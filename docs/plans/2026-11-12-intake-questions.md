@@ -53,7 +53,7 @@ Batch 1 questions 2–5 fold into the step-by-step rounds below.
 | 3.1 | Work done without approval: does the client pay anyway, dispute it, or does OF eat it? Did Dana put a figure on it? | $80K–$200K a year in disputed invoices for work not approved first. |
 | 3.2 | Price caps and approval patterns: where do they live today (contract PDFs, someone's head), and how many rule sets: one per client, or per client by issue type? | |
 | 4.1 | Tony: what does he decide, with what information, and what happened the last time he was out? | |
-| 5.1 | Replace the empty notes field with five to eight fields: what are they? | |
+| 5.1 | Replace the empty notes field with five to eight fields: what are they? | Answered: see `2026-11-12-job-record-draft.md`. |
 
 ### On the $80K–$200K
 
