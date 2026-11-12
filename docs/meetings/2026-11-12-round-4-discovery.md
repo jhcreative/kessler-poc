@@ -138,3 +138,7 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
   no software or apps in the field came up. John's impression: they use none of it, and the product (from its site)
   could be stuck in 2015.
 - Follow-up questions go to Dana by email (`2026-11-12-follow-up-email-draft.md`).
+
+### Coordinators (John, 2026-11-12)
+
+- Hiring coordinators has gotten harder, so making the role easier to do well with technology is an extra win.

@@ -1,0 +1,89 @@
+# Flow 1: request to onsite (steps 1-5). Data first; the graphic comes later in JHC formats.
+# Source: John, 2026-11-12. Items marked "proposed:" are the team's additions, not John's words; he rules on them.
+# Steps 6-9 (close, billing, invoicing, collections) are their own flow: this one hands off at the end.
+
+flow: request-to-onsite
+version: draft-1
+date: 2026-11-12
+why: >
+  One company source of truth for every request, so contract knowledge reaches every person before work,
+  and every human decision teaches the system.
+context:
+  - Coordinators are getting harder to hire, so making the role easier to do well is an extra win (Dana, via John).
+
+blocks:
+  - id: coordinator
+    steps: [1 intake, 2 coordination]
+    human: coordinator (owns the request for its whole life)
+    inputs:
+      - Target portal (staff log in and pick up work)
+      - Starbucks store emails
+      - other clients' emails and attachments
+      - FacilIT (smaller clients)
+    system:
+      - wrangle every intake type into one company source of truth (the job record)
+      - auto-context every request by its contract, via lookup or MCP, including FacilIT
+    outputs:
+      - a qualified request, with identity fixed and contract context attached
+    open:
+      - what FacilIT offers that sounds underutilized (deep research running; feeds the next discovery round)
+      - proposed: which contract terms the auto-context must carry first (caps, approval rules, SLAs)
+
+  - id: estimation
+    steps: [3 estimation]
+    human: tech (determines onsite, confirms or denies)
+    inputs:
+      - the qualified request (from coordinator)
+      - historical data on like jobs
+    system:
+      - give dispatch the clearest picture of the need
+      - predict a range of values for the job
+      - keep the history, and record the difference whenever a human overrides the predicted value
+    human_does:
+      - determine the real need onsite; confirm or deny the prediction
+    learning:
+      - every confirm, deny and override teaches the system
+    outputs:
+      - an enriched request with a predicted range
+
+  - id: dispatch
+    steps: [4 dispatch]
+    human: dispatcher (Tony today)
+    inputs:
+      - the enriched request (from estimation)
+      - Samsara fleet data
+      - weather
+      - staff capacity
+    system:
+      - optimize assignments
+      - prepare for likely parts requests
+      - vendor management and other support work
+    outputs:
+      - an assigned job, with the likely parts staged
+
+  - id: tech
+    steps: [5 onsite]
+    human: tech
+    inputs:
+      - the assigned job (from dispatch)
+    system:
+      - capture what reality says, so the job can be completed
+    human_does:
+      - review and override anything, except the rails below
+    rails:  # never overridable by a human in the field
+      - price caps
+      - other stipulations in the client's contract
+    learning:
+      - what reality said, against what the system predicted
+    outputs:
+      - a job ready to close: hands off to flow 2
+
+edges:
+  - [coordinator, estimation, qualified request]
+  - [estimation, dispatch, enriched request with predicted range]
+  - [dispatch, tech, assigned job with parts staged]
+  - [tech, estimation, "learning: reality vs prediction, overrides"]
+  - [tech, flow-2-close-to-cash, job ready to close]
+
+handoff:
+  to: flow-2-close-to-cash (steps 6-9, its own diagram)
