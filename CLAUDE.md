@@ -39,7 +39,7 @@ system: `~/jhc/jhc-agency`. Load `POLICIES.md` + your domain child file there at
 
 ## Calendar target (BP-1)
 
-Not yet known: waiting on John (what step 5 delivers, by when, how it's shown).
+**Due Monday 2026-11-16** (John, 2026-11-12). Format and recipients to be confirmed by Neale, Jahnel's HR contact.
 
 ## Background
 

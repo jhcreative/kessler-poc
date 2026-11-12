@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-12 (Angela, intake)
+Updated: 2026-11-12 (Anne, due date)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it; org to confirm)
 
@@ -14,14 +14,15 @@ None.
 
 ## Next
 
-POC-00, intake: John's account of the round-4 role play and the step-5 brief. Nothing can be scoped until both are in.
+**Due Monday 2026-11-16.** Intake is mostly in (`docs/meetings/2026-11-12-round-4-discovery.md`); next is the POC plan for
+John's approval, then the build. Calendar: Thu intake and plan · Fri approve and build the job record and rules · Sat the
+screens and the eval set · Sun cold review, README, demo · Mon buffer and deliver.
 
 ## Waiting on John
 
 | Since | Item | Owner | Answer |
 |---|---|---|---|
-| 2026-11-12 | The client Ann-Marie played: business, pain, numbers, the never-go-wrong item (raw notes are fine) | Angela | |
-| 2026-11-12 | Step 5: what's delivered, by when, and how it's shown (demo, repo, video, write-up) | Anne | |
+| 2026-11-12 | Neale's confirmation: the step-5 format and the email's recipients (Neale and Ann-Marie?) | Anne | |
 | 2026-11-12 | Constraints: tools and stack, hosting, real or fake data, Claude allowed | Cesar | |
 | 2026-11-12 | What you committed to in the room: number, workstream, date, what a win looks like | Angela | |
 | 2026-11-12 | Remote: johnhiemstracreative (client default, private) or jhcreative (where it can be shown) | Cesar | |

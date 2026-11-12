@@ -1,6 +1,6 @@
 # Follow-up email to Dana: draft (Maya, for John; not sent)
 
-To: Dana Koessler (via Ann-Marie)
+To: Neale and Ann-Marie (to confirm with Neale), addressed to Dana in the role play
 Subject: OneFamilyServices: a few questions before the proof of concept
 
 Dana,
@@ -24,6 +24,6 @@ A few questions so the proof of concept starts from your facts, not my guesses. 
 For the proof of concept itself I'll use realistic made-up data, not your clients' records, so nothing sensitive
 needs to leave your office.
 
-I'll send the proof of concept by [date].
+I'll send the proof of concept by Monday, November 16.
 
 John
