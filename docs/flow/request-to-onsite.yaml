@@ -8,6 +8,10 @@ date: 2026-11-12
 why: >
   One company source of truth for every request, so contract knowledge reaches every person before work,
   and every human decision teaches the system.
+architecture: >
+  A harness: our job record and rules, with an adapter per way in and out (Target portal, email, FacilIT,
+  FieldDesk, QuickBooks, Samsara). FacilIT is an adapter, not the core.
+  See docs/adr/2026-11-12-a-harness-with-adapters-not-a-core.md.
 context:
   - Coordinators are getting harder to hire, so making the role easier to do well is an extra win (Dana, via John).
 
