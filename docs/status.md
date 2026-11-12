@@ -1,26 +1,27 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-12 (Cesar, new-client.sh)
+Updated: 2026-11-12 (Angela, intake)
 Kind: prospect
-Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet: `johnhiemstracreative/jahnel-poc` (John creates it)
-
-One file per engagement, overwritten rather than appended (spec C3). The carry-forward notes are the dated log;
-this file is the present tense. `inbox.py` reads the "Waiting on John" table into `jhc-agency/docs/for-john.md`.
+Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it; org to confirm)
 
 ## Live
 
-What runs in production now: the version, the URL, the box or host, and the date it went live. "Nothing live" if
-none.
+Nothing live.
 
 ## Rollback
 
-The previous version, where it is kept, until when, and the run sheet that holds the command. "None" if none.
+None.
 
 ## Next
 
-The top of the backlog, with the reason it is next.
+POC-00, intake: John's account of the round-4 role play and the step-5 brief. Nothing can be scoped until both are in.
 
 ## Waiting on John
 
 | Since | Item | Owner | Answer |
 |---|---|---|---|
+| 2026-11-12 | The client Ann-Marie played: business, pain, numbers, the never-go-wrong item (raw notes are fine) | Angela | |
+| 2026-11-12 | Step 5: what's delivered, by when, and how it's shown (demo, repo, video, write-up) | Anne | |
+| 2026-11-12 | Constraints: tools and stack, hosting, real or fake data, Claude allowed | Cesar | |
+| 2026-11-12 | What you committed to in the room: number, workstream, date, what a win looks like | Angela | |
+| 2026-11-12 | Remote: johnhiemstracreative (client default, private) or jhcreative (where it can be shown) | Cesar | |
