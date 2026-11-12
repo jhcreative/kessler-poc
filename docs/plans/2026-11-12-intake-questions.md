@@ -88,8 +88,8 @@ and the system gates any estimate over a cap; each estimate is scored against th
 
 | # | Question | Answer |
 |---|---|---|
-| 6.1 | How does Marcee learn a job closed, and how many days pass from close to invoice? | |
-| 7.1 | When she matches a job to its contract, PO and signature, what's missing most often, and how does she chase it? | |
-| 8.1 | How many invoice formats or portals does she deliver to? | |
-| 9.1 | How much sits past 60 or 90 days? Did Dana give days to payment? | |
-| 9.2 | Where do the $80K–$200K disputes surface: when the client rejects the invoice, or later? Who finds out first? | |
+| 6.1 | How does Marcee learn a job closed, and how many days pass from close to invoice? | Marcee pulls completed work reports from FieldDesk; timing varies with volume. |
+| 7.1 | When she matches a job to its contract, PO and signature, what's missing most often, and how does she chase it? | The client's local rep signs off on the work in the field. |
+| 8.1 | How many invoice formats or portals does she deliver to? | About a dozen strict formats. Research Target, CVS, Walgreens, Wegmans, ALDI. |
+| 9.1 | How much sits past 60 or 90 days? Did Dana give days to payment? | Not the concern; disputes are. |
+| 9.2 | Where do the $80K–$200K disputes surface: when the client rejects the invoice, or later? Who finds out first? | After all is said and done. OF invoices anyway when the signature is missing or the contract is vague: the only way to get paid. |

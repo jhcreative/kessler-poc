@@ -117,3 +117,13 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
 
 - Aging reports from QuickBooks and **a few spreadsheets** are the whole system.
 - **Marcee is the only enforcer**; not much happens when she's unavailable.
+
+### Steps 6–9, follow-ups (John, 2026-11-12)
+
+- **Close to invoice:** Marcee goes and gets completed work reports from FieldDesk; timing varies with volume.
+- **The signature:** the client's local representative accepts the work done by the OF tech, signing in the field.
+- **Invoice formats:** about a dozen clients with my-way-or-the-highway formats. Research cases: **Target, CVS,
+  Walgreens, Wegmans, ALDI**: what it takes to be a trusted vendor, and their invoicing rules.
+- **Aging (60–90 days) is not the concern.** The disputed invoices are, and they come after all is said and done. With
+  the work already done, OF submits the invoice even when the signature is missing or the contract is vague: it's the
+  only possible way to get paid in less-than-ideal circumstances.
