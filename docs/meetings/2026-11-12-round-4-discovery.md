@@ -12,6 +12,20 @@ Evidence as received from John. Facts below are John's account; nothing added.
   chosen areas where established clients are concentrated.
 - A **nine-step system from request to payment**, with ample room for improvement.
 
+## The nine steps (John, 2026-11-12)
+
+1. Intake
+2. Coordination
+3. Estimation
+4. Dispatch
+5. Onsite
+6. Close
+7. Billing
+8. Invoicing
+9. Collection / aging accounts
+
+Plenty of detail in each step; we take them one at a time.
+
 ## John's notes
 
 John has more notes; they come in through the Socratic rounds in `../plans/` intake (one batch at a time) and land here.
