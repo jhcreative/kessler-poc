@@ -74,4 +74,12 @@ and the system gates any estimate over a cap; each estimate is scored against th
 | H.2 | If the leak is $80K–$200K on that revenue, is the bigger prize elsewhere (estimate accuracy, days to payment in steps 7–9)? Hold until we've walked 6–9? | |
 | H.3 | "Like jobs": what makes two jobs alike? Client, issue type, equipment, region, season? | |
 
-| H.4 | With Target on its own portal, smaller clients on FacilIT and the rest on email into FieldDesk: where should the contract rules and the job record live? In one of those, or in a layer above all of them? | |
+| H.4 | With Target on its own portal, smaller clients on FacilIT and the rest on email into FieldDesk: where should the contract rules and the job record live? In one of those, or in a layer above all of them? | FacilIT stays (a necessary dependency). FieldDesk holds the truth but hides it: no request state, no turnaround data. Points to a layer above. |
+
+### Visibility
+
+| # | Question | Answer |
+|---|---|---|
+| V.1 | Who most needs to see a request's state, and what question are they asking? (Dana: "are we on time?"; a coordinator: "what's stuck?"; Tony: "who's free?"; a client: "where's my repair?") | |
+| V.2 | Can data get out of FieldDesk at all: an export, reports, an API? Did Dana say? | |
+| V.3 | Turnaround: from which step to which step does Dana care most? Request to onsite, onsite to invoice, invoice to paid? | |

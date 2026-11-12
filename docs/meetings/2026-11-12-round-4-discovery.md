@@ -92,3 +92,9 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
 
 - **Target** is too big for any shared platform: "do it their way or get lost." Work comes only through Target's portal.
 - **Smaller companies** use the FacilIT connection.
+
+### FieldDesk and FacilIT, John's read (2026-11-12)
+
+- **FacilIT** is probably a necessary dependency.
+- **FieldDesk** stores the truth but doesn't expose it: nobody can know the **state of a request** at any given time,
+  there's **no data on turnaround**, nor the other detail that goes with excellent client and opportunity management.
