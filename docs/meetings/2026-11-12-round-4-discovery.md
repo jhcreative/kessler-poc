@@ -44,3 +44,35 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
 - OF staff **enter all of it by hand** into **FieldDesk**, the SaaS source of truth.
 - **FacilIT:** another SaaS, used by only some clients, which OF pays to connect to. To research.
 - Intake is **complete when the request lands with a coordinator**, who owns it for its whole life.
+
+### Step 2: Coordination (John, 2026-11-12)
+
+- **Three people** handle intake at central HQ; **20,000 requests a quarter** (about 300 a working day, Angela's arithmetic).
+- Every request is assigned to a coordinator, who owns it.
+- Requests are accurate enough when received. **Detail is lost in the handling**, because people are overwhelmed.
+- The pattern repeats across steps, **for lack of structured data**: cognitive overload means complex job state goes
+  into empty notes fields, and key information is lost: the diagnosis, what the contract covers, price caps by issue type.
+- Loss runs both ways: coordinators don't always get what they need from techs (onsite reports, estimates), and techs
+  don't always get what they need for estimating (client specifics, price caps).
+
+### Step 3: Estimation (John, 2026-11-12)
+
+- Missing information leads to **work done without approval**.
+- Pictures and summaries are **texted from personal phones**: no central place to build case history or verify decisions.
+- **No gates** from known customer limits or each customer's own approval pattern.
+- No place to keep what was learned or proven fixes, except people's heads (tribal knowledge).
+
+### Step 4: Dispatch (John, 2026-11-12)
+
+- Run by **one person, Tony**, a single point of failure, on his personal phone, with **Samsara** (SaaS fleet management).
+  To research Samsara and what it can do.
+- Every truck carries a **parts inventory, managed on a spreadsheet somewhere**; nobody really knows how standard and
+  common parts (chips and clips) flow.
+
+### Step 5: Onsite (John, 2026-11-12)
+
+- Similar: personal phones, nowhere to capture structured data, store images, or build case and client history that
+  could improve future projections or **reclaim revenue from disputed invoices**.
+- No inventory beyond new parts ordered for a specific request, and those have to be tracked to the job by hand, more
+  data entry that overwhelmed people often skip.
+- **The generic notes field fails hardest here.**

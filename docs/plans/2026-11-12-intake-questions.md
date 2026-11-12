@@ -42,3 +42,15 @@ Batch 1 questions 2–5 fold into the step-by-step rounds below.
 | 1.8 | The chains' rules at intake: response times, priority levels, a cap on cost without approval, penalties? Did Dana name any? | |
 | 1.9 | FacilIT: what do you know (which clients, what flows through it, what OF pays)? And is it a name from the role play we should treat as a black box with an assumed interface, rather than research? (Same question for FieldDesk.) | |
 | 1.10 | Your reflection: what does intake leak, and what number would show it? | |
+
+## Steps 2–5 (answered 2026-11-12; notes in the meeting record)
+
+### Follow-ups
+
+| # | Question | Answer |
+|---|---|---|
+| 2.1 | Are the three intake people also the coordinators? How many coordinators, techs and trucks in all, and how many open jobs does one coordinator carry? | |
+| 3.1 | Work done without approval: does the client pay anyway, dispute it, or does OF eat it? Did Dana put a figure on it? | |
+| 3.2 | Price caps and approval patterns: where do they live today (contract PDFs, someone's head), and how many rule sets: one per client, or per client by issue type? | |
+| 4.1 | Tony: what does he decide, with what information, and what happened the last time he was out? | |
+| 5.1 | Replace the empty notes field with five to eight fields: what are they? | |
