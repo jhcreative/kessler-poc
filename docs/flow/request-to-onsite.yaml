@@ -3,13 +3,18 @@
 # Steps 6-9 (close, billing, invoicing, collections) are their own flow: this one hands off at the end.
 
 flow: request-to-onsite
-version: draft-1
+version: draft-2
 date: 2026-11-12
 why: >
   One company source of truth for every request, so contract knowledge reaches every person before work,
   and every human decision teaches the system.
 context:
   - Coordinators are getting harder to hire, so making the role easier to do well is an extra win (Dana, via John).
+
+lanes:
+  - id: coordinator
+    spans: [coordinator, estimation, dispatch, tech]
+    note: owns the request across every block until step 6, close (John, FL.2)
 
 blocks:
   - id: coordinator
@@ -43,6 +48,7 @@ blocks:
       - determine the real need onsite; confirm or deny the prediction
     learning:
       - every confirm, deny and override teaches the system
+      - a person reviews what the system learned before it changes future predictions (John, FL.4)
     outputs:
       - an enriched request with a predicted range
 
@@ -53,7 +59,7 @@ blocks:
       - the enriched request (from estimation)
       - Samsara fleet data
       - weather
-      - staff capacity
+      - staff capacity, with each tech's skills and trade licenses by state (seven states) (John, FL.3)
     system:
       - optimize assignments
       - prepare for likely parts requests
@@ -78,11 +84,23 @@ blocks:
     outputs:
       - a job ready to close: hands off to flow 2
 
+events:
+  - id: approval-required
+    source: John, FL.1
+    when: in the field, the job needs client approval (over a cap, or any rule that fires)
+    system: updates the job in real time and notifies, however the approval is gathered
+    then:
+      - dispatch re-evaluates allocation in real time
+      - the coordinator launches the approval process right away, not after the fact
+    why: the certain win; today approval is chased after the work, and the dispute follows
+
 edges:
   - [coordinator, estimation, qualified request]
   - [estimation, dispatch, enriched request with predicted range]
   - [dispatch, tech, assigned job with parts staged]
-  - [tech, estimation, "learning: reality vs prediction, overrides"]
+  - [tech, estimation, "learning: reality vs prediction, overrides (human-reviewed)"]
+  - [tech, dispatch, "event: approval required (re-evaluate allocation)"]
+  - [tech, coordinator, "event: approval required (launch approval now)"]
   - [tech, flow-2-close-to-cash, job ready to close]
 
 handoff:
