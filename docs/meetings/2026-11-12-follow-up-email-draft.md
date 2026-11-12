@@ -10,8 +10,9 @@ invoices, and how much of each job lives in notes fields, personal phones and pe
 
 A few questions so the proof of concept starts from your facts, not my guesses. Short answers are fine.
 
-1. **FieldDesk.** Do your techs use it in the field at all, and if so for what? It offers signatures and custom
-   forms; are you using either? Can anyone get data out of it (an export or a report)?
+1. **Your system.** Is it Mobilogic's FieldOPS in the office, its FieldDesk app in the field, or both? If your techs
+   don't use FieldDesk, what do they use besides their phones? And can anyone get data out of FieldOPS (an export or
+   a report)?
 2. **Approval rules.** Where do each client's caps and approval rules live today: the contracts, a spreadsheet,
    someone's memory? Is it one rule set per client, or per client by type of repair?
 3. **The disputes.** Of the $80K to $200K, roughly how much comes from work over a cap without approval, from a
