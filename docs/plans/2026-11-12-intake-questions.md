@@ -59,6 +59,17 @@ Batch 1 questions 2–5 fold into the step-by-step rounds below.
 
 | # | Question | Answer |
 |---|---|---|
-| 3.3 | Is that the disputed amount or the lost amount? How much is eventually won back, and what does winning it back cost in staff time? | |
-| 3.4 | Did Dana give it, or is it your estimate from what she said? Why a range that wide? | |
-| 3.5 | The average job size, roughly, so we know what share of revenue that is. | |
+| 3.3 | Is that the disputed amount or the lost amount? How much is eventually won back, and what does winning it back cost in staff time? | Lost: written off in accounting. |
+| 3.4 | Did Dana give it, or is it your estimate from what she said? Why a range that wide? | Dana's. |
+| 3.5 | The average job size, roughly, so we know what share of revenue that is. | $2,000–$50,000 (Dana). |
+
+## Working hypothesis for the POC (Angela, 2026-11-12, not yet approved)
+
+Contract rules (caps and approval patterns per client, per issue type) reach the coordinator and the tech before work,
+and the system gates any estimate over a cap; each estimate is scored against the history of like jobs.
+
+| # | Question | Answer |
+|---|---|---|
+| H.1 | Volume check: 80,000 requests a year at $2,000+ each is $160M+ in revenue. Does that match Dana's company, or are most "requests" smaller than a job (calls, follow-ups, small fixes)? | |
+| H.2 | If the leak is $80K–$200K on that revenue, is the bigger prize elsewhere (estimate accuracy, days to payment in steps 7–9)? Hold until we've walked 6–9? | |
+| H.3 | "Like jobs": what makes two jobs alike? Client, issue type, equipment, region, season? | |
