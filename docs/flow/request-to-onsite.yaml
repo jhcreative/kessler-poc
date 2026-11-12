@@ -26,7 +26,7 @@ blocks:
     outputs:
       - a qualified request, with identity fixed and contract context attached
     open:
-      - what FacilIT offers that sounds underutilized (deep research running; feeds the next discovery round)
+      - what FacilIT offers that sounds underutilized: see docs/research/2026-11-12-facilit-deep.md and questions FI.1-FI.7
       - proposed: which contract terms the auto-context must carry first (caps, approval rules, SLAs)
 
   - id: estimation

@@ -93,3 +93,15 @@ and the system gates any estimate over a cap; each estimate is scored against th
 | 8.1 | How many invoice formats or portals does she deliver to? | About a dozen strict formats. Research Target, CVS, Walgreens, Wegmans, ALDI. |
 | 9.1 | How much sits past 60 or 90 days? Did Dana give days to payment? | Not the concern; disputes are. |
 | 9.2 | Where do the $80K–$200K disputes surface: when the client rejects the invoice, or later? Who finds out first? | After all is said and done. OF invoices anyway when the signature is missing or the contract is vague: the only way to get paid. |
+
+## Next discovery round: FacilIT (from `docs/research/2026-11-12-facilit-deep.md`, for Dana)
+
+| # | Question | Answer |
+|---|---|---|
+| FI.1 | Which FacilIT edition do you pay for: the connector only, or with the field app, AR/AP and the QuickBooks Online link? | |
+| FI.2 | Has anyone offered your techs the FacilIT app or phone check-in? What stopped them? | |
+| FI.3 | When a job will run over the cap, what happens today, step by step? Has FacilIT shown you its proposal approval? | |
+| FI.4 | For clients on ServiceChannel, Corrigo or Fexa, does the invoice go back through FacilIT, or is it re-keyed? | |
+| FI.5 | Has FacilIT ever quoted connecting Target (Maximo, which FacilIT lists) or Starbucks? | |
+| FI.6 | Which work lives in FacilIT and which in FieldDesk? If FacilIT held every client's jobs, what would keep FieldDesk? | |
+| FI.7 | Can either system export a year of jobs with the cap, the final invoice and the dispute outcome? | |
