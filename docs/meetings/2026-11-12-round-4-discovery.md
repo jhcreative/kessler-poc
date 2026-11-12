@@ -131,7 +131,7 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
 ### FieldDesk use (John, 2026-11-12)
 
 - **Dana named FieldDesk and never mentioned FieldOPS.**
-- **Our inference, not hers (John):** it may really be FieldOPS. FieldDesk is Mobilogic's field add-on to the FieldOPS
+- **Our inference, not hers (John):** FieldOPS may be what she meant. FieldDesk is Mobilogic's field add-on to the FieldOPS
   office system, and no field apps came up. Working assumption: an office system of record that holds the truth and
   shows it to nobody. Which product it is goes to Dana (email question 1).
 - **Assume they don't use** FieldDesk's signatures or custom forms: Dana said nothing really talks to anything else, and
