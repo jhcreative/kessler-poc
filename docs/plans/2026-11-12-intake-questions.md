@@ -83,3 +83,13 @@ and the system gates any estimate over a cap; each estimate is scored against th
 | V.1 | Who most needs to see a request's state, and what question are they asking? (Dana: "are we on time?"; a coordinator: "what's stuck?"; Tony: "who's free?"; a client: "where's my repair?") | |
 | V.2 | Can data get out of FieldDesk at all: an export, reports, an API? Did Dana say? | |
 | V.3 | Turnaround: from which step to which step does Dana care most? Request to onsite, onsite to invoice, invoice to paid? | |
+
+## Steps 6–9 (answered 2026-11-12; notes in the meeting record)
+
+| # | Question | Answer |
+|---|---|---|
+| 6.1 | How does Marcee learn a job closed, and how many days pass from close to invoice? | |
+| 7.1 | When she matches a job to its contract, PO and signature, what's missing most often, and how does she chase it? | |
+| 8.1 | How many invoice formats or portals does she deliver to? | |
+| 9.1 | How much sits past 60 or 90 days? Did Dana give days to payment? | |
+| 9.2 | Where do the $80K–$200K disputes surface: when the client rejects the invoice, or later? Who finds out first? | |

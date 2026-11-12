@@ -98,3 +98,22 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
 - **FacilIT** is probably a necessary dependency.
 - **FieldDesk** stores the truth but doesn't expose it: nobody can know the **state of a request** at any given time,
   there's **no data on turnaround**, nor the other detail that goes with excellent client and opportunity management.
+
+### Step 6: Close (John, 2026-11-12)
+
+- Work complete is registered as such in **FieldDesk**, which somehow triggers billing.
+
+### Step 7: Billing (John, 2026-11-12)
+
+- **One person, Marcee**, a single point of failure, does it all by hand. She pulls completed work out of FieldDesk
+  (how: to research) and matches it against contract specifics, POs, the signature of completion from the field, and so on.
+
+### Step 8: Invoicing (John, 2026-11-12)
+
+- Marcee enters invoices into **QuickBooks**, then delivers each in the client's preferred format (Target: their way
+  or no work).
+
+### Step 9: Collections and aging (John, 2026-11-12)
+
+- Aging reports from QuickBooks and **a few spreadsheets** are the whole system.
+- **Marcee is the only enforcer**; not much happens when she's unavailable.
