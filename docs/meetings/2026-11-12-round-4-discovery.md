@@ -127,3 +127,11 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
 - **Aging (60–90 days) is not the concern.** The disputed invoices are, and they come after all is said and done. With
   the work already done, OF submits the invoice even when the signature is missing or the contract is vague: it's the
   only possible way to get paid in less-than-ideal circumstances.
+
+### FieldDesk use (John, 2026-11-12)
+
+- OF runs **FieldDesk only**, not FieldOPS.
+- **Assume they don't use** FieldDesk's signatures or custom forms: Dana said nothing really talks to anything else, and
+  no software or apps in the field came up. John's impression: they use none of it, and the product (from its site)
+  could be stuck in 2015.
+- Follow-up questions go to Dana by email (`2026-11-12-follow-up-email-draft.md`).
