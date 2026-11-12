@@ -50,7 +50,15 @@ Batch 1 questions 2–5 fold into the step-by-step rounds below.
 | # | Question | Answer |
 |---|---|---|
 | 2.1 | Are the three intake people also the coordinators? How many coordinators, techs and trucks in all, and how many open jobs does one coordinator carry? | |
-| 3.1 | Work done without approval: does the client pay anyway, dispute it, or does OF eat it? Did Dana put a figure on it? | |
+| 3.1 | Work done without approval: does the client pay anyway, dispute it, or does OF eat it? Did Dana put a figure on it? | $80K–$200K a year in disputed invoices for work not approved first. |
 | 3.2 | Price caps and approval patterns: where do they live today (contract PDFs, someone's head), and how many rule sets: one per client, or per client by issue type? | |
 | 4.1 | Tony: what does he decide, with what information, and what happened the last time he was out? | |
 | 5.1 | Replace the empty notes field with five to eight fields: what are they? | |
+
+### On the $80K–$200K
+
+| # | Question | Answer |
+|---|---|---|
+| 3.3 | Is that the disputed amount or the lost amount? How much is eventually won back, and what does winning it back cost in staff time? | |
+| 3.4 | Did Dana give it, or is it your estimate from what she said? Why a range that wide? | |
+| 3.5 | The average job size, roughly, so we know what share of revenue that is. | |

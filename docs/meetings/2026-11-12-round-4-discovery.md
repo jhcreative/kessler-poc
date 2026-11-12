@@ -76,3 +76,8 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
 - No inventory beyond new parts ordered for a specific request, and those have to be tracked to the job by hand, more
   data entry that overwhelmed people often skip.
 - **The generic notes field fails hardest here.**
+
+### The leak, in dollars (John, 2026-11-12)
+
+- **$80,000 to $200,000 a year in disputed invoices** for work not approved before it was done.
+- Scale (Angela's arithmetic): 20,000 requests a quarter is about 80,000 a year, so $1 to $2.50 per request on average.
