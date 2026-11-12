@@ -33,3 +33,14 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
 ## Socratic intake: answers as given
 
 (Filled batch by batch.)
+
+### Step 1: Intake (John, 2026-11-12)
+
+- Clients are on **2–5 year contracts** won in a separate process, so intake starts from known customers. Several have
+  very specific ways of doing business.
+- **Target:** OneFamilyServices staff log into Target's portal (email and password) to pick up work.
+- **Starbucks:** sends email from an address that identifies the store.
+- **Others:** a mix of email and attachments to start a request.
+- OF staff **enter all of it by hand** into **FieldDesk**, the SaaS source of truth.
+- **FacilIT:** another SaaS, used by only some clients, which OF pays to connect to. To research.
+- Intake is **complete when the request lands with a coordinator**, who owns it for its whole life.

@@ -27,8 +27,18 @@ Batch 1 questions 2–5 fold into the step-by-step rounds below.
 
 | # | Question | Answer |
 |---|---|---|
-| 1.1 | What arrives, and how? Channels per chain (their portal, email, phone), and roughly how many requests a day or week. | |
+| 1.1 | What arrives, and how? Channels per chain (their portal, email, phone), and roughly how many requests a day or week. | Target portal login; Starbucks store emails; others email + attachments; hand entry into FieldDesk; FacilIT for some. Volume open. |
 | 1.2 | Who does intake at HQ, how many people, and what system do they enter it into? | |
 | 1.3 | What do the chains hold OneFamilyServices to at intake: response times, priority levels, a not-to-exceed amount, penalties? | |
 | 1.4 | What goes wrong here, in Dana's words: lost or duplicate requests, missing details (site, equipment, urgency), wrong priority? | |
 | 1.5 | Your reflection: what does intake leak, and what number would show it? | |
+
+### Step 1, follow-ups
+
+| # | Question | Answer |
+|---|---|---|
+| 1.6 | Volume and people: how many requests a week, how many intake staff, and does anyone own each channel (who checks the Target portal, and how often)? | |
+| 1.7 | "Accurately": how does anyone know an entry is right before the coordinator gets it? What happens when it's wrong? | |
+| 1.8 | The chains' rules at intake: response times, priority levels, a cap on cost without approval, penalties? Did Dana name any? | |
+| 1.9 | FacilIT: what do you know (which clients, what flows through it, what OF pays)? And is it a name from the role play we should treat as a black box with an assumed interface, rather than research? (Same question for FieldDesk.) | |
+| 1.10 | Your reflection: what does intake leak, and what number would show it? | |
