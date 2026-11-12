@@ -73,3 +73,5 @@ and the system gates any estimate over a cap; each estimate is scored against th
 | H.1 | Volume check: 80,000 requests a year at $2,000+ each is $160M+ in revenue. Does that match Dana's company, or are most "requests" smaller than a job (calls, follow-ups, small fixes)? | |
 | H.2 | If the leak is $80K–$200K on that revenue, is the bigger prize elsewhere (estimate accuracy, days to payment in steps 7–9)? Hold until we've walked 6–9? | |
 | H.3 | "Like jobs": what makes two jobs alike? Client, issue type, equipment, region, season? | |
+
+| H.4 | With Target on its own portal, smaller clients on FacilIT and the rest on email into FieldDesk: where should the contract rules and the job record live? In one of those, or in a layer above all of them? | |

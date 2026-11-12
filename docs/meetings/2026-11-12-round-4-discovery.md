@@ -87,3 +87,8 @@ John has more notes; they come in through the Socratic rounds in `../plans/` int
   caps requests at **$25,000 without prior authorization** (John's example), the coordinator and the tech should know
   going in, and so should the system. The system should also **rate a tech's estimate against the history of like
   jobs**, given how much data the company could be collecting in a well-defined space.
+
+### Channels by client size (John, 2026-11-12)
+
+- **Target** is too big for any shared platform: "do it their way or get lost." Work comes only through Target's portal.
+- **Smaller companies** use the FacilIT connection.
