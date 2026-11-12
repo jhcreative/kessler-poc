@@ -29,6 +29,10 @@ the core, because the largest clients set their own formats, and one format forc
 ### Risks
 - If FacilIT's edition already covers most of it, the harness duplicates paid work. FI.1 (which edition) tests this.
 
+## Follow-on: one field app (John, 2026-11-12, FR.3)
+Every tech uses one field app, ours, for every job, whatever client and whatever door it came through. FacilIT's
+field app is not used for FacilIT jobs; their jobs reach the tech through the FacilIT adapter like any other.
+
 ## Positions
 **John (product owner):** "I lean b but am seeing us building a harness that includes it rather than its the central
 core - why? Target. Has its own way in and out of our system. Are we forcing one format in to another with this

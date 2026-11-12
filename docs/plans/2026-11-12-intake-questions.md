@@ -105,3 +105,14 @@ and the system gates any estimate over a cap; each estimate is scored against th
 | FI.5 | Has FacilIT ever quoted connecting Target (Maximo, which FacilIT lists) or Starbucks? | |
 | FI.6 | Which work lives in FacilIT and which in FieldDesk? If FacilIT held every client's jobs, what would keep FieldDesk? | |
 | FI.7 | Can either system export a year of jobs with the cap, the final invoice and the dispute outcome? | |
+
+**When (FR.2, John, 2026-11-12):** wait. FI.1–FI.7 go to Dana in a later round, not in the follow-up email.
+
+## Architecture (FR, John, 2026-11-12)
+
+| # | Question | Answer |
+|---|---|---|
+| FR.1 | (a) our own layer over every system, or (b) FacilIT as the core? | A harness that includes FacilIT, not a core. Recorded in `docs/adr/2026-11-12-a-harness-with-adapters-not-a-core.md`. |
+| FR.2 | FI.1–FI.7 in the email now, or a later round? | Wait. |
+| FR.3 | One field app for every job (ours), or FacilIT's app for FacilIT jobs? | One app. |
+| N.1 | Next: the POC plan, flow 1's graphic, or flow 2 as data? | Draw the flows, in a readable PDF, with the ADR basics first. |
