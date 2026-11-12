@@ -1,0 +1,89 @@
+# Flow 2: close to cash (steps 6-9). Data first, like flow 1.
+# Source: John, 2026-11-12, from round 4. "today:" lines are his facts. Anything marked "proposed:" is the team's,
+# not John's or Dana's; he rules on it.
+
+flow: close-to-cash
+version: draft-1
+date: 2026-11-12
+why: >
+  The disputes ($80K-$200K a year, written off) are born before the work, when approval isn't on record.
+  This flow checks the record before an invoice leaves, so the invoice OF sends is one the client will pay.
+architecture: >
+  Same harness as flow 1: the job record holds the approval, the signature and the contract terms;
+  QuickBooks and each client's invoice format are adapters.
+context:
+  - Aging (60-90 days) is not the concern; disputed invoices are (John).
+  - One person, Marcee, does billing, invoicing and collections by hand. When she's out, little happens (John).
+
+receives:
+  from: flow-1-request-to-onsite
+  what: a job ready to close, with any approval gathered during the job already on the record
+
+blocks:
+  - id: close
+    steps: [6 close]
+    human: tech, with the client's local representative
+    today:
+      - work complete is registered in FieldDesk, which somehow triggers billing
+      - the client's local rep signs off on the work in the field
+    proposed:
+      - the field app closes the job only with the signature, or with a reason it is missing
+      - closing puts the job straight into billing; nobody has to go and get it
+    outputs:
+      - a closed job: completion, signature (or the reason it's missing), time and parts
+
+  - id: billing
+    steps: [7 billing]
+    human: billing (Marcee today)
+    today:
+      - pulls completed work out of FieldDesk; timing varies with volume
+      - matches each job by hand against contract specifics, POs and the field signature
+    proposed:
+      - the system does the match and shows Marcee only what fails it
+      - "checks before invoice: approval on record when a rule required it; signature; PO; amount within the cap"
+    outputs:
+      - a job that passes every check, or a list of what it's missing
+
+  - id: invoicing
+    steps: [8 invoicing]
+    human: billing (Marcee today)
+    today:
+      - enters each invoice into QuickBooks
+      - delivers it in the client's own format; about a dozen clients set strict formats (Target, CVS, Walgreens, Wegmans, ALDI to research)
+    proposed:
+      - one invoice from the job record, written out per client by that client's adapter
+      - QuickBooks receives it through its adapter; no re-keying
+    outputs:
+      - an invoice in the client's format, with the approval and signature attached
+
+  - id: collections
+    steps: [9 collection and aging]
+    human: billing (Marcee today)
+    today:
+      - aging reports from QuickBooks and a few spreadsheets are the whole system
+      - Marcee is the only enforcer
+    proposed:
+      - every dispute is recorded against the job, with the rule that should have fired
+      - dispute outcomes feed back to flow 1, so the rule fires earlier next time
+    outputs:
+      - payment, or a dispute tied to its cause
+
+events:
+  - id: check-failed
+    source: proposed
+    when: a closed job is missing an approval the rules required, a signature or a PO
+    system: holds the invoice and tells billing and the coordinator what is missing and from whom
+    why: today OF invoices anyway, because with the work done it's the only way to get paid (John); this makes the gap visible before, not after
+
+edges:
+  - [flow-1-request-to-onsite, close, job ready to close]
+  - [close, billing, closed job with signature]
+  - [billing, invoicing, job that passes every check]
+  - [billing, coordinator, "event: check failed (what's missing, from whom)"]
+  - [invoicing, collections, invoice in the client's format]
+  - [collections, flow-1-request-to-onsite, "learning: dispute and its cause (human-reviewed)"]
+
+open:
+  - how FieldDesk's close triggers billing today (to research; V.2, can data get out of FieldDesk)
+  - each strict-format client's invoice rules (research: Target, CVS, Walgreens, Wegmans, ALDI)
+  - how disputes split: no approval on record, missing signature, vague contract (email to Dana, question 3)

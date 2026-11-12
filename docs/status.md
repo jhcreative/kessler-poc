@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-12 (Anne, due date)
+Updated: 2026-11-12 (Anne, flows PDF)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it; org to confirm)
 
@@ -14,8 +14,9 @@ None.
 
 ## Next
 
-**Due Monday 2026-11-16.** Intake is mostly in (`docs/meetings/2026-11-12-round-4-discovery.md`); next is the POC plan for
-John's approval, then the build. Calendar: Thu intake and plan · Fri approve and build the job record and rules · Sat the
+**Due Monday 2026-11-16.** Intake is mostly in (`docs/meetings/2026-11-12-round-4-discovery.md`); the flows are drawn
+(`docs/flow/jahnel-poc-flows-2026-11-12.pdf`: the decision, flow 1, flow 2); next is the POC plan for John's approval, then
+the build. Calendar: Thu intake and plan · Fri approve and build the job record and rules · Sat the
 screens and the eval set · Sun cold review, README, demo · Mon buffer and deliver.
 
 ## Waiting on John

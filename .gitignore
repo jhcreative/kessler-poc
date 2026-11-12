@@ -9,3 +9,5 @@ node_modules/
 !.env.example
 *.tmp
 .idea/
+docs/flow/deck/common.css
+docs/flow/deck/components.css

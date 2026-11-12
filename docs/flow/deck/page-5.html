@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>OneFamilyServices flows, page 5</title>
+    <link rel="stylesheet" href="common.css" />
+    <link rel="stylesheet" href="components.css" />
+
+    <style>
+      .dek {
+        font-size: 11.5pt;
+        margin: 10px 0 0;
+      }
+      svg.fig {
+        display: block;
+        width: 6.8in;
+        height: auto;
+        margin: 14px 0 0;
+      }
+      svg.fig text {
+        font-family: "Fira Sans", sans-serif;
+        fill: #1c1b19;
+      }
+      svg.fig .h {
+        font-weight: 700;
+        font-size: 13.5px;
+      }
+      svg.fig .s {
+        font-size: 11.5px;
+        fill: #3a382f;
+      }
+      svg.fig .k {
+        font-weight: 600;
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        fill: #6f6c66;
+      }
+      svg.fig .n {
+        font-weight: 700;
+        font-size: 13.5px;
+        fill: #d07200;
+      }
+      svg.fig .e {
+        font-size: 10.5px;
+        fill: #6f6c66;
+        font-style: italic;
+      }
+      .two {
+        display: flex;
+        gap: 26px;
+      }
+      .two > div {
+        flex: 1;
+      }
+      .two h2 {
+        margin-top: 18px;
+      }
+      table.flow td {
+        font-size: 9.8pt;
+        line-height: 1.36;
+        padding: 8px 9px;
+      }
+      table.flow td.b {
+        font-family: "Fira Sans", sans-serif;
+        font-weight: 600;
+        font-size: 9.6pt;
+        white-space: nowrap;
+      }
+      table.flow td.b span {
+        display: block;
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 8.4pt;
+      }
+      .answer {
+        margin: 14px 0 0;
+      }
+      .answer p {
+        font-size: 10.6pt;
+      }
+      .src {
+        font-family: "Fira Sans", sans-serif;
+        font-size: 8.2pt;
+        color: var(--faint);
+        margin: 10px 0 0;
+      }
+      ul li {
+        font-size: 11pt;
+        margin-bottom: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sheet">
+      <div class="masthead">
+        <svg
+          width="46"
+          height="46"
+          class="mark"
+          viewBox="0 0 130 130"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+          <title>jhc-logo</title>
+          <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <image
+              id="jhc-logo"
+              x="0"
+              y="0"
+              width="130"
+              height="130"
+              xlink:href="data:image/png;base64,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"
+            ></image>
+          </g>
+        </svg>
+        <div class="wordmark">
+          John&nbsp;Hiemstra&nbsp;Creative<span class="sub">Product Engineering &bull; Digital Solutions Partner</span>
+        </div>
+      </div>
+
+      <h1 class="title">Flow 2, Today and Proposed</h1>
+      <div class="meta">
+        Discovery Report<span class="dot">&bull;</span>OneFamilyServices<span class="dot">&bull;</span>November 12, 2026
+      </div>
+      <table class="flow">
+        <thead>
+          <tr>
+            <th>Step</th>
+            <th>Today</th>
+            <th>Proposed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="b">Close<span>step 6</span></td>
+            <td>
+              Work complete is registered in FieldDesk, which somehow triggers billing. The client's local rep signs off
+              in the field.
+            </td>
+            <td>
+              The field app closes a job only with the signature, or with the reason it's missing. Closing puts the job
+              into billing; nobody has to go and get it.
+            </td>
+          </tr>
+          <tr>
+            <td class="b">Billing<span>step 7</span></td>
+            <td>
+              One person pulls completed work from FieldDesk, timing varying with volume, and matches it by hand to the
+              contract, the PO and the signature.
+            </td>
+            <td>
+              The system makes the match: approval on record when a rule required it, signature, PO, amount within the
+              cap. She sees only what fails.
+            </td>
+          </tr>
+          <tr>
+            <td class="b">Invoicing<span>step 8</span></td>
+            <td>
+              The same person keys each invoice into QuickBooks, then sends it in the client's format. About a dozen
+              clients set strict ones.
+            </td>
+            <td>
+              One invoice from the job record, written out by each client's adapter, with the approval and signature
+              attached. QuickBooks gets it without re-keying.
+            </td>
+          </tr>
+          <tr>
+            <td class="b">Collections<span>step 9</span></td>
+            <td>
+              QuickBooks aging and a few spreadsheets. The same person is the only one who enforces; when she's out,
+              little happens.
+            </td>
+            <td>
+              Every dispute is recorded against its job, with the rule that should have fired, and fed back to flow 1.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="answer">
+        <p class="q">Why this flow matters</p>
+        <p>
+          Aging isn't the concern; disputes are. Once the work is done, the company invoices even when the signature is
+          missing or the contract is vague, because it's the only way to get paid. The check before the invoice makes
+          that gap visible while it can still be closed.
+        </p>
+      </div>
+      <h2>Still open</h2>
+      <ul>
+        <li>How a close in FieldDesk triggers billing today, and whether its data can get out.</li>
+        <li>Each strict-format client's invoice rules: Target, CVS, Walgreens, Wegmans, ALDI.</li>
+        <li>How the disputes split: no approval on record, a missing signature, a vague contract.</li>
+      </ul>
+      <p class="src">Source: docs/flow/close-to-cash.yaml, draft 1.</p>
+
+      <div class="folio">5 / 5</div>
+    </div>
+  </body>
+</html>
