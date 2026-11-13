@@ -47,6 +47,7 @@ def svg():
     p.append(line("M740,130 H788"))
     p.append(box(790, 100, 160, 60, "Onsite", "the tech at the site"))
     p.append(line("M870,100 V40 H440 V136"))
+    p.append(line("M660,100 V43"))  # dispatch reports back into the record too (John, 2026-11-13)
     p.append('<text class="e" x="645" y="32" text-anchor="middle">back into the record: what the site found, approval needed, signed</text>')
     # billing (lower lane), only after onsite returns
     p.append(line("M470,262 H523"))
