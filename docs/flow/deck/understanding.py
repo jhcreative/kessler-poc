@@ -26,6 +26,12 @@ def box(x, y, w, h, name, sub, dark=False):
     return "".join(out)
 
 
+def stack(x, y, w, h, rx, fill, stroke):
+    """Two offset sheets behind a box: many client formats (John, 2026-11-13). Drawn before the box."""
+    return "".join(f'<rect x="{x+d}" y="{y-d}" width="{w}" height="{h}" rx="{rx}" fill="{fill}" stroke="{stroke}" '
+                   f'stroke-width="1.1"/>' for d in (8, 4))
+
+
 def manual(x, y, w, h, name, subs):
     """A manual junction: a person moves the request by hand. Rounded, warm fill, deep-orange border, BY HAND kicker,
     so it never reads as a system step (John, 2026-11-13)."""
@@ -91,7 +97,11 @@ def svg_recommended():
     p.append('<text class="e" x="485" y="243">Only after</text><text class="e" x="485" y="255">onsite.</text>')
     p.append(box(540, 232, 120, 60, "Billing", "Matched to the job."))
     p.append(line("M660,262 H683"))
-    p.append(box(685, 232, 155, 60, "Invoicing", "Multiple client formats."))
+    p.append(stack(685, 232, 155, 60, 6, "#fff", "#cfc9bf"))
+    p.append(box(685, 232, 155, 60, "Invoicing", ["Multiple client formats,", "from the contract."]))
+    # contracts also feed invoicing: each client's format, read-only
+    p.append(line("M455,405 H762 V294"))
+    p.append('<text class="e" x="560" y="398">Read-only: each client\'s invoice format.</text>')
     p.append(line("M840,262 H863"))
     p.append(box(865, 232, 105, 60, "Collections", "Aging, disputes."))
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
@@ -124,16 +134,19 @@ def svg_current():
     p.append(line("M642,92 V40 H478 V136"))
     mid_arrows(p, ["M642,76 V66", "M570,40 H560"])
     p.append('<text class="e" x="560" y="32" text-anchor="middle" style="fill:#9a5a00">Tony updates the record by hand.</text>')
-    p.append(line("M490,262 H538"))
-    p.append('<text class="e" x="494" y="243">Pulled</text><text class="e" x="494" y="255">by hand.</text>')
-    p.append(manual(540, 220, 150, 84, "Billing: Marcee", ["Reconciles finished work", "to contracts, PO numbers."]))
-    p.append(line("M690,262 H703"))
-    p.append(box(705, 228, 125, 70, "Invoicing", ["Multiple client", "formats."]))
-    p.append(line("M830,262 H848"))
-    p.append(box(850, 228, 100, 70, "Collections", ["Disputes", "written off."]))
-    p.append(store(535, 378, 165, 54, "Contracts, POs", "In files and people's heads.", True))
-    p.append(line("M612,378 V306"))
-    p.append('<text class="e" x="620" y="340">Checked only</text><text class="e" x="620" y="354">before invoicing.</text>')
+    p.append(line("M490,262 H531"))
+    p.append('<text class="e" x="493" y="243" style="font-size:10px">Pulled</text><text class="e" x="493" y="255" style="font-size:10px">by hand.</text>')
+    p.append(manual(533, 220, 134, 84, "Billing: Marcee", ["Reconciles finished", "work to contracts,", "PO numbers."]))
+    p.append(line("M667,262 H685"))
+    p.append(stack(687, 220, 145, 84, 14, "#f6efe4", "#D07200"))
+    p.append(manual(687, 220, 145, 84, "Invoicing: Marcee", ["Multiple client", "formats, each", "by hand."]))
+    p.append(line("M840,262 H853"))
+    p.append(box(855, 228, 95, 70, "Collections", ["Disputes", "written off."]))
+    p.append(store(560, 378, 190, 54, "Contracts, POs", "In files and people's heads.", True))
+    p.append(line("M596,378 V306"))
+    p.append(line("M730,378 V306"))
+    p.append('<text class="e" x="760" y="398" style="fill:#9a5a00">Checked by hand,</text>'
+             '<text class="e" x="760" y="412" style="fill:#9a5a00">after the work.</text>')
     p.append('<rect x="0" y="372" width="26" height="16" rx="6" fill="#f6efe4" stroke="#D07200" stroke-width="1.4"/>'
              '<text class="e" x="34" y="384">Manual junction: a person moves the request by hand.</text>'
              '<rect x="0" y="396" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
