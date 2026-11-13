@@ -43,11 +43,11 @@ def human(x, y, label):
 
 
 def manual(x, y, w, h, name, subs):
-    """A manual junction: a person moves the request by hand. Rounded, warm fill, deep-orange border, BY HAND kicker,
+    """A manual junction: a person moves the request by hand. Rounded, the human-in-the-loop fill and black border, BY HAND kicker,
     so it never reads as a system step (John, 2026-11-13)."""
     subs = [subs] if isinstance(subs, str) else subs
     top = y + h / 2 + 4 - 7 * (len(subs) - 1)
-    out = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="#f6efe4" stroke="#D07200" stroke-width="1.6"/>',
+    out = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.6"/>',
            f'<text class="k" x="{x+14}" y="{y+16}" style="fill:#9a5a00;font-size:9px">BY HAND</text>',
            f'<text class="h" x="{x+14}" y="{top}" style="font-weight:700;font-size:14.5px">{name}</text>']
     for i, t in enumerate(subs):
@@ -161,7 +161,7 @@ def svg_current():
     p.append('<text class="e" x="493" y="243" style="font-size:10px">Pulled</text><text class="e" x="493" y="255" style="font-size:10px">by hand.</text>')
     p.append(manual(533, 220, 134, 84, "Billing: Marcee", ["Reconciles finished", "work to contracts,", "PO numbers."]))
     p.append(line("M667,262 H685"))
-    p.append(stack(687, 220, 145, 84, 14, "#f6efe4", "#D07200"))
+    p.append(stack(687, 220, 145, 84, 14, "#eadbc4", "#1c1b19"))
     p.append(manual(687, 220, 145, 84, "Invoicing: Marcee", ["Multiple client", "formats, each", "by hand."]))
     p.append(line("M840,262 H853"))
     p.append(box(855, 228, 95, 70, "Collections", ["Disputes", "written off."]))
@@ -172,7 +172,7 @@ def svg_current():
              '<text class="e" x="760" y="412" style="fill:#9a5a00">after the work.</text>')
     p.append(human(0, 350, "Role"))
     p.append('<text class="e" x="64" y="364">Human in the loop: a person reviews or decides in a step.</text>')
-    p.append('<rect x="0" y="380" width="26" height="16" rx="6" fill="#f6efe4" stroke="#D07200" stroke-width="1.4"/>'
+    p.append('<rect x="0" y="380" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'
              '<text class="e" x="34" y="392">Manual junction: a person moves the request by hand.</text>'
              '<rect x="0" y="404" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
              '<rect x="0" y="404" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="416">A step in a system.</text>')
