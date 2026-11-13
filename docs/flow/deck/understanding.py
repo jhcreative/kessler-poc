@@ -78,24 +78,30 @@ LEGEND = {
     "manual": "Manual junction: Human makes multiple system decisions.",
     "step": "Step in the system.",
     "gear": "Automation or application benefit.",
+    "screen": "Screen in the application.",
 }
 
 
-def legend(p, kinds, y=452):
-    """The key: one row under the drawing, out of the workflow (John, 2026-11-13). Icons centred on the row."""
+def legend(p, kinds, y=476):
+    """The key: one row well below the drawing, each icon centred over its words, so the icons sit close together
+    (John, 2026-11-13)."""
     x = 0
     for k in kinds:
+        w = max(len(LEGEND[k]) * 5.0, 50)
+        c = x + w / 2
         if k == "human":
-            p.append(human(x, y - 10, "Role")); tx = x + 54
+            p.append(human(c - 22, y - 10, "Role"))
         elif k == "manual":
-            p.append(f'<rect x="{x}" y="{y-8}" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'); tx = x + 34
+            p.append(f'<rect x="{c-13}" y="{y-8}" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>')
         elif k == "step":
-            p.append(f'<rect x="{x}" y="{y-8}" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
-                     f'<rect x="{x}" y="{y-8}" width="4" height="16" fill="#F7941E"/>'); tx = x + 34
+            p.append(f'<rect x="{c-13}" y="{y-8}" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
+                     f'<rect x="{c-13}" y="{y-8}" width="4" height="16" fill="#F7941E"/>')
+        elif k == "screen":
+            p.append(f'<rect x="{c-13}" y="{y-8}" width="26" height="16" fill="#f4efe6" stroke="#1c1b19" stroke-width="1.4"/>')
         else:
-            p.append(gear(x + 10, y)); tx = x + 26
-        p.append(f'<text class="e" x="{tx}" y="{y+4}">{LEGEND[k]}</text>')
-        x = tx + len(LEGEND[k]) * 5.4 + 30
+            p.append(gear(c, y))
+        p.append(f'<text class="e" x="{c}" y="{y+22}" text-anchor="middle">{LEGEND[k]}</text>')
+        x += w + 26
 
 
 def mid_arrows(p, segs):
@@ -104,8 +110,10 @@ def mid_arrows(p, segs):
         p.append(line(d))
 
 
-def svg_recommended(overlay=None):
+def svg_recommended(overlay=None, under=None, kinds=None):
     p = [ARROW]
+    if under:
+        under(p)  # final coordinates, drawn first so the flow sits on top
     ways_in(p, 170, [190, 220, 250, 237], ["Their format, their rules.", "Starbucks stores, other clients.", "Smaller clients."])
     mid = len(p)  # everything after the ways in shifts left 20 to make room on the right
     p.append(cylinder(259.5, 141, 231, 158, "Job records", ["One record per request.", "Contract guardrails added.",
@@ -121,17 +129,17 @@ def svg_recommended(overlay=None):
     p.append(line("M458,202 H300 V133", dash=True, end=False))  # joins the solid arrow; one arrowhead only
     p.append(store(295, 378, 160, 54, "Contracts", "Maintained elsewhere, for now.", False))
     p.append(line("M375,378 V312"))
-    p.append('<text class="e" x="384" y="340">Checked before</text><text class="e" x="384" y="354">work assigned.</text>')
-    p.append(line("M490,168 H525 V130 H578"))
-    p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, routes."))
-    p.append(line("M740,130 H788"))
-    p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
-    p.append(line("M870,100 V74 H458 V132"))  # lowered toward dispatch and onsite (John, 2026-11-13)
-    mid_arrows(p, ["M870,92 V84", "M775,74 H765", "M565,74 H555"])
-    p.append('<path d="M660,100 V87 V74" fill="none" stroke="#444" stroke-width="1.3" marker-mid="url(#ar)"/>')
-    p.append('<text class="e" x="645" y="66" text-anchor="middle">Updates the record.</text>')
+    p.append('<text class="e" x="390" y="340">Checked before</text><text class="e" x="390" y="354">work assigned.</text>')
+    p.append(line("M490,168 H525 V140 H578"))
+    p.append(box(580, 110, 160, 60, "Dispatch", "People, parts, routes."))
+    p.append(line("M740,140 H788"))
+    p.append(box(790, 110, 160, 60, "Onsite", "Tech analysis, repair."))
+    p.append(line("M870,110 V88 H458 V132"))  # lowered toward dispatch and onsite (John, 2026-11-13)
+    mid_arrows(p, ["M870,103 V96", "M775,88 H765", "M565,88 H555"])
+    p.append('<path d="M660,110 V99 V88" fill="none" stroke="#444" stroke-width="1.3" marker-mid="url(#ar)"/>')
+    p.append('<text class="e" x="765" y="101" text-anchor="middle">Updates the record.</text>')
     p.append(line("M490,262 H538"))
-    p.append('<text class="e" x="494" y="254" style="font-size:10px">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
+    p.append('<text class="e" x="494" y="246" style="font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
     p.append(box(540, 220, 140, 84, "Billing", ["Accepted work", "pre-matched to client."]))
     p.append(line("M680,262 H698"))
     p.append(stack(700, 220, 145, 84, 6, "#fff", "#cfc9bf"))
@@ -146,16 +154,16 @@ def svg_recommended(overlay=None):
     # override anything but the rails; billing sees only what fails the check)
     p.append(human(385, 302, "Coordinator"))  # right of the contracts arrow
     p.append(human(318, 47, "Client"))
-    p.append(human(650, 150, "Dispatcher"))
-    p.append(human(880, 150, "Tech"))
+    p.append(human(650, 160, "Dispatcher"))
+    p.append(human(880, 160, "Tech"))
     p.append(human(555, 296, "Controller"))
     p.append(human(752, 296, "Controller"))  # invoicing, right of the contracts arrow
     p.append(human(872, 296, "Controller"))
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
     if overlay:
         overlay(p)  # final coordinates: after the group's -20 shift
-    legend(p, ["human", "step"] + (["gear"] if overlay else []))
-    return f'<svg class="fig" viewBox="-2 -2 962 472" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
+    legend(p, kinds or ["human", "step"] + (["gear"] if overlay else []))
+    return f'<svg class="fig" viewBox="-2 -2 962 504" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
 
 
 def svg_current():
@@ -179,7 +187,7 @@ def svg_current():
     p.append(line("M482,168 H515 V130 H550"))
     p.append(manual(552, 84, 180, 92, "Dispatch: Tony", "One person, his own phone."))
     p.append(line("M732,118 H788"))
-    p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
+    p.append(box(790, 110, 160, 60, "Onsite", "Tech analysis, repair."))
     p.append(human(897, 90, "Tech"))  # human in the loop (John, 2026-11-13)
     p.append(line("M790,145 H734"))
     p.append('<text class="e" x="760" y="192" text-anchor="middle" style="fill:#9a5a00">Texts Tony from a personal phone.</text>')
@@ -211,27 +219,44 @@ def svg_current():
     p.append(line("M560,405 H520 V354 H240 V342"))
     p.append('<text class="e" x="334" y="349" style="fill:#9a5a00">Rework: back to the coordinators.</text>')
     legend(p, ["human", "manual", "step"])
-    return f'<svg class="fig" viewBox="-2 -2 962 472" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
+    return f'<svg class="fig" viewBox="-2 -2 962 504" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
 
 
 
 def svg_opportunities():
     """Page 3: the recommended flow with its improvement opportunities on top. A black gear marks LLM-assisted
     automation or an application benefit, with a short line of what it does (John, 2026-11-13)."""
-    def add(p):
+    return svg_recommended(gears_overlay)
+
+
+def svg_application():
+    """Page 4: page 3 with the application's three screens under it, a box tree whose edges touch (John, 2026-11-13).
+    1 Coordinator workspace: the job record, guardrails and approvals. 2 Dispatch and the field app. 3 Controller
+    queue: billing, invoicing, collections. Requests come in from the left, contracts from below, the client above."""
+    def screens(p):
+        for (x0, y0, x1, y1), fill, (lx, ly), lines in SCREENS:
+            p.append(f'<rect x="{x0}" y="{y0}" width="{x1-x0}" height="{y1-y0}" fill="{fill}" stroke="#1c1b19" stroke-width="1.6"/>')
+            for i, t in enumerate(lines):
+                p.append(f'<text class="k" x="{lx}" y="{ly+i*12}" style="fill:#1c1b19;font-size:9.5px">{t}</text>')
+    return svg_recommended(gears_overlay, under=screens, kinds=["screen", "human", "step", "gear"])
+
+
+# ((x0, y0, x1, y1), fill, label at, label lines): the screens, final coordinates; edges touch
+SCREENS = [
+    ((185, 72, 510, 362), "#f7f3ec", (193, 87), ["1  COORDINATOR", "WORKSPACE"]),
+    ((510, 72, 958, 196), "#f1f0ec", (860, 87), ["2  DISPATCH", "AND FIELD APP"]),
+    ((510, 196, 958, 362), "#f4efe6", (860, 340), ["3  CONTROLLER", "QUEUE"]),
+]
+
+
+def gears_overlay(p):
+    if True:
         # make room for two gears: lift "On Close." above its gear, move "Checked before" clear of its gear
-        p.append('<rect x="470" y="243" width="50" height="15" fill="#fff"/>'
-                 '<text class="e" x="474" y="246" style="font-size:10px">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">'
-                 'Close</tspan>.</text>')
-        p.append('<rect x="361" y="329" width="80" height="30" fill="#fff"/>'
-                 '<text class="e" x="338" y="350" text-anchor="end">Checked before</text>'
-                 '<text class="e" x="338" y="363" text-anchor="end">work assigned.</text>')
         for cx, cy, lines, anchor, tx, ty in GEARS:
             p.append(gear(cx, cy))
             for i, t in enumerate(lines):
                 p.append(f'<text x="{tx}" y="{ty+i*10.8}" text-anchor="{anchor}" '
                          f'style="font-size:9.8px;font-weight:600;fill:#1c1b19;paint-order:stroke;stroke:#fff;stroke-width:3px">{t}</text>')
-    return svg_recommended(add)
 
 
 # (gear x, gear y, text lines, anchor, text x, text y): final coordinates on the recommended drawing
@@ -240,9 +265,9 @@ GEARS = [
     (204, 221, [], "middle", 204, 0),   # Emails
     (204, 277, ["Auto draft job", "records from source."], "start", 194, 304),   # FacilIT; one caption for the column
     (489, 262, ["Auto push", "to queue."], "middle", 489, 284),
-    (505, 74, ["One way update flow keeps", "everyone on same page."], "middle", 505, 96),
-    (355, 346, ["Auto provide contract guardrails", "before work begins."], "start", 368, 344),
-    (715, 360, ["Auto draft invoice", "in required format."], "start", 728, 358),
+    (505, 88, ["One way update flow keeps", "everyone on same page."], "middle", 494, 108),
+    (355, 346, ["Auto provide contract", "guardrails before work begins."], "end", 342, 344),
+    (715, 386, ["Auto draft invoice", "in required format."], "start", 728, 384),
 ]
 
 
@@ -273,6 +298,10 @@ PAGES = [  # current first, then recommended (John, 2026-11-13)
      "By centralizing the source of truth for a given request, our goal is to provide real-time visibility to all "
      "available information relevant to ideal human decision making, and help prevent delays, disputes, rework and "
      "waste.", svg_opportunities),
+    ("Application Surface",
+     "Three screens carry the recommended flow. The coordinator workspace holds the job record, its contract "
+     "guardrails and approvals; dispatch and the field app work from the same record in real time; the controller "
+     "queue takes accepted work through billing, invoicing and collections.", svg_application),
 ]
 pdfs = []
 with sync_playwright() as pw:
