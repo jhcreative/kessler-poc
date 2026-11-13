@@ -96,7 +96,7 @@ def svg_recommended():
     p.append(line("M458,202 H300 V140", dash=True, end=False))  # joins the solid arrow; one arrowhead only
     p.append(store(295, 378, 160, 54, "Contracts", "Maintained elsewhere, for now.", False))
     p.append(line("M375,378 V306"))
-    p.append('<text class="e" x="384" y="340">Read-only: applied</text><text class="e" x="384" y="354">to each request.</text>')
+    p.append('<text class="e" x="384" y="340">Checked before</text><text class="e" x="384" y="354">work assigned.</text>')
     p.append(line("M480,168 H525 V130 H578"))
     p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, routes."))
     p.append(line("M740,130 H788"))
@@ -113,7 +113,7 @@ def svg_recommended():
     p.append(box(685, 232, 155, 60, "Invoicing", ["Multiple client formats,", "from the contract."]))
     # contracts also feed invoicing: each client's format, read-only
     p.append(line("M455,405 H762 V294"))
-    p.append('<text class="e" x="560" y="398">Read-only: each client\'s invoice format.</text>')
+    p.append('<text class="e" x="560" y="398">Client specific invoice templating.</text>')
     p.append(line("M840,262 H863"))
     p.append(box(865, 232, 105, 60, "Collections", "Aging, disputes."))
     # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
@@ -158,22 +158,21 @@ def svg_current():
     mid_arrows(p, ["M642,76 V66", "M570,40 H560"])
     p.append('<text class="e" x="560" y="32" text-anchor="middle" style="fill:#9a5a00">Tony updates the record by hand.</text>')
     p.append(line("M490,262 H531"))
-    p.append('<text class="e" x="493" y="243" style="font-size:10px">Pulled</text><text class="e" x="493" y="255" style="font-size:10px">by hand.</text>')
+    p.append('<text class="e" x="493" y="255" style="font-size:10px">By hand.</text>')
     p.append(manual(533, 220, 134, 84, "Billing: Marcee", ["Reconciles finished", "work to contracts,", "PO numbers."]))
     p.append(line("M667,262 H685"))
     p.append(stack(687, 220, 145, 84, 14, "#eadbc4", "#1c1b19"))
     p.append(manual(687, 220, 145, 84, "Invoicing: Marcee", ["Multiple client", "formats, each", "by hand."]))
     p.append(line("M840,262 H853"))
     p.append(box(855, 228, 95, 70, "Collections", ["Disputes", "written off."]))
-    p.append(store(560, 378, 190, 54, "Contracts, POs", "In files and people's heads.", True))
+    p.append(store(560, 378, 190, 54, "Contracts, POs", "Files, Sheets, tribal knowledge.", True))
     p.append(line("M596,378 V306"))
     p.append(line("M730,378 V306"))
-    p.append('<text class="e" x="760" y="398" style="fill:#9a5a00">Checked by hand,</text>'
-             '<text class="e" x="760" y="412" style="fill:#9a5a00">after the work.</text>')
+    p.append('<text class="e" x="760" y="405" style="fill:#9a5a00">After work complete.</text>')
     p.append(human(0, 350, "Role"))
     p.append('<text class="e" x="64" y="364">Human in the loop: a person reviews or decides in a step.</text>')
     p.append('<rect x="0" y="380" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'
-             '<text class="e" x="34" y="392">Manual junction: a person moves the request by hand.</text>'
+             '<text class="e" x="34" y="392">Manual junction: Human makes multiple system decisions.</text>'
              '<rect x="0" y="404" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
              '<rect x="0" y="404" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="416">A step in a system.</text>')
     return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
