@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Landscape page 1 (11 x 8.5): our high-level understanding, one request's flow, left to right (John, 2026-11-13).
-Writes _landscape-1.html (underscore: the portrait assembler skips it), renders it, and puts it in front of the
+"""Landscape pages (11 x 8.5), left to right (John, 2026-11-13): 1 the recommended request flow, 2 the current one.
+Writes _landscape-N.html (underscore: the portrait assembler skips it), renders it, and puts it in front of the
 portrait deck as ../jahnel-poc-flows.pdf. A flow diagram, not system architecture: no vendors or tools on it."""
 import io, sys
 from pathlib import Path
@@ -14,48 +14,66 @@ HERE = Path(__file__).resolve().parent
 
 
 def box(x, y, w, h, name, sub, dark=False):
-    fill, stroke, col = ("#1c1b19", "#1c1b19", ' style="fill:#fff"') if dark else ("#fff", "#9a968f", "")
-    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{fill}" stroke="{stroke}" stroke-width="1.3"/>'
-            f'<rect x="{x}" y="{y}" width="5" height="{h}" rx="2" fill="#F7941E"/>'
-            f'<text class="h" x="{x+16}" y="{y+h/2-3}" style="font-weight:700;font-size:14.5px{";fill:#fff" if dark else ""}">{name}</text>'
-            f'<text class="s" x="{x+16}" y="{y+h/2+14}" style="font-size:11px{";fill:#fff" if dark else ""}">{sub}</text>')
+    """A step: bold name, then one or more short sentence-case lines."""
+    subs = [sub] if isinstance(sub, str) else sub
+    fill, stroke = ("#1c1b19", "#1c1b19") if dark else ("#fff", "#9a968f")
+    top = y + h / 2 - 3 - 7 * (len(subs) - 1)
+    out = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{fill}" stroke="{stroke}" stroke-width="1.3"/>',
+           f'<rect x="{x}" y="{y}" width="5" height="{h}" rx="2" fill="#F7941E"/>',
+           f'<text class="h" x="{x+16}" y="{top}" style="font-weight:700;font-size:14.5px{";fill:#fff" if dark else ""}">{name}</text>']
+    for i, t in enumerate(subs):
+        out.append(f'<text class="s" x="{x+16}" y="{top+17+i*14}" style="font-size:11px{";fill:#fff" if dark else ""}">{t}</text>')
+    return "".join(out)
 
 
-def svg():
-    p = [ARROW]
+def cylinder(x, y, w, h, title, lines, cx):
+    p = [f'<path d="M{x},{y} a{w/2},10 0 0 1 {w},0 V{y+h} a{w/2},10 0 0 1 {-w},0 Z" fill="#fdf1e1" stroke="#F7941E" stroke-width="1.8"/>',
+         f'<path d="M{x},{y} a{w/2},10 0 0 0 {w},0" fill="none" stroke="#F7941E" stroke-width="1.8"/>',
+         f'<text class="h" x="{cx}" y="{y+42}" text-anchor="middle" style="font-weight:700;font-size:15px">{title}</text>']
+    for i, t in enumerate(lines):
+        p.append(f'<text class="s" x="{cx}" y="{y+62+i*14.5}" text-anchor="middle" style="font-size:11px">{t}</text>')
+    return "".join(p)
+
+
+def ways_in(p, w, ends, subs):
     p.append('<text class="k" x="0" y="96">WAYS IN</text>')
-    for i, (n, s) in enumerate([("Target portal", "Their format, their rules."), ("Emails", "Starbucks stores, other clients."),
-                                ("FacilIT", "Smaller clients.")]):
+    for i, (n, s) in enumerate(zip(["Target portal", "Emails", "FacilIT"], subs)):
         y = 110 + i * 82
-        p.append(box(0, y, 170, 60, n, s))
-        p.append(line(f"M170,{y+30} C212,{y+30} 212,{190+i*30} 248,{190+i*30}"))
+        p.append(box(0, y, w, 60, n, s))
+        cx = (w + ends[3]) / 2  # control points between the two ends, so the arrowhead points forward
+        p.append(line(f"M{w},{y+30} C{cx},{y+30} {cx},{ends[i]} {ends[3]},{ends[i]}"))
+
+
+def mid_arrows(p, segs):
+    """Short arrowhead-only segments that sit mid-line, so a feedback path reads in its direction."""
+    for d in segs:
+        p.append(line(d))
+
+
+def svg_recommended():
+    p = [ARROW]
+    ways_in(p, 170, [190, 220, 250, 248], ["Their format, their rules.", "Starbucks stores, other clients.", "Smaller clients."])
     mid = len(p)  # everything after the ways in shifts left 20 to make room on the right
-    # job records
-    p.append('<path d="M270,148 a105,10 0 0 1 210,0 V292 a105,10 0 0 1 -210,0 Z" fill="#fdf1e1" stroke="#F7941E" stroke-width="1.8"/>'
-             '<path d="M270,148 a105,10 0 0 0 210,0" fill="none" stroke="#F7941E" stroke-width="1.8"/>')
-    p.append('<text class="h" x="360" y="190" text-anchor="middle" style="font-weight:700;font-size:15px">Job records</text>')
-    for i, t in enumerate(["One record per request.", "Contract guardrails", "applied to request.",
-                           "Maintains record state", "from Intake to Collections."]):
-        p.append(f'<text class="s" x="360" y="{210+i*14.5}" text-anchor="middle" style="font-size:11px">{t}</text>')
-    # inside the record: onsite feedback enters, billing exits
-    p.append(line("M458,154 V262 H478", dash=True))
-    # contracts, below, read-only into job records
+    p.append(cylinder(270, 148, 210, 144, "Job records", ["One record per request.", "Contract guardrails",
+                      "applied to request.", "Maintains record state", "from Intake to Collections."], 360))
+    # additional approvals: out of the record's top, back in, then on to dispatch (dotted inside, John 2026-11-13)
+    p.append(box(270, 62, 175, 50, "Additional approvals", "Client sign-off, over a cap."))
+    p.append(line("M300,140 V114"))
+    p.append(line("M410,112 V140"))
+    p.append(line("M410,158 V168 H478", dash=True))
+    # inside the record: updates enter, billing exits (a gap where the approval path crosses)
+    p.append(line("M458,154 V162 M458,174 V262 H478", dash=True))
     p.append(store(295, 378, 160, 54, "Contracts", "Maintained elsewhere, for now.", False))
     p.append(line("M375,378 V306"))
     p.append('<text class="e" x="384" y="340">Read-only: applied to</text><text class="e" x="384" y="354">this one request.</text>')
-    # dispatch, onsite (upper lane)
-    p.append(line("M480,190 H525 V130 H578"))
+    p.append(line("M480,168 H525 V130 H578"))
     p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, routes."))
     p.append(line("M740,130 H788"))
     p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
     p.append(line("M870,100 V40 H458 V136"))
-    # mid-line arrowheads make the feedback direction readable (John, 2026-11-13)
-    p.append(line("M870,76 V66"))      # up out of onsite
-    p.append(line("M775,40 H765"))     # left, onsite toward dispatch's join
-    p.append(line("M565,40 H555"))     # left, on toward the record
-    p.append('<path d="M660,100 V70 V40" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-mid="url(#ar)"/>')  # dispatch reports back into the record too (John, 2026-11-13)
+    mid_arrows(p, ["M870,76 V66", "M775,40 H765", "M565,40 H555"])
+    p.append('<path d="M660,100 V70 V40" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-mid="url(#ar)"/>')
     p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
-    # billing (lower lane), only after onsite returns
     p.append(line("M480,262 H538"))
     p.append('<text class="e" x="485" y="243">Only after</text><text class="e" x="485" y="255">onsite.</text>')
     p.append(box(540, 232, 120, 60, "Billing", "Matched to the job."))
@@ -67,37 +85,83 @@ def svg():
     return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
+def svg_current():
+    """Today, from round 4: coordinators re-key and update by hand; the tech texts Tony; Tony updates the record;
+    Marcee reconciles finished work with contracts and PO numbers before invoicing. No contract reaches the record."""
+    p = [ARROW]
+    ways_in(p, 150, [140, 222, 304, 178], ["Their format, their rules.", "Stores, other clients.", "Smaller clients."])
+    p.append(box(180, 110, 120, 224, "Coordinators", ["Re-key every", "request by hand.", "", "Update the", "record by hand."]))
+    p.append(line("M300,222 H328"))
+    p.append(cylinder(330, 148, 160, 144, "Job records", ["One notes field.", "Detail lost", "in the handling.",
+                      "No contract guardrails.", "State seen by no one."], 403))
+    p.append(box(300, 62, 170, 50, "Additional approvals", "Often chased after the work."))
+    p.append(line("M340,140 V114"))
+    p.append(line("M440,112 V140"))
+    p.append(line("M440,158 V168 H488", dash=True))
+    p.append(line("M478,152 V162 M478,174 V262 H488", dash=True))
+    p.append(line("M490,168 H520 V130 H558"))
+    p.append(box(560, 100, 165, 60, "Dispatch: Tony", "One person, his own phone."))
+    p.append(line("M725,118 H788"))
+    p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
+    p.append(line("M790,145 H727"))
+    p.append('<text class="e" x="757" y="180" text-anchor="middle" style="fill:#9a5a00">Texts Tony from a personal phone.</text>')
+    p.append(line("M642,100 V40 H478 V136"))
+    mid_arrows(p, ["M642,76 V66", "M570,40 H560"])
+    p.append('<text class="e" x="560" y="32" text-anchor="middle" style="fill:#9a5a00">Tony updates the record by hand.</text>')
+    p.append(line("M490,262 H538"))
+    p.append('<text class="e" x="494" y="243">Pulled</text><text class="e" x="494" y="255">by hand.</text>')
+    p.append(box(540, 228, 145, 70, "Billing: Marcee", ["Reconciles finished work", "to contracts, PO numbers."]))
+    p.append(line("M685,262 H703"))
+    p.append(box(705, 228, 125, 70, "Invoicing", ["Multiple client", "formats."]))
+    p.append(line("M830,262 H848"))
+    p.append(box(850, 228, 100, 70, "Collections", ["Disputes", "written off."]))
+    p.append(store(535, 378, 165, 54, "Contracts, POs", "In files and people's heads.", True))
+    p.append(line("M612,378 V300"))
+    p.append('<text class="e" x="620" y="340">Checked only</text><text class="e" x="620" y="354">before invoicing.</text>')
+    return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
+
+
 LAND = """<style>
   .sheet{width:11in;height:8.5in;padding:0.55in 0.75in 0.45in;}
   @media print{@page{size:11in 8.5in;margin:0;}}
   .title{margin-top:20px;}
 </style>"""
 
-html = f"""<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>OneFamilyServices: how one request flows</title>
+PAGES = [
+    ("Recommended Request Flow",
+     "Every request lands in one job record, which pulls its contract read-only and applies it to that request. When a "
+     "job needs more approval, the record sends it out and takes it back before dispatch. Dispatch and onsite update the "
+     "record, and only then does it move on to billing, invoicing and collections.", svg_recommended),
+    ("Current Request Flow",
+     "Today coordinators re-key every request and update the record by hand. The tech texts Tony from a personal phone, "
+     "and Tony updates the record. No contract reaches the record, so Marcee reconciles finished work with contracts and "
+     "PO numbers before she can invoice.", svg_current),
+]
+pdfs = []
+with sync_playwright() as pw:
+    b = pw.chromium.launch(); pg = b.new_page()
+    for i, (title, dek, fig) in enumerate(PAGES, 1):
+        src = HERE / f"_landscape-{i}.html"
+        src.write_text(f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>OneFamilyServices: {title}</title>
 <link rel="stylesheet" href="common.css"><link rel="stylesheet" href="components.css">{STYLE}{LAND}</head>
 <body><div class="sheet">
 {MASTHEAD}
-<h1 class="title">How One Request Flows</h1>
+<h1 class="title">{title}</h1>
 <div class="meta">{META}</div>
-<p class="dek">Every request lands in one job record, which pulls its contract read-only and applies it to that request.
-The record sends the job to dispatch and onsite, takes back what the site found, and only then moves it on to billing, invoicing and collections.</p>
-{svg()}
-<div class="folio">1</div>
+<p class="dek">{dek}</p>
+{fig()}
+<div class="folio">{i} / {len(PAGES)}</div>
 </div></body></html>
-"""
-src = HERE / "_landscape-1.html"
-src.write_text(html)
-with sync_playwright() as pw:
-    b = pw.chromium.launch(); pg = b.new_page()
-    pg.goto(src.as_uri()); pg.wait_for_load_state("networkidle")
-    land = pg.pdf(width="11in", height="8.5in", print_background=True, prefer_css_page_size=False)
+""")
+        pg.goto(src.as_uri()); pg.wait_for_load_state("networkidle")
+        pdfs.append(pg.pdf(width="11in", height="8.5in", print_background=True))
     b.close()
-# Page one alone for now (John, 2026-11-13); --with-rest puts it in front of the portrait deck.
+# The landscape pages alone for now (John, 2026-11-13); --with-rest puts them in front of the portrait deck.
 rest = "--with-rest" in sys.argv
 out = HERE.parent / ("jahnel-poc-flows.pdf" if rest else "jahnel-poc-understanding.pdf")
 w = PdfWriter()
-for pdf in [PdfReader(io.BytesIO(land))] + ([PdfReader(str(HERE.parent / "_portrait.pdf"))] if rest else []):
+for pdf in [PdfReader(io.BytesIO(x)) for x in pdfs] + ([PdfReader(str(HERE.parent / "_portrait.pdf"))] if rest else []):
     for page in pdf.pages:
         w.add_page(page)
 with open(out, "wb") as f:
