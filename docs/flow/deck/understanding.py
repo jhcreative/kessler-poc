@@ -78,7 +78,7 @@ LEGEND = {
     "manual": "Manual junction: Human makes multiple system decisions.",
     "step": "Step in the system.",
     "gear": "Automation or application benefit.",
-    "screen": "Screen in the application.",
+    "screen": "View in the application.",
 }
 
 
@@ -97,7 +97,7 @@ def legend(p, kinds, y=476):
             p.append(f'<rect x="{c-13}" y="{y-8}" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
                      f'<rect x="{c-13}" y="{y-8}" width="4" height="16" fill="#F7941E"/>')
         elif k == "screen":
-            p.append(f'<rect x="{c-13}" y="{y-8}" width="26" height="16" fill="#f4efe6" stroke="#1c1b19" stroke-width="1.4"/>')
+            p.append(f'<rect x="{c-13}" y="{y-8}" width="26" height="16" fill="#f7ecdc" stroke="#1c1b19" stroke-width="1.6"/>')
         else:
             p.append(gear(c, y))
         p.append(f'<text class="e" x="{c}" y="{y+22}" text-anchor="middle">{LEGEND[k]}</text>')
@@ -110,7 +110,7 @@ def mid_arrows(p, segs):
         p.append(line(d))
 
 
-def svg_recommended(overlay=None, under=None, kinds=None):
+def svg_recommended(overlay=None, under=None, kinds=None, top=None):
     p = [ARROW]
     if under:
         under(p)  # final coordinates, drawn first so the flow sits on top
@@ -162,6 +162,8 @@ def svg_recommended(overlay=None, under=None, kinds=None):
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
     if overlay:
         overlay(p)  # final coordinates: after the group's -20 shift
+    if top:
+        top(p)  # final coordinates, over everything but the key
     legend(p, kinds or ["human", "step"] + (["gear"] if overlay else []))
     return f'<svg class="fig" viewBox="-2 -2 962 504" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
 
@@ -230,22 +232,27 @@ def svg_opportunities():
 
 
 def svg_application():
-    """Page 4: page 3 with the application's three screens under it, a box tree whose edges touch (John, 2026-11-13).
-    1 Coordinator workspace: the job record, guardrails and approvals. 2 Dispatch and the field app. 3 Controller
-    queue: billing, invoicing, collections. Requests come in from the left, contracts from below, the client above."""
-    def screens(p):
-        for (x0, y0, x1, y1), fill, (lx, ly), lines in SCREENS:
-            p.append(f'<rect x="{x0}" y="{y0}" width="{x1-x0}" height="{y1-y0}" fill="{fill}" stroke="#1c1b19" stroke-width="1.6"/>')
-            for i, t in enumerate(lines):
-                p.append(f'<text class="k" x="{lx}" y="{ly+i*12}" style="fill:#1c1b19;font-size:9.5px">{t}</text>')
-    return svg_recommended(gears_overlay, under=screens, kinds=["screen", "human", "step", "gear"])
+    """Page 4: the application's three views laid over the recommended flow, a box tree whose edges touch
+    (John, 2026-11-13). The shading sits OVER the workflow so the flow fades back and the three views read first;
+    each view is labelled by a large number in a white box. Requests come in from the left, contracts from below,
+    the client above, all left at full strength outside the views."""
+    def views(p):
+        for (x0, y0, x1, y1), fill, n, name in SCREENS:
+            p.append(f'<rect x="{x0}" y="{y0}" width="{x1-x0}" height="{y1-y0}" fill="{fill}" fill-opacity="0.82" '
+                     f'stroke="#1c1b19" stroke-width="2"/>')
+            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+            w = len(name) * 8.6 + 64
+            p.append(f'<rect x="{cx-w/2}" y="{cy-24}" width="{w}" height="48" rx="8" fill="#fff" stroke="#1c1b19" stroke-width="1.6"/>'
+                     f'<text x="{cx-w/2+16}" y="{cy+12}" style="font-size:34px;font-weight:700;fill:#D07200">{n}</text>'
+                     f'<text x="{cx-w/2+46}" y="{cy+6}" style="font-size:16px;font-weight:700;fill:#1c1b19">{name}</text>')
+    return svg_recommended(gears_overlay, top=views, kinds=["screen", "human", "step", "gear"])
 
 
-# ((x0, y0, x1, y1), fill, label at, label lines): the screens, final coordinates; edges touch
+# ((x0, y0, x1, y1), fill, number, name): the views, final coordinates; edges touch
 SCREENS = [
-    ((185, 72, 510, 362), "#f7f3ec", (193, 87), ["1  COORDINATOR", "WORKSPACE"]),
-    ((510, 72, 958, 196), "#f1f0ec", (860, 87), ["2  DISPATCH", "AND FIELD APP"]),
-    ((510, 196, 958, 362), "#f4efe6", (860, 340), ["3  CONTROLLER", "QUEUE"]),
+    ((185, 72, 510, 362), "#f7ecdc", "1", "Coordinator workspace"),
+    ((510, 72, 958, 196), "#eceae4", "2", "Dispatch and field app"),
+    ((510, 196, 958, 362), "#f1e6d4", "3", "Controller queue"),
 ]
 
 
@@ -299,9 +306,10 @@ PAGES = [  # current first, then recommended (John, 2026-11-13)
      "available information relevant to ideal human decision making, and help prevent delays, disputes, rework and "
      "waste.", svg_opportunities),
     ("Application Surface",
-     "Three screens carry the recommended flow. The coordinator workspace holds the job record, its contract "
-     "guardrails and approvals; dispatch and the field app work from the same record in real time; the controller "
-     "queue takes accepted work through billing, invoicing and collections.", svg_application),
+     "The application has three views, numbered below: <b>1</b> the coordinator workspace, for the job record, its "
+     "contract guardrails and approvals; <b>2</b> dispatch and the field app, working from the same record in real "
+     "time; <b>3</b> the controller queue, taking accepted work through billing, invoicing and collections.",
+     svg_application),
 ]
 pdfs = []
 with sync_playwright() as pw:
