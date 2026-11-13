@@ -1,0 +1,89 @@
+# One request, start to cash: where it breaks today and what each wait costs. Data first.
+# John, 2026-11-13: "first impression needs to be flow of single request through a system where we can see the
+# brittle/missing parts and measure Cost of Delay ... multiple efficiencies adding up in your process over time -
+# not 'new master system that will fix everything'".
+# "today" lines are facts from round 4 (docs/meetings/2026-11-12-round-4-discovery.md). "measure" and "efficiency"
+# are the team's proposals; John rules on them. No invented figures: anything not from Dana is "to measure".
+
+flow: one-request
+version: draft-1
+date: 2026-11-13
+message: Efficiencies that add up over time, each measured by its Cost of Delay.
+
+across_every_step:
+  today: FieldDesk holds the truth but shows nobody the state of a request; there is no turnaround data.
+  so: none of the delays below is measured today. The first efficiency is the clock.
+
+path: [request arrives, intake, job record, qualified, estimation, dispatch, onsite, close, billing, invoice, paid]
+
+stores:
+  - {id: job-records, at: job record, today: "FieldDesk, detail in a notes field", state: brittle}
+  - {id: contracts, at: qualified, today: "missing: in people's heads", state: missing}
+  - {id: like-job-history, at: estimation, today: "missing: texts on personal phones", state: missing}
+  - {id: fleet, at: dispatch, today: "Samsara, on one person's phone", state: brittle}
+  - {id: quickbooks, at: invoice, today: re-keyed by hand, state: brittle}
+
+breaks:
+  - n: 1
+    at: intake
+    today: Requests re-keyed by hand from Target's portal, store emails and FacilIT into FieldDesk.
+    cost_of_delay: Every hour a request waits to reach a coordinator comes off the client's clock.
+    known: 3 people; 20,000 requests a quarter, about 300 a working day.
+    measure: Time from the client's request to a coordinator owning it.
+  - n: 2
+    at: job record
+    today: Detail goes into a notes field and is lost in the handling, the diagnosis, the coverage, the caps.
+    cost_of_delay: Each later step re-asks or guesses; rework, and decisions made without the facts.
+    known: Requests arrive accurate; the loss is in the handling (Dana).
+    measure: Jobs where a later step asks for something already received.
+  - n: 3
+    at: qualified
+    today: No gate. Caps and approval rules live in people's heads.
+    cost_of_delay: Work done without approval becomes a dispute, written off.
+    known: "$80K to $200K a year (Dana): $1,500 to $3,800 a week."
+    measure: Jobs over a cap with no approval on record.
+  - n: 4
+    at: estimation
+    today: Photos and summaries texted from personal phones; no history of like jobs.
+    cost_of_delay: An estimate can't be checked before the work starts.
+    known: Jobs run $2,000 to $50,000 (Dana).
+    measure: Estimate against final, by job type.
+  - n: 5
+    at: dispatch
+    today: One dispatcher on his personal phone, with Samsara; truck parts on a spreadsheet.
+    cost_of_delay: When he's out, dispatch waits; a missing part means a return visit.
+    known: A single point of failure.
+    measure: Return visits for parts; days dispatch runs without him.
+  - n: 6
+    at: onsite
+    today: The need for approval is found onsite and chased after the work.
+    cost_of_delay: The dispute in break 3, born here.
+    known: See break 3.
+    measure: Time from "needs approval" to approved.
+  - n: 7
+    at: close to billing
+    today: Completed work pulled from FieldDesk by hand; timing varies with volume.
+    cost_of_delay: Every day from close to invoice is a day the cash arrives late.
+    known: To measure.
+    measure: Days from close to invoice, times the job's value.
+  - n: 8
+    at: invoice
+    today: One person; about a dozen strict client formats; re-keyed into QuickBooks.
+    cost_of_delay: When she's out, invoices wait; a wrong format is a refused invoice.
+    known: A single point of failure.
+    measure: Invoices refused, and why.
+  - n: 9
+    at: paid
+    today: Aging in QuickBooks and a few spreadsheets; disputes surface after it's all done.
+    cost_of_delay: Written off.
+    known: See break 3.
+    measure: Disputes by cause.
+
+efficiencies:  # proposed order, by cost of delay; each ships alone and pays back alone; John rules on the order
+  - {n: 1, name: The clock, fixes: [all], does: "a state and a timestamp for every request at every step, from what's already entered", proves: every other measure}
+  - {n: 2, name: Contract guardrails, fixes: [3], does: "caps and approval rules attached when a request is qualified", proves: jobs over a cap with no approval}
+  - {n: 3, name: Approval in real time, fixes: [6], does: "the field flags it; dispatch re-plans; the coordinator starts approval", proves: time to approval}
+  - {n: 4, name: Typed fields for the notes, fixes: [2], does: "diagnosis, coverage and caps as fields every screen shares", proves: jobs re-asked}
+  - {n: 5, name: The check before the invoice, fixes: [7, 8, 9], does: "approval, signature, PO and cap checked before an invoice leaves", proves: "days to invoice; invoices refused"}
+  - {n: 6, name: One field app, fixes: [4, 5], does: "photos, estimate and signature on the job, not on a phone", proves: estimate against final}
+  - {n: 7, name: Every way in read into the record, fixes: [1], does: "Target's portal, store emails and FacilIT read into one record, not re-keyed", proves: time to a coordinator}

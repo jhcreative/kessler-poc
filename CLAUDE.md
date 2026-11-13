@@ -22,6 +22,11 @@ system: `~/jhc/jhc-agency`. Load `POLICIES.md` + your domain child file there at
 - **Synthetic data only**, unless John says otherwise; built the way the podcast pipeline's `fixtures_gen` builds
   test episodes.
 
+- **The message: efficiencies that add up, measured by Cost of Delay** (John, 2026-11-13). First impression is one
+  request flowing through the system, showing where it's brittle or missing and what each wait costs. Not "a new
+  master system that will fix everything." John: "multiple efficiencies adding up in your process over time."
+  Every page and the POC itself carry this.
+
 ## Standing owners
 
 | Area | Owner |

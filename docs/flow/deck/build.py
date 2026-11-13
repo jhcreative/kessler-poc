@@ -1,20 +1,28 @@
 #!/usr/bin/env python3
-"""Build the flows deck: the decision first, then flow 1 and flow 2, drawn from docs/flow/*.yaml.
+"""Build the flows deck: one request start to cash, what each wait costs, the efficiencies that add up, how the
+pieces connect, then flow 1 and flow 2. Source: docs/flow/*.yaml.
+
+Message (John, 2026-11-13): multiple efficiencies adding up over time, measured by Cost of Delay; not a new master
+system that will fix everything.
 
 Writes page-N.html beside this file on the JHC brand sheet (writer-brand-kit), then the assembler makes the PDF:
-    python3 build.py && python3 <kit>/assemble_report_pdf.py . -o ../jahnel-poc-flows-2026-11-12.pdf
-The diagrams are hand-placed SVG; the yaml files are the source of truth for every word in them.
+    python3 build.py && python3 <kit>/assemble_report_pdf.py . -o ../jahnel-poc-flows.pdf
+The diagrams are hand-placed SVG; the tables on pages 2 and 3 are read from one-request.yaml.
 """
+import html
 import shutil
 from pathlib import Path
 
+import yaml
+
 HERE = Path(__file__).resolve().parent
+ONE = yaml.safe_load((HERE.parent / "one-request.yaml").read_text())
 KIT = Path.home() / "jhc/jhc-agency/skills/product-ops/writer-brand-kit"
 TEMPLATE = Path.home() / "jhc/jhc-agency/skills/product-ops/proposal-writer/assets/page-one-template.html"
 
 src = TEMPLATE.read_text()
 MASTHEAD = src[src.index('<div class="masthead">'):src.index('<h1 class="title">')].strip()
-META = 'Discovery Report<span class="dot">&bull;</span>OneFamilyServices<span class="dot">&bull;</span>November 12, 2026'
+META = 'Discovery Report<span class="dot">&bull;</span>OneFamilyServices<span class="dot">&bull;</span>November 13, 2026'
 
 STYLE = """
 <style>
@@ -36,6 +44,11 @@ STYLE = """
   .answer p{font-size:10.6pt;}
   .src{font-family:'Fira Sans',sans-serif;font-size:8.2pt;color:var(--faint);margin:10px 0 0;}
   ul li{font-size:11pt;margin-bottom:4px;}
+  table.cod td{font-size:8.9pt;line-height:1.3;padding:6px 7px;}
+  table.cod th{padding:7px 7px;font-size:7.8pt;}
+  table.cod td.num{font-family:'Fira Sans',sans-serif;font-weight:700;color:#D07200;width:.25in;text-align:left;}
+  table.cod td.at{font-family:'Fira Sans',sans-serif;font-weight:600;font-size:8.8pt;}
+  table.cod td.k{font-family:'Fira Sans',sans-serif;font-size:8.6pt;}
 </style>"""
 
 ARROW = """<defs>
@@ -68,7 +81,159 @@ def line(d, orange=False, dash=False, end=True):
     return f'<path d="{d}" fill="none" stroke="{c}" stroke-width="1.3"{da}{m}/>'
 
 
-# ---------- Page 1: the decision ----------
+def store(x, y, w, h, name, today, missing):
+    stroke, fill, dash = ("#D07200", "#fff", ' stroke-dasharray="5 4"') if missing else ("#9a968f", "#faf8f4", "")
+    body = (f'<path d="M{x},{y+6} a{w/2},6 0 0 1 {w},0 V{y+h-6} a{w/2},6 0 0 1 {-w},0 Z" fill="{fill}" '
+            f'stroke="{stroke}" stroke-width="1.2"{dash}/>'
+            f'<path d="M{x},{y+6} a{w/2},6 0 0 0 {w},0" fill="none" stroke="{stroke}" stroke-width="1.2"{dash}/>')
+    return (body + f'<text class="h" x="{x+14}" y="{y+27}">{name}</text>'
+            f'<text class="e" x="{x+14}" y="{y+42}"{" style=\"fill:#9a5a00\"" if missing else ""}>{html.escape(today)}</text>')
+
+
+# ---------- Page 1: one request, start to cash ----------
+STAGES = [("Request arrives", "portal, email, FacilIT"), ("Intake", "into one record"), ("Job record", "every request"),
+          ("Qualified", "against its contract"), ("Estimation", "a range, from like jobs"),
+          ("Dispatch", "people, parts, trucks"), ("Onsite", "the tech at the site"), ("Close", "signed in the field"),
+          ("Billing", "matched to contract, PO"), ("Invoice", "in the client's format"), ("Paid", "or disputed")]
+BREAK_AT = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7.5, 8: 9, 9: 10}   # break n -> stage index (7.5: the hand-off)
+BREAK_SHORT = {
+    1: ("Re-keyed by hand into FieldDesk;", "3 people, about 300 a day"),
+    2: ("Detail lost in a notes field:", "diagnosis, coverage, caps"),
+    3: ("No gate: caps and approval rules", "live in people's heads"),
+    4: ("Photos texted from personal phones;", "no history of like jobs"),
+    5: ("One dispatcher, his own phone;", "truck parts on a spreadsheet"),
+    6: ("Approval found onsite,", "chased after the work"),
+    7: ("Completed work pulled by hand;", "timing varies with volume"),
+    8: ("One person, a dozen strict formats,", "re-keyed into QuickBooks"),
+    9: ("Disputes surface after it's done:", "$80K–$200K a year written off"),
+}
+STORE_AT = {"job-records": (2, "Job records"), "contracts": (3, "Contracts"), "like-job-history": (4, "Like-job history"),
+            "fleet": (5, "Fleet"), "quickbooks": (9, "QuickBooks")}
+
+
+def one_request_svg():
+    p = [ARROW]
+    X, W, H, STEP = 262, 176, 40, 62
+    for i, (name, sub) in enumerate(STAGES):
+        y = i * STEP
+        p.append(f'<rect x="{X}" y="{y}" width="{W}" height="{H}" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>')
+        p.append(f'<text class="h" x="{X+W/2}" y="{y+17}" text-anchor="middle">{name}</text>')
+        p.append(f'<text class="e" x="{X+W/2}" y="{y+32}" text-anchor="middle">{html.escape(sub)}</text>')
+        if i < len(STAGES) - 1:
+            p.append(line(f"M{X+W/2},{y+H} V{y+STEP-2}"))
+    for n, at in BREAK_AT.items():
+        cy = at * STEP + 20 if at == int(at) else int(at) * STEP + H + (STEP - H) / 2
+        p.append(f'<line x1="232" y1="{cy}" x2="{X if at == int(at) else X+W/2}" y2="{cy}" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2"/>')
+        p.append(f'<circle cx="236" cy="{cy}" r="10" fill="#D07200"/><text x="236" y="{cy+4}" text-anchor="middle" '
+                 f'style="font-weight:700;font-size:11px;fill:#fff">{n}</text>')
+        a, b = BREAK_SHORT[n]
+        p.append(f'<text class="s" x="218" y="{cy-3}" text-anchor="end">{html.escape(a)}</text>'
+                 f'<text class="s" x="218" y="{cy+12}" text-anchor="end">{html.escape(b)}</text>')
+    for s in ONE["stores"]:
+        i, name = STORE_AT[s["id"]]
+        cy = i * STEP + 20
+        missing = s["state"] == "missing"
+        p.append(f'<line x1="{X+W}" y1="{cy}" x2="478" y2="{cy}" stroke="{"#D07200" if missing else "#9a968f"}" '
+                 f'stroke-width="1.2"{" stroke-dasharray=\"4 3\"" if missing else ""}/>')
+        p.append(store(480, cy - 24, 200, 48, name, "today: " + s["today"], missing))
+    ly = 700
+    p.append(f'<circle cx="8" cy="{ly-4}" r="7" fill="#D07200"/><text class="e" x="22" y="{ly}">where it breaks or waits today</text>')
+    p.append(store(250, ly - 16, 34, 22, "", "", True))
+    p.append(f'<text class="e" x="292" y="{ly}">a store that is missing today</text>')
+    return f'<svg class="fig" viewBox="-2 -2 684 712" xmlns="http://www.w3.org/2000/svg">{"".join(p)}</svg>'
+
+
+PAGE_ONE = f"""
+<h1 class="title">One Request, Start to Cash</h1>
+<div class="meta">{META}</div>
+<p class="dek">Each numbered mark is where a request breaks or waits today, and each wait has a cost. The work is a
+run of small efficiencies, one per break, that add up over time.</p>
+{one_request_svg()}
+"""
+
+
+# ---------- Page 2: what each wait costs ----------
+def cod_rows():
+    rows = []
+    for b in ONE["breaks"]:
+        rows.append(f'<tr><td class="num">{b["n"]}</td><td class="at">{html.escape(b["at"].capitalize())}</td>'
+                    f'<td>{html.escape(b["today"])}</td><td>{html.escape(b["cost_of_delay"])}</td>'
+                    f'<td class="k">{html.escape(b["known"])}</td><td class="k">{html.escape(b["measure"])}</td></tr>')
+    return "\n".join(rows)
+
+
+PAGE_COD = f"""
+<h1 class="title">What Each Wait Costs</h1>
+<div class="meta">{META}</div>
+<table class="flow cod">
+<thead><tr><th></th><th>Where</th><th>Today</th><th>Cost of delay</th><th>What we know</th><th>We'd measure</th></tr></thead>
+<tbody>
+{cod_rows()}
+</tbody>
+</table>
+<div class="answer"><p class="q">Nobody can measure any of this today</p>
+<p>{html.escape(ONE["across_every_step"]["today"])} So the first efficiency is the clock: a state and a timestamp for
+every request at every step. Every number above that reads "to measure" starts there.</p></div>
+<p class="src">Source: docs/flow/one-request.yaml. Figures are Dana's; the weekly range is her yearly figure over 52 weeks.</p>
+"""
+
+
+# ---------- Page 3: efficiencies that add up ----------
+def efficiencies_svg():
+    import textwrap
+    p = [ARROW]
+    C0, CW = 338, 38
+    labels = ["intake", "record", "gate", "estimate", "dispatch", "onsite", "close", "invoice", "paid"]
+    for j in range(9):
+        cx = C0 + j * CW + CW / 2
+        p.append(f'<circle cx="{cx}" cy="12" r="10" fill="#D07200"/><text x="{cx}" y="16" text-anchor="middle" '
+                 f'style="font-weight:700;font-size:11px;fill:#fff">{j+1}</text>')
+        p.append(f'<text class="e" x="{cx}" y="38" text-anchor="middle" style="font-size:8.5px">{labels[j]}</text>')
+    p.append('<text class="k" x="0" y="16">EACH STEP SHIPS ALONE</text><text class="k" x="0" y="32">AND PAYS BACK ALONE</text>')
+    y, fixed = 52, set()
+    for e in ONE["efficiencies"]:
+        does = textwrap.wrap(e["does"], 50)
+        h = 34 + 14 * len(does) + 6
+        p.append(f'<line x1="0" y1="{y}" x2="680" y2="{y}" stroke="#e7e3dc"/>')
+        p.append(f'<text x="0" y="{y+19}"><tspan class="n">{e["n"]}</tspan><tspan class="h" dx="8">{html.escape(e["name"])}</tspan></text>')
+        for k, ln in enumerate(does):
+            p.append(f'<text class="s" x="18" y="{y+36+k*14}">{html.escape(ln)}</text>')
+        p.append(f'<text class="e" x="18" y="{y+36+len(does)*14}">proves: {html.escape(e["proves"])}</text>')
+        new = set(range(1, 10)) if e["fixes"] == ["all"] else set(e["fixes"])
+        cy = y + h / 2
+        for j in range(1, 10):
+            cx = C0 + (j - 1) * CW + CW / 2
+            if e["fixes"] == ["all"]:
+                p.append(f'<circle cx="{cx}" cy="{cy}" r="8" fill="none" stroke="#D07200" stroke-width="2"/>')
+            elif j in new:
+                p.append(f'<circle cx="{cx}" cy="{cy}" r="9" fill="#D07200"/>')
+            elif j in fixed:
+                p.append(f'<circle cx="{cx}" cy="{cy}" r="9" fill="#fdf1e1" stroke="#F7941E" stroke-width="1"/>')
+            else:
+                p.append(f'<circle cx="{cx}" cy="{cy}" r="6" fill="none" stroke="#cfc9bf" stroke-width="1.2"/>')
+        if e["fixes"] != ["all"]:
+            fixed |= new
+        y += h
+    p.append(f'<line x1="0" y1="{y}" x2="680" y2="{y}" stroke="#e7e3dc"/>')
+    ly = y + 26
+    p.append(f'<circle cx="10" cy="{ly-4}" r="8" fill="none" stroke="#D07200" stroke-width="2"/><text class="e" x="24" y="{ly}">measured</text>'
+             f'<circle cx="98" cy="{ly-4}" r="8" fill="#D07200"/><text class="e" x="112" y="{ly}">fixed by this step</text>'
+             f'<circle cx="236" cy="{ly-4}" r="8" fill="#fdf1e1" stroke="#F7941E"/><text class="e" x="250" y="{ly}">fixed by an earlier step</text>'
+             f'<circle cx="398" cy="{ly-4}" r="6" fill="none" stroke="#cfc9bf" stroke-width="1.2"/><text class="e" x="410" y="{ly}">measured, not yet fixed</text>')
+    return f'<svg class="fig" viewBox="-2 -2 684 {ly+8}" xmlns="http://www.w3.org/2000/svg">{"".join(p)}</svg>'
+
+
+PAGE_ADD = f"""
+<h1 class="title">Efficiencies That Add Up</h1>
+<div class="meta">{META}</div>
+<p class="dek">No single system replaces the business. Each step fixes one or two breaks, ships on its own, and shows
+its payback on the clock from step 1. The order is by cost of delay, and it moves when the clock says so.</p>
+{efficiencies_svg()}
+<p class="src">Source: docs/flow/one-request.yaml. The order is proposed; it waits on the clock's first numbers.</p>
+"""
+
+
+# ---------- Page 4: how the pieces connect ----------
 def harness_svg():
     p = [ARROW]
     p.append('<text class="k" x="0" y="12">WAYS IN</text><text class="k" x="680" y="12" text-anchor="end">SYSTEMS AND THE FIELD</text>')
@@ -76,7 +241,7 @@ def harness_svg():
             ("Client emails", "and attachments"), ("FacilIT", "smaller clients")]
     right = [("FieldDesk", "today's records"), ("QuickBooks", "invoices and aging"),
              ("Samsara", "fleet and drivers"), ("Field app", "ours, for every tech")]
-    cy = 175
+    cy = 136
     for i, (t, sub) in enumerate(left):
         y = 26 + i * 76
         p.append(f'<rect x="0" y="{y}" width="168" height="58" rx="5" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1"/>')
@@ -91,19 +256,22 @@ def harness_svg():
         p.append(f'<text class="h" x="526" y="{y+25}"{col}>{t}</text><text class="s" x="526" y="{y+44}"{col}>{sub}</text>')
         p.append(line(f"M512,{y+29} C475,{y+29} 480,{cy-36+i*24} 452,{cy-36+i*24}", end=False))
         p.append(f'<rect x="444" y="{cy-41+i*24}" width="10" height="10" rx="2" fill="#F7941E"/>')
-    p.append('<rect x="236" y="96" width="208" height="160" rx="7" fill="#fdf1e1" stroke="#F7941E" stroke-width="1.6"/>')
-    for i, (cls, t) in enumerate([("h", "Our job record"), ("s", "identity, working fields,"), ("s", "approval, state"),
-                                  ("h", "Each client's rules"), ("s", "caps, approval rules,"), ("s", "contract terms")]):
-        p.append(f'<text class="{cls}" x="340" y="{124+i*21+(10 if i>2 else 0)}" text-anchor="middle">{t}</text>')
-    p.append('<rect x="236" y="300" width="10" height="10" rx="2" fill="#F7941E"/><text class="e" x="254" y="309">adapter: one per way in or out</text>')
-    return f'<svg class="fig" viewBox="-2 -2 684 320" xmlns="http://www.w3.org/2000/svg">{"".join(p)}</svg>'
+    p.append('<rect x="236" y="70" width="208" height="120" rx="7" fill="#fdf1e1" stroke="#F7941E" stroke-width="1.6"/>')
+    for i, (cls, t) in enumerate([("h", "Job records"), ("s", "every request, one record:"), ("s", "identity, typed fields,"),
+                                  ("s", "approval, state, the clock")]):
+        p.append(f'<text class="{cls}" x="340" y="{98+i*20}" text-anchor="middle">{t}</text>')
+    p.append(line("M340,190 V220"))
+    p.append(store(250, 222, 180, 66, "Contracts", "", False))
+    p.append('<text class="s" x="264" y="268">caps, approval rules, terms</text><text class="s" x="264" y="282">per client</text>')
+    p.append('<rect x="0" y="326" width="10" height="10" rx="2" fill="#F7941E"/><text class="e" x="18" y="335">adapter: one per way in or out, each added when its efficiency earns it</text>')
+    return f'<svg class="fig" viewBox="-2 -2 684 344" xmlns="http://www.w3.org/2000/svg">{"".join(p)}</svg>'
 
 
-PAGE1 = f"""
-<h1 class="title">How We're Building the POC</h1>
+PAGE_HARNESS = f"""
+<h1 class="title">How the Pieces Connect</h1>
 <div class="meta">{META}</div>
-<p class="dek">We build a harness: our own job record and each client's rules in the middle, with an adapter for every
-way in and out. FacilIT is one of those adapters, not the core.</p>
+<p class="dek">Each efficiency adds one piece: a store, a rule or an adapter. Nothing is torn out on day one; today's
+tools keep working and connect in. FacilIT is one adapter, not the core.</p>
 {harness_svg()}
 <div class="two">
 <div>
@@ -111,7 +279,7 @@ way in and out. FacilIT is one of those adapters, not the core.</p>
 <ul>
 <li>Target sets its own format; it won't bend to FacilIT's, or to ours.</li>
 <li>One rule, such as Target's $25K cap, reaches every job, whatever door it came through.</li>
-<li>A new client is a new adapter.</li>
+<li>A new client is a new adapter, not a migration.</li>
 <li>No paid subscription becomes the system the company can't leave.</li>
 </ul>
 </div>
@@ -138,7 +306,7 @@ def flow1_svg():
     blocks = [
         (60, "1–2", "COORDINATOR", [("s", "Person: the coordinator, who owns the request until close"),
                                    ("s", "System: turns every way in into one job record"),
-                                   ("s", "System: attaches the contract: caps, approval rules, terms")]),
+                                   ("s", "System: qualifies it against the contracts store")]),
         (210, "3", "ESTIMATION", [("s", "Person: the tech confirms or denies, onsite"),
                                  ("s", "System: predicts a range of values from like jobs"),
                                  ("s", "System: records the difference when a person overrides")]),
@@ -153,7 +321,7 @@ def flow1_svg():
         p.append(block(70, y, W, 100, n, name, lines))
     p.append('<rect x="262" y="518" width="178" height="20" rx="3" fill="#fdf1e1" stroke="#F7941E" stroke-width="1"/>'
              '<text class="s" x="351" y="532" text-anchor="middle" style="font-weight:600;fill:#9a5a00">Rails: price caps, contract terms</text>')
-    for y0, t in [(160, "qualified request, with its contract"), (310, "enriched request, with a predicted range"),
+    for y0, t in [(160, "qualified, with its contract guardrails"), (310, "enriched request, with a predicted range"),
                   (460, "assigned job, likely parts staged")]:
         p.append(line(f"M150,{y0} V{y0+48}"))
         p.append(f'<text class="e" x="160" y="{y0+29}">{t}</text>')
@@ -163,6 +331,14 @@ def flow1_svg():
     # learning loop
     p.append(line("M70,590 H44 V262 H68"))
     p.append('<text class="e" transform="translate(39,426) rotate(-90)" text-anchor="middle">learning: a person reviews it first</text>')
+    # stores (John, 2026-11-13): job records, then a separate contracts store that qualifies each request
+    p.append(line("M450,140 H468"))
+    p.append(store(470, 118, 160, 48, "Job records", "today: FieldDesk notes", False))
+    p.append(line("M550,166 V214"))
+    p.append('<text class="e" x="556" y="194">qualify against</text>')
+    p.append(store(470, 216, 160, 48, "Contracts", "today: in people's heads", True))
+    p.append(line("M470,252 H452", orange=True))
+    p.append('<text class="e" x="458" y="283" style="fill:#9a5a00">guardrails</text>')
     # approval-required event
     p.append('<rect x="500" y="505" width="180" height="110" rx="6" fill="#fdf1e1" stroke="#D07200" stroke-width="1.6"/>')
     for i, (cls, t) in enumerate([("k", "EVENT, IN REAL TIME"), ("h", "Approval required"),
@@ -182,8 +358,8 @@ def flow1_svg():
 PAGE2 = f"""
 <h1 class="title">Flow 1: Request to Onsite</h1>
 <div class="meta">{META}</div>
-<p class="dek">Steps 1 to 5. Every request becomes one job record that carries its contract to every person before the
-work. Each human decision teaches the system.</p>
+<p class="dek">Steps 1 to 5. Intake flows each request into the job records, which are qualified against a separate
+contracts store, so the guardrails travel with the job. Today that store is missing, and the delay starts there.</p>
 {flow1_svg()}
 """
 
@@ -328,7 +504,7 @@ while it can still be closed.</p></div>
 <p class="src">Source: docs/flow/close-to-cash.yaml, draft 1.</p>
 """
 
-PAGES = [PAGE1, PAGE2, PAGE3, PAGE4, PAGE5]
+PAGES = [PAGE_ONE, PAGE_COD, PAGE_ADD, PAGE_HARNESS, PAGE2, PAGE3, PAGE4, PAGE5]
 
 
 def main():

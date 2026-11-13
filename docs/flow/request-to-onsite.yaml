@@ -3,7 +3,7 @@
 # Steps 6-9 (close, billing, invoicing, collections) are their own flow: this one hands off at the end.
 
 flow: request-to-onsite
-version: draft-2
+version: draft-3
 date: 2026-11-12
 why: >
   One company source of truth for every request, so contract knowledge reaches every person before work,
@@ -12,6 +12,16 @@ architecture: >
   A harness: our job record and rules, with an adapter per way in and out (Target portal, email, FacilIT,
   FieldDesk, QuickBooks, Samsara). FacilIT is an adapter, not the core.
   See docs/adr/2026-11-12-a-harness-with-adapters-not-a-core.md.
+message: >
+  Efficiencies that add up over time, each measured by its Cost of Delay; not a new master system (John, 2026-11-13).
+stores:  # John, 2026-11-13: intake flows requests into job records, which hit a separate contracts store
+  - id: job-records
+    holds: every request, from intake to close
+    today: FieldDesk, with the detail in a notes field
+  - id: contracts
+    holds: each client's caps, approval rules and terms (2-5 year contracts)
+    today: missing; in people's heads
+    use: a job record is qualified against it, and moves to estimation with the contract guardrails included
 context:
   - Coordinators are getting harder to hire, so making the role easier to do well is an extra win (Dana, via John).
 
@@ -31,6 +41,7 @@ blocks:
       - FacilIT (smaller clients)
     system:
       - wrangle every intake type into one company source of truth (the job record)
+      - qualify every job record against the contracts store, so it moves to estimation with its guardrails (John, 2026-11-13)
       - auto-context every request by its contract, via lookup or MCP, including FacilIT
     outputs:
       - a qualified request, with identity fixed and contract context attached
@@ -99,7 +110,9 @@ events:
     why: the certain win; today approval is chased after the work, and the dispute follows
 
 edges:
-  - [coordinator, estimation, qualified request]
+  - [coordinator, job-records, every request, one record]
+  - [job-records, contracts, qualify against the contract]
+  - [contracts, estimation, qualified request with guardrails]
   - [estimation, dispatch, enriched request with predicted range]
   - [dispatch, tech, assigned job with parts staged]
   - [tech, estimation, "learning: reality vs prediction, overrides (human-reviewed)"]

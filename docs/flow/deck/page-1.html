@@ -88,6 +88,31 @@
         font-size: 11pt;
         margin-bottom: 4px;
       }
+      table.cod td {
+        font-size: 8.9pt;
+        line-height: 1.3;
+        padding: 6px 7px;
+      }
+      table.cod th {
+        padding: 7px 7px;
+        font-size: 7.8pt;
+      }
+      table.cod td.num {
+        font-family: "Fira Sans", sans-serif;
+        font-weight: 700;
+        color: #d07200;
+        width: 0.25in;
+        text-align: left;
+      }
+      table.cod td.at {
+        font-family: "Fira Sans", sans-serif;
+        font-weight: 600;
+        font-size: 8.8pt;
+      }
+      table.cod td.k {
+        font-family: "Fira Sans", sans-serif;
+        font-size: 8.6pt;
+      }
     </style>
   </head>
   <body>
@@ -119,15 +144,15 @@
         </div>
       </div>
 
-      <h1 class="title">How We're Building the POC</h1>
+      <h1 class="title">One Request, Start to Cash</h1>
       <div class="meta">
-        Discovery Report<span class="dot">&bull;</span>OneFamilyServices<span class="dot">&bull;</span>November 12, 2026
+        Discovery Report<span class="dot">&bull;</span>OneFamilyServices<span class="dot">&bull;</span>November 13, 2026
       </div>
       <p class="dek">
-        We build a harness: our own job record and each client's rules in the middle, with an adapter for every way in
-        and out. FacilIT is one of those adapters, not the core.
+        Each numbered mark is where a request breaks or waits today, and each wait has a cost. The work is a run of
+        small efficiencies, one per break, that add up over time.
       </p>
-      <svg class="fig" viewBox="-2 -2 684 320" xmlns="http://www.w3.org/2000/svg">
+      <svg class="fig" viewBox="-2 -2 684 712" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <marker
             id="ar"
@@ -152,85 +177,174 @@
             <path d="M0,0 L10,5 L0,10 z" fill="#D07200" />
           </marker>
         </defs>
-        <text class="k" x="0" y="12">WAYS IN</text>
-        <text class="k" x="680" y="12" text-anchor="end">SYSTEMS AND THE FIELD</text>
-        <rect x="0" y="26" width="168" height="58" rx="5" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
-        <text class="h" x="14" y="51">Target portal</text>
-        <text class="s" x="14" y="70">their format, their rules</text>
-        <path d="M168,55 C205,55 200,139 228,139" fill="none" stroke="#1c1b19" stroke-width="1.3" />
-        <rect x="226" y="134" width="10" height="10" rx="2" fill="#F7941E" />
-        <rect x="0" y="102" width="168" height="58" rx="5" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
-        <text class="h" x="14" y="127">Store emails</text>
-        <text class="s" x="14" y="146">Starbucks</text>
-        <path d="M168,131 C205,131 200,163 228,163" fill="none" stroke="#1c1b19" stroke-width="1.3" />
-        <rect x="226" y="158" width="10" height="10" rx="2" fill="#F7941E" />
-        <rect x="0" y="178" width="168" height="58" rx="5" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
-        <text class="h" x="14" y="203">Client emails</text>
-        <text class="s" x="14" y="222">and attachments</text>
-        <path d="M168,207 C205,207 200,187 228,187" fill="none" stroke="#1c1b19" stroke-width="1.3" />
-        <rect x="226" y="182" width="10" height="10" rx="2" fill="#F7941E" />
-        <rect x="0" y="254" width="168" height="58" rx="5" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
-        <text class="h" x="14" y="279">FacilIT</text>
-        <text class="s" x="14" y="298">smaller clients</text>
-        <path d="M168,283 C205,283 200,211 228,211" fill="none" stroke="#1c1b19" stroke-width="1.3" />
-        <rect x="226" y="206" width="10" height="10" rx="2" fill="#F7941E" />
-        <rect x="512" y="26" width="168" height="58" rx="5" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
-        <text class="h" x="526" y="51">FieldDesk</text>
-        <text class="s" x="526" y="70">today's records</text>
-        <path d="M512,55 C475,55 480,139 452,139" fill="none" stroke="#1c1b19" stroke-width="1.3" />
-        <rect x="444" y="134" width="10" height="10" rx="2" fill="#F7941E" />
-        <rect x="512" y="102" width="168" height="58" rx="5" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
-        <text class="h" x="526" y="127">QuickBooks</text>
-        <text class="s" x="526" y="146">invoices and aging</text>
-        <path d="M512,131 C475,131 480,163 452,163" fill="none" stroke="#1c1b19" stroke-width="1.3" />
-        <rect x="444" y="158" width="10" height="10" rx="2" fill="#F7941E" />
-        <rect x="512" y="178" width="168" height="58" rx="5" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
-        <text class="h" x="526" y="203">Samsara</text>
-        <text class="s" x="526" y="222">fleet and drivers</text>
-        <path d="M512,207 C475,207 480,187 452,187" fill="none" stroke="#1c1b19" stroke-width="1.3" />
-        <rect x="444" y="182" width="10" height="10" rx="2" fill="#F7941E" />
-        <rect x="512" y="254" width="168" height="58" rx="5" fill="#1c1b19" stroke="#1c1b19" stroke-width="1.1" />
-        <text class="h" x="526" y="279" style="fill: #fff">Field app</text>
-        <text class="s" x="526" y="298" style="fill: #fff">ours, for every tech</text>
-        <path d="M512,283 C475,283 480,211 452,211" fill="none" stroke="#1c1b19" stroke-width="1.3" />
-        <rect x="444" y="206" width="10" height="10" rx="2" fill="#F7941E" />
-        <rect x="236" y="96" width="208" height="160" rx="7" fill="#fdf1e1" stroke="#F7941E" stroke-width="1.6" />
-        <text class="h" x="340" y="124" text-anchor="middle">Our job record</text>
-        <text class="s" x="340" y="145" text-anchor="middle">identity, working fields,</text>
-        <text class="s" x="340" y="166" text-anchor="middle">approval, state</text>
-        <text class="h" x="340" y="197" text-anchor="middle">Each client's rules</text>
-        <text class="s" x="340" y="218" text-anchor="middle">caps, approval rules,</text>
-        <text class="s" x="340" y="239" text-anchor="middle">contract terms</text>
-        <rect x="236" y="300" width="10" height="10" rx="2" fill="#F7941E" />
-        <text class="e" x="254" y="309">adapter: one per way in or out</text>
+        <rect x="262" y="0" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="17" text-anchor="middle">Request arrives</text>
+        <text class="e" x="350.0" y="32" text-anchor="middle">portal, email, FacilIT</text>
+        <path d="M350.0,40 V60" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="62" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="79" text-anchor="middle">Intake</text>
+        <text class="e" x="350.0" y="94" text-anchor="middle">into one record</text>
+        <path d="M350.0,102 V122" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="124" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="141" text-anchor="middle">Job record</text>
+        <text class="e" x="350.0" y="156" text-anchor="middle">every request</text>
+        <path d="M350.0,164 V184" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="186" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="203" text-anchor="middle">Qualified</text>
+        <text class="e" x="350.0" y="218" text-anchor="middle">against its contract</text>
+        <path d="M350.0,226 V246" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="248" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="265" text-anchor="middle">Estimation</text>
+        <text class="e" x="350.0" y="280" text-anchor="middle">a range, from like jobs</text>
+        <path d="M350.0,288 V308" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="310" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="327" text-anchor="middle">Dispatch</text>
+        <text class="e" x="350.0" y="342" text-anchor="middle">people, parts, trucks</text>
+        <path d="M350.0,350 V370" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="372" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="389" text-anchor="middle">Onsite</text>
+        <text class="e" x="350.0" y="404" text-anchor="middle">the tech at the site</text>
+        <path d="M350.0,412 V432" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="434" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="451" text-anchor="middle">Close</text>
+        <text class="e" x="350.0" y="466" text-anchor="middle">signed in the field</text>
+        <path d="M350.0,474 V494" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="496" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="513" text-anchor="middle">Billing</text>
+        <text class="e" x="350.0" y="528" text-anchor="middle">matched to contract, PO</text>
+        <path d="M350.0,536 V556" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="558" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="575" text-anchor="middle">Invoice</text>
+        <text class="e" x="350.0" y="590" text-anchor="middle">in the client&#x27;s format</text>
+        <path d="M350.0,598 V618" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="262" y="620" width="176" height="40" rx="6" fill="#fff" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="350.0" y="637" text-anchor="middle">Paid</text>
+        <text class="e" x="350.0" y="652" text-anchor="middle">or disputed</text>
+        <line x1="232" y1="82" x2="262" y2="82" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="82" r="10" fill="#D07200" />
+        <text x="236" y="86" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">1</text>
+        <text class="s" x="218" y="79" text-anchor="end">Re-keyed by hand into FieldDesk;</text>
+        <text class="s" x="218" y="94" text-anchor="end">3 people, about 300 a day</text>
+        <line x1="232" y1="144" x2="262" y2="144" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="144" r="10" fill="#D07200" />
+        <text x="236" y="148" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">2</text>
+        <text class="s" x="218" y="141" text-anchor="end">Detail lost in a notes field:</text>
+        <text class="s" x="218" y="156" text-anchor="end">diagnosis, coverage, caps</text>
+        <line x1="232" y1="206" x2="262" y2="206" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="206" r="10" fill="#D07200" />
+        <text x="236" y="210" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">3</text>
+        <text class="s" x="218" y="203" text-anchor="end">No gate: caps and approval rules</text>
+        <text class="s" x="218" y="218" text-anchor="end">live in people&#x27;s heads</text>
+        <line x1="232" y1="268" x2="262" y2="268" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="268" r="10" fill="#D07200" />
+        <text x="236" y="272" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">4</text>
+        <text class="s" x="218" y="265" text-anchor="end">Photos texted from personal phones;</text>
+        <text class="s" x="218" y="280" text-anchor="end">no history of like jobs</text>
+        <line x1="232" y1="330" x2="262" y2="330" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="330" r="10" fill="#D07200" />
+        <text x="236" y="334" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">5</text>
+        <text class="s" x="218" y="327" text-anchor="end">One dispatcher, his own phone;</text>
+        <text class="s" x="218" y="342" text-anchor="end">truck parts on a spreadsheet</text>
+        <line x1="232" y1="392" x2="262" y2="392" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="392" r="10" fill="#D07200" />
+        <text x="236" y="396" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">6</text>
+        <text class="s" x="218" y="389" text-anchor="end">Approval found onsite,</text>
+        <text class="s" x="218" y="404" text-anchor="end">chased after the work</text>
+        <line x1="232" y1="485.0" x2="350.0" y2="485.0" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="485.0" r="10" fill="#D07200" />
+        <text x="236" y="489.0" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">7</text>
+        <text class="s" x="218" y="482.0" text-anchor="end">Completed work pulled by hand;</text>
+        <text class="s" x="218" y="497.0" text-anchor="end">timing varies with volume</text>
+        <line x1="232" y1="578" x2="262" y2="578" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="578" r="10" fill="#D07200" />
+        <text x="236" y="582" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">8</text>
+        <text class="s" x="218" y="575" text-anchor="end">One person, a dozen strict formats,</text>
+        <text class="s" x="218" y="590" text-anchor="end">re-keyed into QuickBooks</text>
+        <line x1="232" y1="640" x2="262" y2="640" stroke="#D07200" stroke-width="1" stroke-dasharray="2 2" />
+        <circle cx="236" cy="640" r="10" fill="#D07200" />
+        <text x="236" y="644" text-anchor="middle" style="font-weight: 700; font-size: 11px; fill: #fff">9</text>
+        <text class="s" x="218" y="637" text-anchor="end">Disputes surface after it&#x27;s done:</text>
+        <text class="s" x="218" y="652" text-anchor="end">$80K–$200K a year written off</text>
+        <line x1="438" y1="144" x2="478" y2="144" stroke="#9a968f" stroke-width="1.2" />
+        <path
+          d="M480,126 a100.0,6 0 0 1 200,0 V162 a100.0,6 0 0 1 -200,0 Z"
+          fill="#faf8f4"
+          stroke="#9a968f"
+          stroke-width="1.2"
+        />
+        <path d="M480,126 a100.0,6 0 0 0 200,0" fill="none" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="494" y="147">Job records</text>
+        <text class="e" x="494" y="162">today: FieldDesk, detail in a notes field</text>
+        <line x1="438" y1="206" x2="478" y2="206" stroke="#D07200" stroke-width="1.2" stroke-dasharray="4 3" />
+        <path
+          d="M480,188 a100.0,6 0 0 1 200,0 V224 a100.0,6 0 0 1 -200,0 Z"
+          fill="#fff"
+          stroke="#D07200"
+          stroke-width="1.2"
+          stroke-dasharray="5 4"
+        />
+        <path
+          d="M480,188 a100.0,6 0 0 0 200,0"
+          fill="none"
+          stroke="#D07200"
+          stroke-width="1.2"
+          stroke-dasharray="5 4"
+        />
+        <text class="h" x="494" y="209">Contracts</text>
+        <text class="e" x="494" y="224" style="fill: #9a5a00">today: missing: in people&#x27;s heads</text>
+        <line x1="438" y1="268" x2="478" y2="268" stroke="#D07200" stroke-width="1.2" stroke-dasharray="4 3" />
+        <path
+          d="M480,250 a100.0,6 0 0 1 200,0 V286 a100.0,6 0 0 1 -200,0 Z"
+          fill="#fff"
+          stroke="#D07200"
+          stroke-width="1.2"
+          stroke-dasharray="5 4"
+        />
+        <path
+          d="M480,250 a100.0,6 0 0 0 200,0"
+          fill="none"
+          stroke="#D07200"
+          stroke-width="1.2"
+          stroke-dasharray="5 4"
+        />
+        <text class="h" x="494" y="271">Like-job history</text>
+        <text class="e" x="494" y="286" style="fill: #9a5a00">today: missing: texts on personal phones</text>
+        <line x1="438" y1="330" x2="478" y2="330" stroke="#9a968f" stroke-width="1.2" />
+        <path
+          d="M480,312 a100.0,6 0 0 1 200,0 V348 a100.0,6 0 0 1 -200,0 Z"
+          fill="#faf8f4"
+          stroke="#9a968f"
+          stroke-width="1.2"
+        />
+        <path d="M480,312 a100.0,6 0 0 0 200,0" fill="none" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="494" y="333">Fleet</text>
+        <text class="e" x="494" y="348">today: Samsara, on one person&#x27;s phone</text>
+        <line x1="438" y1="578" x2="478" y2="578" stroke="#9a968f" stroke-width="1.2" />
+        <path
+          d="M480,560 a100.0,6 0 0 1 200,0 V596 a100.0,6 0 0 1 -200,0 Z"
+          fill="#faf8f4"
+          stroke="#9a968f"
+          stroke-width="1.2"
+        />
+        <path d="M480,560 a100.0,6 0 0 0 200,0" fill="none" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="494" y="581">QuickBooks</text>
+        <text class="e" x="494" y="596">today: re-keyed by hand</text>
+        <circle cx="8" cy="696" r="7" fill="#D07200" />
+        <text class="e" x="22" y="700">where it breaks or waits today</text>
+        <path
+          d="M250,690 a17.0,6 0 0 1 34,0 V700 a17.0,6 0 0 1 -34,0 Z"
+          fill="#fff"
+          stroke="#D07200"
+          stroke-width="1.2"
+          stroke-dasharray="5 4"
+        />
+        <path d="M250,690 a17.0,6 0 0 0 34,0" fill="none" stroke="#D07200" stroke-width="1.2" stroke-dasharray="5 4" />
+        <text class="h" x="264" y="711"></text>
+        <text class="e" x="264" y="726" style="fill: #9a5a00"></text>
+        <text class="e" x="292" y="700">a store that is missing today</text>
       </svg>
-      <div class="two">
-        <div>
-          <h2>Why</h2>
-          <ul>
-            <li>Target sets its own format; it won't bend to FacilIT's, or to ours.</li>
-            <li>One rule, such as Target's $25K cap, reaches every job, whatever door it came through.</li>
-            <li>A new client is a new adapter.</li>
-            <li>No paid subscription becomes the system the company can't leave.</li>
-          </ul>
-        </div>
-        <div>
-          <h2>What it costs</h2>
-          <ul>
-            <li>We own more: the record, the rules, every adapter.</li>
-            <li>
-              Each feature FacilIT already has (signatures, approvals) gets its own call: use theirs, or build ours.
-            </li>
-            <li>One field app, ours, for every tech and every job.</li>
-            <li>
-              If FacilIT's edition already covers most of this, we'd be rebuilding paid work. A later round asks which
-              edition they have.
-            </li>
-          </ul>
-        </div>
-      </div>
 
-      <div class="folio">1 / 5</div>
+      <div class="folio">1 / 8</div>
     </div>
   </body>
 </html>

@@ -88,6 +88,31 @@
         font-size: 11pt;
         margin-bottom: 4px;
       }
+      table.cod td {
+        font-size: 8.9pt;
+        line-height: 1.3;
+        padding: 6px 7px;
+      }
+      table.cod th {
+        padding: 7px 7px;
+        font-size: 7.8pt;
+      }
+      table.cod td.num {
+        font-family: "Fira Sans", sans-serif;
+        font-weight: 700;
+        color: #d07200;
+        width: 0.25in;
+        text-align: left;
+      }
+      table.cod td.at {
+        font-family: "Fira Sans", sans-serif;
+        font-weight: 600;
+        font-size: 8.8pt;
+      }
+      table.cod td.k {
+        font-family: "Fira Sans", sans-serif;
+        font-size: 8.6pt;
+      }
     </style>
   </head>
   <body>
@@ -119,81 +144,155 @@
         </div>
       </div>
 
-      <h1 class="title">Flow 2, Today and Proposed</h1>
+      <h1 class="title">Flow 1: Request to Onsite</h1>
       <div class="meta">
-        Discovery Report<span class="dot">&bull;</span>OneFamilyServices<span class="dot">&bull;</span>November 12, 2026
+        Discovery Report<span class="dot">&bull;</span>OneFamilyServices<span class="dot">&bull;</span>November 13, 2026
       </div>
-      <table class="flow">
-        <thead>
-          <tr>
-            <th>Step</th>
-            <th>Today</th>
-            <th>Proposed</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="b">Close<span>step 6</span></td>
-            <td>
-              Work complete is registered in FieldDesk, which somehow triggers billing. The client's local rep signs off
-              in the field.
-            </td>
-            <td>
-              The field app closes a job only with the signature, or with the reason it's missing. Closing puts the job
-              into billing; nobody has to go and get it.
-            </td>
-          </tr>
-          <tr>
-            <td class="b">Billing<span>step 7</span></td>
-            <td>
-              One person pulls completed work from FieldDesk, timing varying with volume, and matches it by hand to the
-              contract, the PO and the signature.
-            </td>
-            <td>
-              The system makes the match: approval on record when a rule required it, signature, PO, amount within the
-              cap. She sees only what fails.
-            </td>
-          </tr>
-          <tr>
-            <td class="b">Invoicing<span>step 8</span></td>
-            <td>
-              The same person keys each invoice into QuickBooks, then sends it in the client's format. About a dozen
-              clients set strict ones.
-            </td>
-            <td>
-              One invoice from the job record, written out by each client's adapter, with the approval and signature
-              attached. QuickBooks gets it without re-keying.
-            </td>
-          </tr>
-          <tr>
-            <td class="b">Collections<span>step 9</span></td>
-            <td>
-              QuickBooks aging and a few spreadsheets. The same person is the only one who enforces; when she's out,
-              little happens.
-            </td>
-            <td>
-              Every dispute is recorded against its job, with the rule that should have fired, and fed back to flow 1.
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="answer">
-        <p class="q">Why this flow matters</p>
-        <p>
-          Aging isn't the concern; disputes are. Once the work is done, the company invoices even when the signature is
-          missing or the contract is vague, because it's the only way to get paid. The check before the invoice makes
-          that gap visible while it can still be closed.
-        </p>
-      </div>
-      <h2>Still open</h2>
-      <ul>
-        <li>How a close in FieldDesk triggers billing today, and whether its data can get out.</li>
-        <li>Each strict-format client's invoice rules: Target, CVS, Walgreens, Wegmans, ALDI.</li>
-        <li>How the disputes split: no approval on record, a missing signature, a vague contract.</li>
-      </ul>
-      <p class="src">Source: docs/flow/close-to-cash.yaml, draft 1.</p>
+      <p class="dek">
+        Steps 1 to 5. Intake flows each request into the job records, which are qualified against a separate contracts
+        store, so the guardrails travel with the job. Today that store is missing, and the delay starts there.
+      </p>
+      <svg class="fig" viewBox="-2 -2 684 694" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker
+            id="ar"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M0,0 L10,5 L0,10 z" fill="#1c1b19" />
+          </marker>
+          <marker
+            id="ao"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M0,0 L10,5 L0,10 z" fill="#D07200" />
+          </marker>
+        </defs>
+        <rect x="70" y="0" width="88" height="28" rx="6" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
+        <text class="s" x="114.0" y="18.0" text-anchor="middle">Target portal</text>
+        <path d="M114,28 V58" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="168" y="0" width="88" height="28" rx="6" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
+        <text class="s" x="212.0" y="18.0" text-anchor="middle">Store emails</text>
+        <path d="M212,28 V58" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="266" y="0" width="88" height="28" rx="6" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
+        <text class="s" x="310.0" y="18.0" text-anchor="middle">Client emails</text>
+        <path d="M310,28 V58" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="364" y="0" width="88" height="28" rx="6" fill="#faf8f4" stroke="#cfc9bf" stroke-width="1.1" />
+        <text class="s" x="408.0" y="18.0" text-anchor="middle">FacilIT</text>
+        <path d="M408,28 V58" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect x="70" y="60" width="380" height="100" rx="5" fill="#fff" stroke="#cfc9bf" stroke-width="1.2" />
+        <rect x="70" y="60" width="5" height="100" rx="2" fill="#F7941E" />
+        <text x="86" y="82">
+          <tspan class="n">1–2</tspan>
+          <tspan class="h" dx="8">COORDINATOR</tspan>
+        </text>
+        <text class="s" x="86" y="102">Person: the coordinator, who owns the request until close</text>
+        <text class="s" x="86" y="119">System: turns every way in into one job record</text>
+        <text class="s" x="86" y="136">System: qualifies it against the contracts store</text>
+        <rect x="70" y="210" width="380" height="100" rx="5" fill="#fff" stroke="#cfc9bf" stroke-width="1.2" />
+        <rect x="70" y="210" width="5" height="100" rx="2" fill="#F7941E" />
+        <text x="86" y="232">
+          <tspan class="n">3</tspan>
+          <tspan class="h" dx="8">ESTIMATION</tspan>
+        </text>
+        <text class="s" x="86" y="252">Person: the tech confirms or denies, onsite</text>
+        <text class="s" x="86" y="269">System: predicts a range of values from like jobs</text>
+        <text class="s" x="86" y="286">System: records the difference when a person overrides</text>
+        <rect x="70" y="360" width="380" height="100" rx="5" fill="#fff" stroke="#cfc9bf" stroke-width="1.2" />
+        <rect x="70" y="360" width="5" height="100" rx="2" fill="#F7941E" />
+        <text x="86" y="382">
+          <tspan class="n">4</tspan>
+          <tspan class="h" dx="8">DISPATCH</tspan>
+        </text>
+        <text class="s" x="86" y="402">Person: the dispatcher</text>
+        <text class="s" x="86" y="419">System: assigns by location, weather, capacity, skills,</text>
+        <text class="s" x="86" y="436">trade licenses by state; stages the likely parts</text>
+        <rect x="70" y="510" width="380" height="100" rx="5" fill="#fff" stroke="#cfc9bf" stroke-width="1.2" />
+        <rect x="70" y="510" width="5" height="100" rx="2" fill="#F7941E" />
+        <text x="86" y="532">
+          <tspan class="n">5</tspan>
+          <tspan class="h" dx="8">TECH ONSITE</tspan>
+        </text>
+        <text class="s" x="86" y="552">Person: the tech, in one field app for every job</text>
+        <text class="s" x="86" y="569">System: captures what the site really needs</text>
+        <text class="s" x="86" y="586">Reviews and overrides anything, except the rails</text>
+        <rect x="262" y="518" width="178" height="20" rx="3" fill="#fdf1e1" stroke="#F7941E" stroke-width="1" />
+        <text class="s" x="351" y="532" text-anchor="middle" style="font-weight: 600; fill: #9a5a00">
+          Rails: price caps, contract terms
+        </text>
+        <path d="M150,160 V208" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <text class="e" x="160" y="189">qualified, with its contract guardrails</text>
+        <path d="M150,310 V358" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <text class="e" x="160" y="339">enriched request, with a predicted range</text>
+        <path d="M150,460 V508" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <text class="e" x="160" y="489">assigned job, likely parts staged</text>
+        <rect x="0" y="60" width="22" height="550" rx="3" fill="#fdf1e1" />
+        <text class="k" transform="translate(15,335) rotate(-90)" text-anchor="middle">
+          THE COORDINATOR OWNS IT UNTIL CLOSE
+        </text>
+        <path d="M70,590 H44 V262 H68" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <text class="e" transform="translate(39,426) rotate(-90)" text-anchor="middle">
+          learning: a person reviews it first
+        </text>
+        <path d="M450,140 H468" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <path
+          d="M470,124 a80.0,6 0 0 1 160,0 V160 a80.0,6 0 0 1 -160,0 Z"
+          fill="#faf8f4"
+          stroke="#9a968f"
+          stroke-width="1.2"
+        />
+        <path d="M470,124 a80.0,6 0 0 0 160,0" fill="none" stroke="#9a968f" stroke-width="1.2" />
+        <text class="h" x="484" y="145">Job records</text>
+        <text class="e" x="484" y="160">today: FieldDesk notes</text>
+        <path d="M550,166 V214" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <text class="e" x="556" y="194">qualify against</text>
+        <path
+          d="M470,222 a80.0,6 0 0 1 160,0 V258 a80.0,6 0 0 1 -160,0 Z"
+          fill="#fff"
+          stroke="#D07200"
+          stroke-width="1.2"
+          stroke-dasharray="5 4"
+        />
+        <path d="M470,222 a80.0,6 0 0 0 160,0" fill="none" stroke="#D07200" stroke-width="1.2" stroke-dasharray="5 4" />
+        <text class="h" x="484" y="243">Contracts</text>
+        <text class="e" x="484" y="258" style="fill: #9a5a00">today: in people&#x27;s heads</text>
+        <path d="M470,252 H452" fill="none" stroke="#D07200" stroke-width="1.3" marker-end="url(#ao)" />
+        <text class="e" x="458" y="283" style="fill: #9a5a00">guardrails</text>
+        <rect x="500" y="505" width="180" height="110" rx="6" fill="#fdf1e1" stroke="#D07200" stroke-width="1.6" />
+        <text class="k" x="514" y="528">EVENT, IN REAL TIME</text>
+        <text class="h" x="514" y="547">Approval required</text>
+        <text class="s" x="514" y="566">over a cap, or any rule</text>
+        <text class="s" x="514" y="585">that fires in the field</text>
+        <path d="M450,560 H498" fill="none" stroke="#D07200" stroke-width="1.3" marker-end="url(#ao)" />
+        <path d="M560,505 V410 H452" fill="none" stroke="#D07200" stroke-width="1.3" marker-end="url(#ao)" />
+        <text class="e" x="462" y="402" style="fill: #9a5a00">dispatch re-plans now</text>
+        <path d="M650,505 V110 H452" fill="none" stroke="#D07200" stroke-width="1.3" marker-end="url(#ao)" />
+        <text class="e" x="462" y="102" style="fill: #9a5a00">coordinator starts approval now</text>
+        <path d="M260,610 V648" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-end="url(#ar)" />
+        <rect
+          x="140"
+          y="650"
+          width="240"
+          height="34"
+          rx="6"
+          fill="#fff"
+          stroke="#cfc9bf"
+          stroke-width="1.1"
+          stroke-dasharray="5 4"
+        />
+        <text class="h" x="260.0" y="671.0" text-anchor="middle">Flow 2: close to cash, steps 6–9</text>
+      </svg>
 
-      <div class="folio">5 / 5</div>
+      <div class="folio">5 / 8</div>
     </div>
   </body>
 </html>
