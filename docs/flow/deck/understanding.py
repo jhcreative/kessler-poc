@@ -17,46 +17,49 @@ def box(x, y, w, h, name, sub, dark=False):
     fill, stroke, col = ("#1c1b19", "#1c1b19", ' style="fill:#fff"') if dark else ("#fff", "#9a968f", "")
     return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{fill}" stroke="{stroke}" stroke-width="1.3"/>'
             f'<rect x="{x}" y="{y}" width="5" height="{h}" rx="2" fill="#F7941E"/>'
-            f'<text class="h" x="{x+18}" y="{y+h/2-3}"{col}>{name}</text>'
-            f'<text class="s" x="{x+18}" y="{y+h/2+14}"{col}>{sub}</text>')
+            f'<text class="h" x="{x+16}" y="{y+h/2-3}" style="font-weight:700;font-size:14.5px{";fill:#fff" if dark else ""}">{name}</text>'
+            f'<text class="s" x="{x+16}" y="{y+h/2+14}" style="font-size:11px{";fill:#fff" if dark else ""}">{sub}</text>')
 
 
 def svg():
     p = [ARROW]
     p.append('<text class="k" x="0" y="96">WAYS IN</text>')
-    for i, (n, s) in enumerate([("Target portal", "their format, their rules"), ("Emails", "Starbucks stores, other clients"),
-                                ("FacilIT", "smaller clients")]):
+    for i, (n, s) in enumerate([("Target portal", "Their format, their rules."), ("Emails", "Starbucks stores, other clients."),
+                                ("FacilIT", "Smaller clients.")]):
         y = 110 + i * 82
-        p.append(box(0, y, 190, 60, n, s))
-        p.append(line(f"M190,{y+30} C240,{y+30} 240,{190+i*30} 278,{190+i*30}"))
+        p.append(box(0, y, 170, 60, n, s))
+        p.append(line(f"M170,{y+30} C212,{y+30} 212,{190+i*30} 248,{190+i*30}"))
+    mid = len(p)  # everything after the ways in shifts left 20 to make room on the right
     # job records
-    p.append('<path d="M280,148 a95,10 0 0 1 190,0 V292 a95,10 0 0 1 -190,0 Z" fill="#fdf1e1" stroke="#F7941E" stroke-width="1.8"/>'
-             '<path d="M280,148 a95,10 0 0 0 190,0" fill="none" stroke="#F7941E" stroke-width="1.8"/>')
-    for i, (c, t) in enumerate([("h", "Job records"), ("s", "one record per request"), ("s", "the contract applied"),
-                                ("s", "the state, at every step")]):
-        p.append(f'<text class="{c}" x="352" y="{196+i*20}" text-anchor="middle">{t}</text>')
+    p.append('<path d="M270,148 a105,10 0 0 1 210,0 V292 a105,10 0 0 1 -210,0 Z" fill="#fdf1e1" stroke="#F7941E" stroke-width="1.8"/>'
+             '<path d="M270,148 a105,10 0 0 0 210,0" fill="none" stroke="#F7941E" stroke-width="1.8"/>')
+    p.append('<text class="h" x="360" y="190" text-anchor="middle" style="font-weight:700;font-size:15px">Job records</text>')
+    for i, t in enumerate(["One record per request.", "Contract guardrails", "applied to request.",
+                           "Maintains record state", "from Intake to Collections."]):
+        p.append(f'<text class="s" x="360" y="{210+i*14.5}" text-anchor="middle" style="font-size:11px">{t}</text>')
     # inside the record: onsite feedback enters, billing exits
-    p.append(line("M440,154 V262 H468", dash=True))
+    p.append(line("M458,154 V262 H478", dash=True))
     # contracts, below, read-only into job records
-    p.append(store(295, 378, 160, 54, "Contracts", "maintained elsewhere, for now", False))
+    p.append(store(295, 378, 160, 54, "Contracts", "Maintained elsewhere, for now.", False))
     p.append(line("M375,378 V306"))
-    p.append('<text class="e" x="384" y="340">read-only: applied to</text><text class="e" x="384" y="354">this one request</text>')
+    p.append('<text class="e" x="384" y="340">Read-only: applied to</text><text class="e" x="384" y="354">this one request.</text>')
     # dispatch, onsite (upper lane)
-    p.append(line("M470,190 H520 V130 H578"))
-    p.append(box(580, 100, 160, 60, "Dispatch", "people, parts, the route"))
+    p.append(line("M480,190 H525 V130 H578"))
+    p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, the route."))
     p.append(line("M740,130 H788"))
-    p.append(box(790, 100, 160, 60, "Onsite", "the tech at the site"))
-    p.append(line("M870,100 V40 H440 V136"))
-    p.append(line("M660,100 V43"))  # dispatch reports back into the record too (John, 2026-11-13)
-    p.append('<text class="e" x="645" y="32" text-anchor="middle">back into the record: what the site found, approval needed, signed</text>')
+    p.append(box(790, 100, 160, 60, "Onsite", "The tech at the site."))
+    p.append(line("M870,100 V40 H458 V136"))
+    p.append('<path d="M660,100 V70 V40" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-mid="url(#ar)"/>')  # dispatch reports back into the record too (John, 2026-11-13)
+    p.append('<text class="e" x="645" y="32" text-anchor="middle">Back into the record: what the site found, approval needed, signed.</text>')
     # billing (lower lane), only after onsite returns
-    p.append(line("M470,262 H523"))
-    p.append('<text class="e" x="476" y="240">only after</text><text class="e" x="476" y="253">onsite</text>')
-    p.append(box(525, 232, 125, 60, "Billing", "matched to the job"))
-    p.append(line("M650,262 H678"))
-    p.append(box(680, 232, 125, 60, "Invoicing", "the client's format"))
-    p.append(line("M805,262 H833"))
-    p.append(box(835, 232, 115, 60, "Collections", "aging, disputes"))
+    p.append(line("M480,262 H538"))
+    p.append('<text class="e" x="485" y="243">Only after</text><text class="e" x="485" y="255">onsite.</text>')
+    p.append(box(540, 232, 120, 60, "Billing", "Matched to the job."))
+    p.append(line("M660,262 H683"))
+    p.append(box(685, 232, 155, 60, "Invoicing", "Multiple client formats."))
+    p.append(line("M840,262 H863"))
+    p.append(box(865, 232, 105, 60, "Collections", "Aging, disputes."))
+    p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
     return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
