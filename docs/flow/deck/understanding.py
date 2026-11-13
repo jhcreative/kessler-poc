@@ -65,12 +65,37 @@ def cylinder(x, y, w, h, title, lines, cx, dy=0, ty=None):
 
 
 def ways_in(p, w, ends, subs):
-    p.append('<text class="k" x="0" y="96">WAYS IN</text>')
+    p.append('<text class="k" x="0" y="96">INCOMING REQUESTS</text>')
     for i, (n, s) in enumerate(zip(["Target portal", "Emails", "FacilIT"], subs)):
         y = 110 + i * 82
         p.append(box(0, y, w, 60, n, s))
         cx = (w + ends[3]) / 2  # control points between the two ends, so the arrowhead points forward
         p.append(line(f"M{w},{y+30} C{cx},{y+30} {cx},{ends[i]} {ends[3]},{ends[i]}"))
+
+
+LEGEND = {
+    "human": "Human review and decision points.",
+    "manual": "Manual junction: Human makes multiple system decisions.",
+    "step": "Step in the system.",
+    "gear": "Automation or application benefit.",
+}
+
+
+def legend(p, kinds, y=452):
+    """The key: one row under the drawing, out of the workflow (John, 2026-11-13). Icons centred on the row."""
+    x = 0
+    for k in kinds:
+        if k == "human":
+            p.append(human(x, y - 10, "Role")); tx = x + 54
+        elif k == "manual":
+            p.append(f'<rect x="{x}" y="{y-8}" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'); tx = x + 34
+        elif k == "step":
+            p.append(f'<rect x="{x}" y="{y-8}" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
+                     f'<rect x="{x}" y="{y-8}" width="4" height="16" fill="#F7941E"/>'); tx = x + 34
+        else:
+            p.append(gear(x + 10, y)); tx = x + 26
+        p.append(f'<text class="e" x="{tx}" y="{y+4}">{LEGEND[k]}</text>')
+        x = tx + len(LEGEND[k]) * 5.4 + 30
 
 
 def mid_arrows(p, segs):
@@ -86,9 +111,9 @@ def svg_recommended(overlay=None):
     p.append(cylinder(259.5, 141, 231, 158, "Job records", ["One record per request.", "Contract guardrails added.",
                       "Structured data for analysis.", "Maintains record state", "and makes visible for humans."], 360, dy=11, ty=188))
     # additional approvals: out of the record's top, back in, then on to dispatch (dotted inside, John 2026-11-13)
-    p.append(box(270, -16, 175, 44, "Additional approvals", "Client sign-off, over a cap."))  # above the updates line
-    p.append(line("M300,133 V30"))
-    p.append(line("M410,28 V130"))
+    p.append(box(270, 6, 175, 44, "Additional approvals", "Client sign-off, over a cap."))  # above the updates line
+    p.append(line("M300,133 V52"))
+    p.append(line("M410,50 V130"))
     p.append(line("M410,132 V168 H488", dash=True))
     # inside the record: updates enter, billing exits (a gap where the approval path crosses)
     p.append(line("M458,134 V162 M458,174 V262 H488", dash=True))
@@ -101,10 +126,10 @@ def svg_recommended(overlay=None):
     p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, routes."))
     p.append(line("M740,130 H788"))
     p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
-    p.append(line("M870,100 V40 H458 V132"))
-    mid_arrows(p, ["M870,76 V66", "M775,40 H765", "M565,40 H555"])
-    p.append('<path d="M660,100 V70 V40" fill="none" stroke="#444" stroke-width="1.3" marker-mid="url(#ar)"/>')
-    p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
+    p.append(line("M870,100 V74 H458 V132"))  # lowered toward dispatch and onsite (John, 2026-11-13)
+    mid_arrows(p, ["M870,92 V84", "M775,74 H765", "M565,74 H555"])
+    p.append('<path d="M660,100 V87 V74" fill="none" stroke="#444" stroke-width="1.3" marker-mid="url(#ar)"/>')
+    p.append('<text class="e" x="645" y="66" text-anchor="middle">Updates the record.</text>')
     p.append(line("M490,262 H538"))
     p.append('<text class="e" x="494" y="254" style="font-size:10px">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
     p.append(box(540, 220, 140, 84, "Billing", ["Accepted work", "pre-matched to client."]))
@@ -120,20 +145,17 @@ def svg_recommended(overlay=None):
     # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
     # override anything but the rails; billing sees only what fails the check)
     p.append(human(385, 302, "Coordinator"))  # right of the contracts arrow
-    p.append(human(318, 26, "Client"))
+    p.append(human(318, 47, "Client"))
     p.append(human(650, 150, "Dispatcher"))
     p.append(human(880, 150, "Tech"))
     p.append(human(555, 296, "Controller"))
     p.append(human(752, 296, "Controller"))  # invoicing, right of the contracts arrow
     p.append(human(872, 296, "Controller"))
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
-    p.append(human(0, 352, "Role"))
-    p.append('<text class="e" x="56" y="366">Human review and decision points.</text>')
     if overlay:
         overlay(p)  # final coordinates: after the group's -20 shift
-    p.append('<rect x="9" y="380" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
-             '<rect x="9" y="380" width="4" height="16" fill="#F7941E"/><text class="e" x="56" y="392">Step in the system.</text>')
-    return f'<svg class="fig" viewBox="-2 -20 962 460" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
+    legend(p, ["human", "step"] + (["gear"] if overlay else []))
+    return f'<svg class="fig" viewBox="-2 -2 962 472" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
 
 
 def svg_current():
@@ -161,9 +183,9 @@ def svg_current():
     p.append(human(897, 90, "Tech"))  # human in the loop (John, 2026-11-13)
     p.append(line("M790,145 H734"))
     p.append('<text class="e" x="760" y="192" text-anchor="middle" style="fill:#9a5a00">Texts Tony from a personal phone.</text>')
-    p.append(line("M642,84 V40 H470 V146"))
-    mid_arrows(p, ["M642,66 V56", "M570,40 H560"])
-    p.append('<text class="e" x="560" y="32" text-anchor="middle" style="fill:#9a5a00">Tony updates the record by hand.</text>')
+    p.append(line("M642,84 V66 H470 V146"))  # lowered toward dispatch (John, 2026-11-13)
+    mid_arrows(p, ["M570,66 H560"])
+    p.append('<text class="e" x="560" y="58" text-anchor="middle" style="fill:#9a5a00">Tony updates the record by hand.</text>')
     # the record tells no one in real time, so Tony goes straight to the coordinators (John, 2026-11-13)
     p.append(line("M700,84 V12 H160 V120 H170"))
     mid_arrows(p, ["M700,50 V40", "M440,12 H430", "M160,64 V74"])
@@ -188,13 +210,8 @@ def svg_current():
     p.append('<text class="e" x="663" y="370" text-anchor="middle" style="fill:#9a5a00">After work complete.</text>')
     p.append(line("M560,405 H520 V354 H240 V342"))
     p.append('<text class="e" x="334" y="349" style="fill:#9a5a00">Rework: back to the coordinators.</text>')
-    p.append(human(0, 352, "Role"))
-    p.append('<text class="e" x="56" y="366">Human review and decision points.</text>')
-    p.append('<rect x="9" y="380" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'
-             '<text class="e" x="56" y="392">Manual junction: Human makes multiple system decisions.</text>')
-    p.append('<rect x="9" y="406" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
-             '<rect x="9" y="406" width="4" height="16" fill="#F7941E"/><text class="e" x="56" y="418">Step in the system.</text>')
-    return f'<svg class="fig" viewBox="-2 -2 962 444" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
+    legend(p, ["human", "manual", "step"])
+    return f'<svg class="fig" viewBox="-2 -2 962 472" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
 
 
 
@@ -214,7 +231,6 @@ def svg_opportunities():
             for i, t in enumerate(lines):
                 p.append(f'<text x="{tx}" y="{ty+i*10.8}" text-anchor="{anchor}" '
                          f'style="font-size:9.8px;font-weight:600;fill:#1c1b19;paint-order:stroke;stroke:#fff;stroke-width:3px">{t}</text>')
-        p.append(gear(22, 414) + '<text class="e" x="56" y="418">Automation or application benefit.</text>')
     return svg_recommended(add)
 
 
@@ -224,7 +240,7 @@ GEARS = [
     (204, 221, [], "middle", 204, 0),   # Emails
     (204, 277, ["Auto draft job", "records from source."], "start", 194, 304),   # FacilIT; one caption for the column
     (489, 262, ["Auto push", "to queue."], "middle", 489, 284),
-    (505, 40, ["One way update flow keeps", "everyone on same page."], "middle", 505, 62),
+    (505, 74, ["One way update flow keeps", "everyone on same page."], "middle", 505, 96),
     (355, 346, ["Auto provide contract guardrails", "before work begins."], "start", 368, 344),
     (715, 360, ["Auto draft invoice", "in required format."], "start", 728, 358),
 ]
