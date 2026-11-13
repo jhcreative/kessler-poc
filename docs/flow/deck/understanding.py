@@ -107,7 +107,7 @@ def svg_recommended():
     p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
     p.append(line("M480,262 H538"))
     p.append('<text class="e" x="487" y="254">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
-    p.append(box(540, 220, 140, 84, "Billing", ["Accepted work", "pre-matched to client/", "PO/approvals."]))
+    p.append(box(540, 220, 140, 84, "Billing", ["Accepted work", "pre-matched to client."]))
     p.append(line("M680,262 H698"))
     p.append(stack(700, 220, 145, 84, 6, "#fff", "#cfc9bf"))
     p.append(box(700, 220, 145, 84, "Invoicing", ["Multiple client formats,", "from the contract."]))
