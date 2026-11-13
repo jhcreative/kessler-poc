@@ -84,7 +84,7 @@ def svg_recommended():
     ways_in(p, 170, [190, 220, 250, 248], ["Their format, their rules.", "Starbucks stores, other clients.", "Smaller clients."])
     mid = len(p)  # everything after the ways in shifts left 20 to make room on the right
     p.append(cylinder(270, 148, 210, 144, "Job records", ["One record per request.", "Contract guardrails added.",
-                      "Structured data for analysis.", "Maintains record state", "from Intake to Collections."], 360, dy=8, ty=184))
+                      "Structured data for analysis.", "Maintains record state", "and makes visible for humans."], 360, dy=8, ty=184))
     # additional approvals: out of the record's top, back in, then on to dispatch (dotted inside, John 2026-11-13)
     p.append(box(270, 62, 175, 50, "Additional approvals", "Client sign-off, over a cap."))
     p.append(line("M300,140 V114"))
