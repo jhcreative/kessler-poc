@@ -48,10 +48,10 @@ def manual(x, y, w, h, name, subs):
     subs = [subs] if isinstance(subs, str) else subs
     top = y + h / 2 + 4 - 7 * (len(subs) - 1)
     out = [f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="14" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.6"/>',
-           f'<text class="k" x="{x+14}" y="{y+16}" style="fill:#9a5a00;font-size:9px">BY HAND</text>',
-           f'<text class="h" x="{x+14}" y="{top}" style="font-weight:700;font-size:14.5px">{name}</text>']
+           f'<text class="k" x="{x+20}" y="{y+20}" style="fill:#9a5a00;font-size:9px">BY HAND</text>',
+           f'<text class="h" x="{x+20}" y="{top}" style="font-weight:700;font-size:14.5px">{name}</text>']
     for i, t in enumerate(subs):
-        out.append(f'<text class="s" x="{x+14}" y="{top+17+i*14}" style="font-size:11px">{t}</text>')
+        out.append(f'<text class="s" x="{x+20}" y="{top+17+i*14}" style="font-size:11px">{t}</text>')
     return "".join(out)
 
 
@@ -81,32 +81,32 @@ def mid_arrows(p, segs):
 
 def svg_recommended(overlay=None):
     p = [ARROW]
-    ways_in(p, 170, [190, 220, 250, 248], ["Their format, their rules.", "Starbucks stores, other clients.", "Smaller clients."])
+    ways_in(p, 170, [190, 220, 250, 237], ["Their format, their rules.", "Starbucks stores, other clients.", "Smaller clients."])
     mid = len(p)  # everything after the ways in shifts left 20 to make room on the right
-    p.append(cylinder(270, 148, 210, 144, "Job records", ["One record per request.", "Contract guardrails added.",
-                      "Structured data for analysis.", "Maintains record state", "and makes visible for humans."], 360, dy=8, ty=184))
+    p.append(cylinder(259.5, 141, 231, 158, "Job records", ["One record per request.", "Contract guardrails added.",
+                      "Structured data for analysis.", "Maintains record state", "and makes visible for humans."], 360, dy=11, ty=188))
     # additional approvals: out of the record's top, back in, then on to dispatch (dotted inside, John 2026-11-13)
-    p.append(box(270, 62, 175, 50, "Additional approvals", "Client sign-off, over a cap."))
-    p.append(line("M300,140 V114"))
-    p.append(line("M410,112 V140"))
-    p.append(line("M410,141 V168 H478", dash=True))
+    p.append(box(270, -16, 175, 44, "Additional approvals", "Client sign-off, over a cap."))  # above the updates line
+    p.append(line("M300,133 V30"))
+    p.append(line("M410,28 V130"))
+    p.append(line("M410,132 V168 H488", dash=True))
     # inside the record: updates enter, billing exits (a gap where the approval path crosses)
-    p.append(line("M458,137 V162 M458,174 V262 H478", dash=True))
+    p.append(line("M458,134 V162 M458,174 V262 H488", dash=True))
     # feedback that needs approval goes straight back out to additional approvals (John, 2026-11-13)
-    p.append(line("M458,202 H300 V140", dash=True, end=False))  # joins the solid arrow; one arrowhead only
+    p.append(line("M458,202 H300 V133", dash=True, end=False))  # joins the solid arrow; one arrowhead only
     p.append(store(295, 378, 160, 54, "Contracts", "Maintained elsewhere, for now.", False))
-    p.append(line("M375,378 V306"))
+    p.append(line("M375,378 V312"))
     p.append('<text class="e" x="384" y="340">Checked before</text><text class="e" x="384" y="354">work assigned.</text>')
-    p.append(line("M480,168 H525 V130 H578"))
+    p.append(line("M490,168 H525 V130 H578"))
     p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, routes."))
     p.append(line("M740,130 H788"))
     p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
-    p.append(line("M870,100 V40 H458 V136"))
+    p.append(line("M870,100 V40 H458 V132"))
     mid_arrows(p, ["M870,76 V66", "M775,40 H765", "M565,40 H555"])
     p.append('<path d="M660,100 V70 V40" fill="none" stroke="#444" stroke-width="1.3" marker-mid="url(#ar)"/>')
     p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
-    p.append(line("M480,262 H538"))
-    p.append('<text class="e" x="487" y="254">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
+    p.append(line("M490,262 H538"))
+    p.append('<text class="e" x="494" y="254" style="font-size:10px">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
     p.append(box(540, 220, 140, 84, "Billing", ["Accepted work", "pre-matched to client."]))
     p.append(line("M680,262 H698"))
     p.append(stack(700, 220, 145, 84, 6, "#fff", "#cfc9bf"))
@@ -119,8 +119,8 @@ def svg_recommended(overlay=None):
     p.append(box(865, 220, 100, 84, "Collections", "Normal aging."))  # no disputes: the record prevents disputable work
     # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
     # override anything but the rails; billing sees only what fails the check)
-    p.append(human(385, 294, "Coordinator"))  # right of the contracts arrow
-    p.append(human(318, 106, "Client"))
+    p.append(human(385, 302, "Coordinator"))  # right of the contracts arrow
+    p.append(human(318, 26, "Client"))
     p.append(human(650, 150, "Dispatcher"))
     p.append(human(880, 150, "Tech"))
     p.append(human(555, 296, "Controller"))
@@ -133,55 +133,61 @@ def svg_recommended(overlay=None):
         overlay(p)  # final coordinates: after the group's -20 shift
     p.append('<rect x="9" y="380" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
              '<rect x="9" y="380" width="4" height="16" fill="#F7941E"/><text class="e" x="56" y="392">Step in the system.</text>')
-    return f'<svg class="fig" viewBox="-2 -2 962 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
+    return f'<svg class="fig" viewBox="-2 -20 962 460" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
 
 
 def svg_current():
     """Today, from round 4: coordinators re-key and update by hand; the tech texts Tony; Tony updates the record;
     Marcee reconciles finished work with contracts and PO numbers before invoicing. No contract reaches the record."""
     p = [ARROW]
-    ways_in(p, 150, [140, 222, 304, 178], ["Their format, their rules.", "Stores, other clients.", "Smaller clients."])
-    p.append(manual(180, 110, 120, 224, "Coordinators", ["Re-key every", "request.", "", "Update the", "record.", "", "Chase approvals."]))
-    p.append(line("M300,222 H328"))
-    p.append(cylinder(330, 148, 160, 144, "Job records", ["One notes field.", "Detail lost", "in the handling.",
-                      "No contract guardrails.", "State seen by no one."], 403))
+    ways_in(p, 150, [140, 222, 304, 170], ["Their format, their rules.", "Stores, other clients.", "Smaller clients."])
+    p.append(manual(172, 102, 146, 238, "Coordinators", ["Re-key every", "request.", "", "Update the", "record.", "", "Chase approvals."]))
+    p.append(line("M318,222 H336"))
+    # job records 10% smaller than page 2's: today's record is the smaller idea (John, 2026-11-13)
+    p.append(cylinder(338, 155, 144, 130, "Job records", ["One notes field.", "Detail lost", "in the handling.",
+                      "No contract guardrails.", "State seen by no one."], 410))
     # approvals today: out of the record to the coordinators, who chase the approval, then back into the record
-    p.append(line("M350,140 V90 H270 V108"))
-    p.append('<text class="e" x="278" y="84">Needs approval.</text>')
-    p.append(line("M220,110 V72"))
+    p.append(line("M350,150 V90 H270 V100"))
+    p.append('<text class="e" x="356" y="110">Needs approval.</text>')
+    p.append(line("M220,102 V72"))
     p.append(box(180, 22, 175, 48, "Additional approvals", "Often chased after the work."))
-    p.append(line("M355,46 H440 V140"))
-    p.append(line("M440,158 V168 H488", dash=True))
-    p.append(line("M478,152 V162 M478,174 V262 H488", dash=True))
-    p.append(line("M490,168 H520 V130 H558"))
-    p.append(manual(560, 92, 165, 76, "Dispatch: Tony", "One person, his own phone."))
-    p.append(line("M725,118 H788"))
+    p.append(line("M355,46 H440 V146"))
+    p.append(line("M440,148 V168 H480", dash=True))
+    p.append(line("M470,151 V162 M470,174 V262 H480", dash=True))
+    p.append(line("M482,168 H515 V130 H550"))
+    p.append(manual(552, 84, 180, 92, "Dispatch: Tony", "One person, his own phone."))
+    p.append(line("M732,118 H788"))
     p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
     p.append(human(897, 90, "Tech"))  # human in the loop (John, 2026-11-13)
-    p.append(line("M790,145 H727"))
-    p.append('<text class="e" x="757" y="180" text-anchor="middle" style="fill:#9a5a00">Texts Tony from a personal phone.</text>')
-    p.append(line("M642,92 V40 H478 V136"))
-    mid_arrows(p, ["M642,76 V66", "M570,40 H560"])
+    p.append(line("M790,145 H734"))
+    p.append('<text class="e" x="760" y="192" text-anchor="middle" style="fill:#9a5a00">Texts Tony from a personal phone.</text>')
+    p.append(line("M642,84 V40 H470 V146"))
+    mid_arrows(p, ["M642,66 V56", "M570,40 H560"])
     p.append('<text class="e" x="560" y="32" text-anchor="middle" style="fill:#9a5a00">Tony updates the record by hand.</text>')
-    p.append(line("M490,262 H531"))
-    p.append('<text class="e" x="493" y="255" style="font-size:10px">By hand.</text>')
-    p.append(manual(533, 220, 134, 84, "Billing: Marcee", ["Reconciles finished", "work to contracts,", "PO numbers."]))
-    p.append(line("M667,262 H685"))
-    p.append(stack(687, 220, 145, 84, 14, "#eadbc4", "#1c1b19"))
-    p.append(manual(687, 220, 145, 84, "Invoicing: Marcee", ["Multiple client", "formats, each", "by hand."]))
-    p.append(line("M840,262 H853"))
-    p.append(stack(855, 228, 92, 70, 6, "#fff", "#cfc9bf"))
-    p.append(box(855, 228, 92, 70, "Collections", ["Normal", "aging."]))
+    # the record tells no one in real time, so Tony goes straight to the coordinators (John, 2026-11-13)
+    p.append(line("M700,84 V12 H160 V120 H170"))
+    mid_arrows(p, ["M700,50 V40", "M440,12 H430", "M160,64 V74"])
+    p.append('<text class="e" x="362" y="26" style="fill:#9a5a00">Tony tells the</text>'
+             '<text class="e" x="362" y="37" style="fill:#9a5a00">coordinators directly.</text>')
+    p.append(line("M482,262 H528"))
+    p.append('<text class="e" x="486" y="255" style="font-size:10px">By hand.</text>')
+    p.append(manual(530, 212, 140, 100, "Billing: Marcee", ["Reconciles finished", "work to contracts,", "PO numbers."]))
+    p.append(line("M670,262 H686"))
+    p.append(stack(688, 212, 150, 100, 14, "#eadbc4", "#1c1b19"))
+    p.append(manual(688, 212, 150, 100, "Invoicing: Marcee", ["Multiple client", "formats, each", "by hand."]))
+    p.append(line("M846,262 H856"))
+    p.append(stack(858, 228, 92, 70, 6, "#fff", "#cfc9bf"))
+    p.append(box(858, 228, 92, 70, "Collections", ["Normal", "aging."]))
     # disputes, by hand: back to the contracts, then to the coordinators and the approvals chase (John, 2026-11-13)
-    p.append(line("M900,298 V326"))
-    p.append(manual(838, 328, 117, 92, "Disputes", ["Marcee chases.", "$80K–$200K a year", "written off."]))
-    p.append(line("M838,395 H752"))
+    p.append(line("M904,298 V326"))
+    p.append(manual(836, 328, 122, 100, "Disputes", ["Marcee chases.", "$80K–$200K a year", "written off."]))
+    p.append(line("M836,395 H752"))
     p.append(store(560, 378, 190, 54, "Contracts, POs", "Files, Sheets, tribal knowledge.", True))
-    p.append(line("M596,378 V306"))
-    p.append(line("M730,378 V306"))
+    p.append(line("M596,378 V314"))
+    p.append(line("M730,378 V314"))
     p.append('<text class="e" x="663" y="370" text-anchor="middle" style="fill:#9a5a00">After work complete.</text>')
-    p.append(line("M560,405 H520 V345 H240 V337"))
-    p.append('<text class="e" x="334" y="339" style="fill:#9a5a00">Rework: back to the coordinators.</text>')
+    p.append(line("M560,405 H520 V354 H240 V342"))
+    p.append('<text class="e" x="334" y="349" style="fill:#9a5a00">Rework: back to the coordinators.</text>')
     p.append(human(0, 352, "Role"))
     p.append('<text class="e" x="56" y="366">Human review and decision points.</text>')
     p.append('<rect x="9" y="380" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'
@@ -197,8 +203,8 @@ def svg_opportunities():
     automation or an application benefit, with a short line of what it does (John, 2026-11-13)."""
     def add(p):
         # make room for two gears: lift "On Close." above its gear, move "Checked before" clear of its gear
-        p.append('<rect x="462" y="243" width="58" height="15" fill="#fff"/>'
-                 '<text class="e" x="467" y="246">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">'
+        p.append('<rect x="470" y="243" width="50" height="15" fill="#fff"/>'
+                 '<text class="e" x="474" y="246" style="font-size:10px">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">'
                  'Close</tspan>.</text>')
         p.append('<rect x="361" y="329" width="80" height="30" fill="#fff"/>'
                  '<text class="e" x="338" y="350" text-anchor="end">Checked before</text>'
@@ -214,9 +220,9 @@ def svg_opportunities():
 
 # (gear x, gear y, text lines, anchor, text x, text y): final coordinates on the recommended drawing
 GEARS = [
-    (209, 165, [], "middle", 209, 0),   # Target portal
-    (209, 221, [], "middle", 209, 0),   # Emails
-    (209, 277, ["Auto draft job", "records from source."], "start", 199, 304),   # FacilIT; one caption for the column
+    (204, 165, [], "middle", 204, 0),   # Target portal
+    (204, 221, [], "middle", 204, 0),   # Emails
+    (204, 277, ["Auto draft job", "records from source."], "start", 194, 304),   # FacilIT; one caption for the column
     (489, 262, ["Auto push", "to queue."], "middle", 489, 284),
     (505, 40, ["One way update flow keeps", "everyone on same page."], "middle", 505, 62),
     (355, 346, ["Auto provide contract guardrails", "before work begins."], "start", 368, 344),
