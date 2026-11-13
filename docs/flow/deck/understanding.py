@@ -45,12 +45,16 @@ def svg():
     p.append('<text class="e" x="384" y="340">Read-only: applied to</text><text class="e" x="384" y="354">this one request.</text>')
     # dispatch, onsite (upper lane)
     p.append(line("M480,190 H525 V130 H578"))
-    p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, the route."))
+    p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, routes."))
     p.append(line("M740,130 H788"))
-    p.append(box(790, 100, 160, 60, "Onsite", "The tech at the site."))
+    p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
     p.append(line("M870,100 V40 H458 V136"))
+    # mid-line arrowheads make the feedback direction readable (John, 2026-11-13)
+    p.append(line("M870,76 V66"))      # up out of onsite
+    p.append(line("M775,40 H765"))     # left, onsite toward dispatch's join
+    p.append(line("M565,40 H555"))     # left, on toward the record
     p.append('<path d="M660,100 V70 V40" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-mid="url(#ar)"/>')  # dispatch reports back into the record too (John, 2026-11-13)
-    p.append('<text class="e" x="645" y="32" text-anchor="middle">Back into the record: what the site found, approval needed, signed.</text>')
+    p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
     # billing (lower lane), only after onsite returns
     p.append(line("M480,262 H538"))
     p.append('<text class="e" x="485" y="243">Only after</text><text class="e" x="485" y="255">onsite.</text>')
