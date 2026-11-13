@@ -119,7 +119,7 @@ def svg_recommended():
     p.append(box(865, 232, 105, 60, "Collections", "Normal aging."))  # no disputes: the record prevents disputable work
     # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
     # override anything but the rails; billing sees only what fails the check)
-    p.append(human(290, 282, "Coordinator"))
+    p.append(human(280, 294, "Coordinator"))
     p.append(human(318, 106, "Client"))
     p.append(human(650, 150, "Dispatcher"))
     p.append(human(880, 150, "Tech"))
