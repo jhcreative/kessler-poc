@@ -107,25 +107,25 @@ def svg_recommended():
     p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
     p.append(line("M480,262 H538"))
     p.append('<text class="e" x="487" y="254">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
-    p.append(box(540, 232, 120, 60, "Billing", "Matched to the job."))
-    p.append(line("M660,262 H683"))
-    p.append(stack(685, 232, 155, 60, 6, "#fff", "#cfc9bf"))
-    p.append(box(685, 232, 155, 60, "Invoicing", ["Multiple client formats,", "from the contract."]))
+    p.append(box(540, 220, 140, 84, "Billing", ["Accepted work", "pre-matched to client/", "PO/approvals."]))
+    p.append(line("M680,262 H698"))
+    p.append(stack(700, 220, 145, 84, 6, "#fff", "#cfc9bf"))
+    p.append(box(700, 220, 145, 84, "Invoicing", ["Multiple client formats,", "from the contract."]))
     # contracts also feed invoicing: each client's format, read-only
-    p.append(line("M455,405 H762 V294"))
+    p.append(line("M455,405 H735 V306"))
     p.append('<text class="e" x="560" y="398">Client specific invoice templating.</text>')
-    p.append(line("M840,262 H863"))
-    p.append(stack(865, 232, 105, 60, 6, "#fff", "#cfc9bf"))
-    p.append(box(865, 232, 105, 60, "Collections", "Normal aging."))  # no disputes: the record prevents disputable work
+    p.append(line("M845,262 H863"))
+    p.append(stack(865, 220, 100, 84, 6, "#fff", "#cfc9bf"))
+    p.append(box(865, 220, 100, 84, "Collections", "Normal aging."))  # no disputes: the record prevents disputable work
     # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
     # override anything but the rails; billing sees only what fails the check)
     p.append(human(280, 294, "Coordinator"))
     p.append(human(318, 106, "Client"))
     p.append(human(650, 150, "Dispatcher"))
     p.append(human(880, 150, "Tech"))
-    p.append(human(560, 290, "Controller"))
-    p.append(human(772, 290, "Controller"))  # invoicing, right of the contracts arrow
-    p.append(human(872, 290, "Controller"))
+    p.append(human(555, 296, "Controller"))
+    p.append(human(752, 296, "Controller"))  # invoicing, right of the contracts arrow
+    p.append(human(872, 296, "Controller"))
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
     p.append(human(0, 352, "Role"))
     p.append('<text class="e" x="64" y="366">Human review and decision points.</text>')
