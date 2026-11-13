@@ -123,8 +123,9 @@ def svg_recommended():
     p.append(human(318, 106, "Client"))
     p.append(human(650, 150, "Dispatcher"))
     p.append(human(880, 150, "Tech"))
-    p.append(human(560, 282, "Controller"))
-    p.append(human(872, 282, "Controller"))
+    p.append(human(560, 290, "Controller"))
+    p.append(human(772, 290, "Controller"))  # invoicing, right of the contracts arrow
+    p.append(human(872, 290, "Controller"))
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
     p.append(human(0, 352, "Role"))
     p.append('<text class="e" x="64" y="366">Human review and decision points.</text>')
