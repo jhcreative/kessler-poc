@@ -32,6 +32,16 @@ def stack(x, y, w, h, rx, fill, stroke):
                    f'stroke-width="1.1"/>' for d in (8, 4))
 
 
+def human(x, y, label):
+    """Human in the loop: a small chip, the by-hand scheme darkened, black border (John, 2026-11-13). It sits on a
+    system step where a person reviews or decides."""
+    w = len(label) * 5.7 + 22
+    return (f'<rect x="{x}" y="{y}" width="{w}" height="20" rx="4" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.1"/>'
+            f'<circle cx="{x+10}" cy="{y+7}" r="2.8" fill="#1c1b19"/>'
+            f'<path d="M{x+5},{y+16.5} a5,5.5 0 0 1 10,0 Z" fill="#1c1b19"/>'
+            f'<text x="{x+19}" y="{y+14}" style="font-size:10px;font-weight:600;fill:#1c1b19">{label}</text>')
+
+
 def manual(x, y, w, h, name, subs):
     """A manual junction: a person moves the request by hand. Rounded, warm fill, deep-orange border, BY HAND kicker,
     so it never reads as a system step (John, 2026-11-13)."""
@@ -93,7 +103,7 @@ def svg_recommended():
     p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
     p.append(line("M870,100 V40 H458 V136"))
     mid_arrows(p, ["M870,76 V66", "M775,40 H765", "M565,40 H555"])
-    p.append('<path d="M660,100 V70 V40" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-mid="url(#ar)"/>')
+    p.append('<path d="M660,100 V70 V40" fill="none" stroke="#444" stroke-width="1.3" marker-mid="url(#ar)"/>')
     p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
     p.append(line("M480,262 H538"))
     p.append('<text class="e" x="487" y="254">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
@@ -106,7 +116,17 @@ def svg_recommended():
     p.append('<text class="e" x="560" y="398">Read-only: each client\'s invoice format.</text>')
     p.append(line("M840,262 H863"))
     p.append(box(865, 232, 105, 60, "Collections", "Aging, disputes."))
+    # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
+    # override anything but the rails; billing sees only what fails the check)
+    p.append(human(290, 282, "Coordinator"))
+    p.append(human(318, 106, "Client"))
+    p.append(human(650, 150, "Dispatcher"))
+    p.append(human(880, 150, "Tech"))
+    p.append(human(560, 282, "Exceptions"))
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
+    p.append(human(0, 356, "Role"))
+    p.append('<text class="e" x="64" y="364">Human in the loop: a person</text>'
+             '<text class="e" x="64" y="377">reviews or decides in a step.</text>')
     return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
@@ -131,6 +151,7 @@ def svg_current():
     p.append(manual(560, 92, 165, 76, "Dispatch: Tony", "One person, his own phone."))
     p.append(line("M725,118 H788"))
     p.append(box(790, 100, 160, 60, "Onsite", "Tech analysis, repair."))
+    p.append(human(897, 90, "Tech"))  # human in the loop (John, 2026-11-13)
     p.append(line("M790,145 H727"))
     p.append('<text class="e" x="757" y="180" text-anchor="middle" style="fill:#9a5a00">Texts Tony from a personal phone.</text>')
     p.append(line("M642,92 V40 H478 V136"))
@@ -149,10 +170,12 @@ def svg_current():
     p.append(line("M730,378 V306"))
     p.append('<text class="e" x="760" y="398" style="fill:#9a5a00">Checked by hand,</text>'
              '<text class="e" x="760" y="412" style="fill:#9a5a00">after the work.</text>')
-    p.append('<rect x="0" y="372" width="26" height="16" rx="6" fill="#f6efe4" stroke="#D07200" stroke-width="1.4"/>'
-             '<text class="e" x="34" y="384">Manual junction: a person moves the request by hand.</text>'
-             '<rect x="0" y="396" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
-             '<rect x="0" y="396" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="408">A step in a system.</text>')
+    p.append(human(0, 350, "Role"))
+    p.append('<text class="e" x="64" y="364">Human in the loop: a person reviews or decides in a step.</text>')
+    p.append('<rect x="0" y="380" width="26" height="16" rx="6" fill="#f6efe4" stroke="#D07200" stroke-width="1.4"/>'
+             '<text class="e" x="34" y="392">Manual junction: a person moves the request by hand.</text>'
+             '<rect x="0" y="404" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
+             '<rect x="0" y="404" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="416">A step in a system.</text>')
     return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 

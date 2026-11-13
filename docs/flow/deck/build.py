@@ -53,7 +53,7 @@ STYLE = """
 
 ARROW = """<defs>
   <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#1c1b19"/></marker>
+    <path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker>
   <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
     <path d="M0,0 L10,5 L0,10 z" fill="#D07200"/></marker>
 </defs>"""
@@ -75,7 +75,7 @@ def pill(x, y, w, h, t, cls="s", stroke="#cfc9bf", fill="#faf8f4", dash=""):
 
 
 def line(d, orange=False, dash=False, end=True):
-    c = "#D07200" if orange else "#1c1b19"
+    c = "#D07200" if orange else "#444"  # arrows dark grey, not black (John, 2026-11-13)
     m = f' marker-end="url(#{"ao" if orange else "ar"})"' if end else ""
     da = ' stroke-dasharray="5 4"' if dash else ""
     return f'<path d="{d}" fill="none" stroke="{c}" stroke-width="1.3"{da}{m}/>'
