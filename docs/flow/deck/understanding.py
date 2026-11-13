@@ -96,7 +96,7 @@ def svg_recommended():
     p.append('<path d="M660,100 V70 V40" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-mid="url(#ar)"/>')
     p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
     p.append(line("M480,262 H538"))
-    p.append('<text class="e" x="487" y="254">On close.</text>')
+    p.append('<text class="e" x="487" y="254">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">Close</tspan>.</text>')
     p.append(box(540, 232, 120, 60, "Billing", "Matched to the job."))
     p.append(line("M660,262 H683"))
     p.append(stack(685, 232, 155, 60, 6, "#fff", "#cfc9bf"))
