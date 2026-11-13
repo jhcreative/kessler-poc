@@ -189,6 +189,12 @@ def svg_current():
     return f'<svg class="fig" viewBox="-2 -2 962 444" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
+
+def svg_opportunities():
+    """Page 3 starts as the recommended flow; the opportunity pattern goes on top of it next (John, 2026-11-13)."""
+    return svg_recommended()
+
+
 LAND = """<style>
   .sheet{width:11in;height:8.5in;padding:0.55in 0.75in 0.45in;}
   @media print{@page{size:11in 8.5in;margin:0;}}
@@ -204,6 +210,10 @@ PAGES = [  # current first, then recommended (John, 2026-11-13)
      "Recommended request flow automates the redundant parts of each human role, including data entry, contract "
      "checks and notifications, and streamlines communication through one shared record, so the same people make "
      "better decisions faster as the volume of business grows.", svg_recommended),
+    ("Flow Improvement Opportunities",
+     "By centralizing the source of truth for a given request, our goal is to provide real-time visibility to all "
+     "available information relevant to ideal human decision making, and help prevent delays, disputes, rework and "
+     "waste.", svg_opportunities),
 ]
 pdfs = []
 with sync_playwright() as pw:
