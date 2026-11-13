@@ -128,11 +128,11 @@ def svg_recommended(overlay=None):
     p.append(human(872, 296, "Controller"))
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
     p.append(human(0, 352, "Role"))
-    p.append('<text class="e" x="64" y="366">Human review and decision points.</text>')
+    p.append('<text class="e" x="56" y="366">Human review and decision points.</text>')
     if overlay:
         overlay(p)  # final coordinates: after the group's -20 shift
-    p.append('<rect x="0" y="382" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
-             '<rect x="0" y="382" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="394">Step in the system.</text>')
+    p.append('<rect x="9" y="380" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
+             '<rect x="9" y="380" width="4" height="16" fill="#F7941E"/><text class="e" x="56" y="392">Step in the system.</text>')
     return f'<svg class="fig" viewBox="-2 -2 962 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
@@ -182,12 +182,12 @@ def svg_current():
     p.append('<text class="e" x="663" y="370" text-anchor="middle" style="fill:#9a5a00">After work complete.</text>')
     p.append(line("M560,405 H520 V345 H240 V337"))
     p.append('<text class="e" x="334" y="339" style="fill:#9a5a00">Rework: back to the coordinators.</text>')
-    p.append(human(0, 358, "Role"))
-    p.append('<text class="e" x="64" y="372">Human review and decision points.</text>')
-    p.append('<rect x="0" y="386" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'
-             '<text class="e" x="34" y="398">Manual junction: Human makes multiple system decisions.</text>')
-    p.append('<rect x="0" y="410" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
-             '<rect x="0" y="410" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="422">Step in the system.</text>')
+    p.append(human(0, 352, "Role"))
+    p.append('<text class="e" x="56" y="366">Human review and decision points.</text>')
+    p.append('<rect x="9" y="380" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'
+             '<text class="e" x="56" y="392">Manual junction: Human makes multiple system decisions.</text>')
+    p.append('<rect x="9" y="406" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
+             '<rect x="9" y="406" width="4" height="16" fill="#F7941E"/><text class="e" x="56" y="418">Step in the system.</text>')
     return f'<svg class="fig" viewBox="-2 -2 962 444" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
@@ -201,22 +201,25 @@ def svg_opportunities():
                  '<text class="e" x="467" y="246">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">'
                  'Close</tspan>.</text>')
         p.append('<rect x="361" y="329" width="80" height="30" fill="#fff"/>'
-                 '<text class="e" x="372" y="340">Checked before</text><text class="e" x="372" y="354">work assigned.</text>')
+                 '<text class="e" x="338" y="350" text-anchor="end">Checked before</text>'
+                 '<text class="e" x="338" y="363" text-anchor="end">work assigned.</text>')
         for cx, cy, lines, anchor, tx, ty in GEARS:
             p.append(gear(cx, cy))
             for i, t in enumerate(lines):
                 p.append(f'<text x="{tx}" y="{ty+i*11.5}" text-anchor="{anchor}" '
                          f'style="font-size:9.8px;font-weight:600;fill:#1c1b19;paint-order:stroke;stroke:#fff;stroke-width:3px">{t}</text>')
-        p.append(gear(10, 410) + '<text class="e" x="26" y="414">Automation or application benefit.</text>')
+        p.append(gear(22, 414) + '<text class="e" x="56" y="418">Automation or application benefit.</text>')
     return svg_recommended(add)
 
 
 # (gear x, gear y, text lines, anchor, text x, text y): final coordinates on the recommended drawing
 GEARS = [
-    (204, 221, ["Auto draft", "job records", "from emails."], "middle", 204, 243),
+    (209, 165, [], "middle", 209, 0),   # Target portal
+    (209, 221, [], "middle", 209, 0),   # Emails
+    (209, 277, ["Auto draft job records from source."], "start", 178, 326),   # FacilIT; one caption for the column
     (489, 262, ["Auto pushed", "to Controller", "queue."], "middle", 489, 284),
     (495, 40, ["One way update flow", "keeps everyone", "on same page."], "middle", 495, 62),
-    (355, 328, ["Auto provide contract", "guardrails before", "work begins."], "end", 342, 346),
+    (355, 346, ["Auto provide contract guardrails", "before work begins."], "start", 368, 344),
     (715, 360, ["Auto draft invoice", "in required format."], "start", 728, 358),
 ]
 
