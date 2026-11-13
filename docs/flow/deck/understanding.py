@@ -206,7 +206,7 @@ def svg_opportunities():
         for cx, cy, lines, anchor, tx, ty in GEARS:
             p.append(gear(cx, cy))
             for i, t in enumerate(lines):
-                p.append(f'<text x="{tx}" y="{ty+i*11.5}" text-anchor="{anchor}" '
+                p.append(f'<text x="{tx}" y="{ty+i*10.8}" text-anchor="{anchor}" '
                          f'style="font-size:9.8px;font-weight:600;fill:#1c1b19;paint-order:stroke;stroke:#fff;stroke-width:3px">{t}</text>')
         p.append(gear(22, 414) + '<text class="e" x="56" y="418">Automation or application benefit.</text>')
     return svg_recommended(add)
@@ -216,7 +216,7 @@ def svg_opportunities():
 GEARS = [
     (209, 165, [], "middle", 209, 0),   # Target portal
     (209, 221, [], "middle", 209, 0),   # Emails
-    (209, 277, ["Auto draft job records from source."], "start", 178, 326),   # FacilIT; one caption for the column
+    (209, 277, ["Auto draft job", "records from source."], "middle", 213, 331),   # FacilIT; one caption for the column
     (489, 262, ["Auto pushed", "to Controller", "queue."], "middle", 489, 284),
     (495, 40, ["One way update flow", "keeps everyone", "on same page."], "middle", 495, 62),
     (355, 346, ["Auto provide contract guardrails", "before work begins."], "start", 368, 344),
