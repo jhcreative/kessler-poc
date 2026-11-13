@@ -34,7 +34,9 @@ def svg():
              '<path d="M280,148 a95,10 0 0 0 190,0" fill="none" stroke="#F7941E" stroke-width="1.8"/>')
     for i, (c, t) in enumerate([("h", "Job records"), ("s", "one record per request"), ("s", "the contract applied"),
                                 ("s", "the state, at every step")]):
-        p.append(f'<text class="{c}" x="375" y="{196+i*20}" text-anchor="middle">{t}</text>')
+        p.append(f'<text class="{c}" x="352" y="{196+i*20}" text-anchor="middle">{t}</text>')
+    # inside the record: onsite feedback enters, billing exits
+    p.append(line("M440,154 V262 H468", dash=True))
     # contracts, below, read-only into job records
     p.append(store(295, 378, 160, 54, "Contracts", "maintained elsewhere, for now", False))
     p.append(line("M375,378 V306"))
@@ -44,12 +46,16 @@ def svg():
     p.append(box(580, 100, 160, 60, "Dispatch", "people, parts, the route"))
     p.append(line("M740,130 H788"))
     p.append(box(790, 100, 160, 60, "Onsite", "the tech at the site"))
-    p.append(line("M870,100 V40 H420 V136"))
+    p.append(line("M870,100 V40 H440 V136"))
     p.append('<text class="e" x="645" y="32" text-anchor="middle">back into the record: what the site found, approval needed, signed</text>')
     # billing (lower lane), only after onsite returns
-    p.append(line("M470,262 H578"))
-    p.append('<text class="e" x="482" y="254">only after onsite</text>')
-    p.append(box(580, 232, 160, 60, "Billing", "close to cash"))
+    p.append(line("M470,262 H523"))
+    p.append('<text class="e" x="476" y="240">only after</text><text class="e" x="476" y="253">onsite</text>')
+    p.append(box(525, 232, 125, 60, "Billing", "matched to the job"))
+    p.append(line("M650,262 H678"))
+    p.append(box(680, 232, 125, 60, "Invoicing", "the client's format"))
+    p.append(line("M805,262 H833"))
+    p.append(box(835, 232, 115, 60, "Collections", "aging, disputes"))
     return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
@@ -67,7 +73,7 @@ html = f"""<!DOCTYPE html>
 <h1 class="title">How One Request Flows</h1>
 <div class="meta">{META}</div>
 <p class="dek">Every request lands in one job record, which pulls its contract read-only and applies it to that request.
-The record sends the job to dispatch and onsite, takes back what the site found, and only then moves it to billing.</p>
+The record sends the job to dispatch and onsite, takes back what the site found, and only then moves it on to billing, invoicing and collections.</p>
 {svg()}
 <div class="folio">1</div>
 </div></body></html>
@@ -79,10 +85,11 @@ with sync_playwright() as pw:
     pg.goto(src.as_uri()); pg.wait_for_load_state("networkidle")
     land = pg.pdf(width="11in", height="8.5in", print_background=True, prefer_css_page_size=False)
     b.close()
-out = HERE.parent / "jahnel-poc-flows.pdf"
-portrait = PdfReader(str(HERE.parent / "_portrait.pdf"))
+# Page one alone for now (John, 2026-11-13); --with-rest puts it in front of the portrait deck.
+rest = "--with-rest" in sys.argv
+out = HERE.parent / ("jahnel-poc-flows.pdf" if rest else "jahnel-poc-understanding.pdf")
 w = PdfWriter()
-for pdf in (PdfReader(io.BytesIO(land)), portrait):
+for pdf in [PdfReader(io.BytesIO(land))] + ([PdfReader(str(HERE.parent / "_portrait.pdf"))] if rest else []):
     for page in pdf.pages:
         w.add_page(page)
 with open(out, "wb") as f:
