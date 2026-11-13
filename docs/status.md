@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-13 (Anne, request flows deck delivered to the repo)
+Updated: 2026-11-13 (Anne, four-page blueprint and the POC plan)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it; org to confirm)
 
@@ -14,12 +14,15 @@ None.
 
 ## Next
 
-**Due Monday 2026-11-16.** The understanding is done:
-`opportunities/onefamilyservices-request-flows-2026-11-13.pdf` (current, recommended, improvement opportunities). We
-are about a day behind the calendar. Next is the POC plan for John's approval, then the build: the job record, contract
-guardrails before work is assigned, and approval in real time, on synthetic data. Calendar: Sat plan, approve and
-build · Sun screens, eval set, cold review, README, demo · Mon buffer and deliver. The full thought process is in
-`docs/carry-forward/2026-11-13-1547-flows.md`.
+**Due Monday 2026-11-16.**
+- **The understanding:** `opportunities/onefamilyservices-flows-and-views-2026-11-13.pdf`. Four pages: problem,
+  solution, what to automate, blueprint.
+- **The POC plan** waits on John's approval: `docs/plans/2026-11-13-poc-plan.md`. Walk through
+  `docs/plans/2026-11-13-poc-plan-walkthrough.md` (Q1–Q11) first.
+- **The build** starts Saturday morning on approval: Tailor instance, `fieldops` module, websockets, OVH edge-mode
+  deploy.
+- **Schedule:** about a day behind, so the plan carries a cut line. The thought process is in
+  `docs/carry-forward/2026-11-13-1827-blueprint-and-plan.md`.
 
 ## Waiting on John
 
@@ -31,3 +34,4 @@ build · Sun screens, eval set, cold review, README, demo · Mon buffer and deli
 | 2026-11-12 | Remote: johnhiemstracreative (client default, private) or jhcreative (where it can be shown) | Cesar | |
 | 2026-11-13 | CD.1–CD.3: the clock first? intake reading last? demo the clock plus one fix? | Angela | |
 | 2026-11-13 | N.2: the POC plan, next | Angela | |
+| 2026-11-13 | Approve the POC plan, and the walkthrough Q1–Q11 | Angela | |
