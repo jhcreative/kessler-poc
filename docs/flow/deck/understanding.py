@@ -195,15 +195,15 @@ LAND = """<style>
   .title{margin-top:20px;}
 </style>"""
 
-PAGES = [
-    ("Recommended Request Flow",
-     "Recommended request flow automates the redundant parts of each human role, including data entry, contract "
-     "checks and notifications, and streamlines communication through one shared record, so the same people make "
-     "better decisions faster as the volume of business grows.", svg_recommended),
+PAGES = [  # current first, then recommended (John, 2026-11-13)
     ("Current Request Flow",
      "Current request flow requires complex human facilitation at multiple points, including manual data entry, "
      "professional analysis, decision making and notification responsibilities all in a single human role, creating "
      "concerns for efficient scaling and expansion.", svg_current),
+    ("Recommended Request Flow",
+     "Recommended request flow automates the redundant parts of each human role, including data entry, contract "
+     "checks and notifications, and streamlines communication through one shared record, so the same people make "
+     "better decisions faster as the volume of business grows.", svg_recommended),
 ]
 pdfs = []
 with sync_playwright() as pw:
