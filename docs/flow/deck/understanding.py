@@ -119,7 +119,7 @@ def svg_recommended(overlay=None):
     p.append(box(865, 220, 100, 84, "Collections", "Normal aging."))  # no disputes: the record prevents disputable work
     # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
     # override anything but the rails; billing sees only what fails the check)
-    p.append(human(280, 294, "Coordinator"))
+    p.append(human(385, 294, "Coordinator"))  # right of the contracts arrow
     p.append(human(318, 106, "Client"))
     p.append(human(650, 150, "Dispatcher"))
     p.append(human(880, 150, "Tech"))
@@ -216,9 +216,9 @@ def svg_opportunities():
 GEARS = [
     (209, 165, [], "middle", 209, 0),   # Target portal
     (209, 221, [], "middle", 209, 0),   # Emails
-    (209, 277, ["Auto draft job", "records from source."], "middle", 213, 331),   # FacilIT; one caption for the column
-    (489, 262, ["Auto pushed", "to Controller", "queue."], "middle", 489, 284),
-    (495, 40, ["One way update flow", "keeps everyone", "on same page."], "middle", 495, 62),
+    (209, 277, ["Auto draft job", "records from source."], "start", 199, 304),   # FacilIT; one caption for the column
+    (489, 262, ["Auto push", "to queue."], "middle", 489, 284),
+    (505, 40, ["One way update flow keeps", "everyone on same page."], "middle", 505, 62),
     (355, 346, ["Auto provide contract guardrails", "before work begins."], "start", 368, 344),
     (715, 360, ["Auto draft invoice", "in required format."], "start", 728, 358),
 ]
