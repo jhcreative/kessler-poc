@@ -197,13 +197,13 @@ LAND = """<style>
 
 PAGES = [
     ("Recommended Request Flow",
-     "Every request lands in one job record, which pulls its contract read-only and applies it to that request. When a "
-     "job needs more approval, the record sends it out and takes it back before dispatch. Dispatch and onsite update the "
-     "record, and only then does it move on to billing, invoicing and collections.", svg_recommended),
+     "Recommended request flow automates the redundant parts of each human role, including data entry, contract "
+     "checks and notifications, and streamlines communication through one shared record, so the same people make "
+     "better decisions faster as the volume of business grows.", svg_recommended),
     ("Current Request Flow",
-     "Today coordinators re-key every request and update the record by hand. The tech texts Tony from a personal phone, "
-     "and Tony updates the record. No contract reaches the record, so Marcee reconciles finished work with contracts and "
-     "PO numbers before she can invoice.", svg_current),
+     "Current request flow requires complex human facilitation at multiple points, including manual data entry, "
+     "professional analysis, decision making and notification responsibilities all in a single human role, creating "
+     "concerns for efficient scaling and expansion.", svg_current),
 ]
 pdfs = []
 with sync_playwright() as pw:
