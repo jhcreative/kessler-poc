@@ -115,19 +115,22 @@ def svg_recommended():
     p.append(line("M455,405 H762 V294"))
     p.append('<text class="e" x="560" y="398">Client specific invoice templating.</text>')
     p.append(line("M840,262 H863"))
-    p.append(box(865, 232, 105, 60, "Collections", "Aging, disputes."))
+    p.append(stack(865, 232, 105, 60, 6, "#fff", "#cfc9bf"))
+    p.append(box(865, 232, 105, 60, "Collections", "Normal aging."))  # no disputes: the record prevents disputable work
     # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
     # override anything but the rails; billing sees only what fails the check)
     p.append(human(290, 282, "Coordinator"))
     p.append(human(318, 106, "Client"))
     p.append(human(650, 150, "Dispatcher"))
     p.append(human(880, 150, "Tech"))
-    p.append(human(560, 282, "Exceptions"))
+    p.append(human(560, 282, "Controller"))
+    p.append(human(872, 282, "Controller"))
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
-    p.append(human(0, 356, "Role"))
-    p.append('<text class="e" x="64" y="364">Human in the loop: a person</text>'
-             '<text class="e" x="64" y="377">reviews or decides in a step.</text>')
-    return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
+    p.append(human(0, 352, "Role"))
+    p.append('<text class="e" x="64" y="366">Human review and decision points.</text>')
+    p.append('<rect x="0" y="382" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
+             '<rect x="0" y="382" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="394">Step in the system.</text>')
+    return f'<svg class="fig" viewBox="-2 -2 962 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
 def svg_current():
@@ -164,18 +167,25 @@ def svg_current():
     p.append(stack(687, 220, 145, 84, 14, "#eadbc4", "#1c1b19"))
     p.append(manual(687, 220, 145, 84, "Invoicing: Marcee", ["Multiple client", "formats, each", "by hand."]))
     p.append(line("M840,262 H853"))
-    p.append(box(855, 228, 95, 70, "Collections", ["Disputes", "written off."]))
+    p.append(stack(855, 228, 92, 70, 6, "#fff", "#cfc9bf"))
+    p.append(box(855, 228, 92, 70, "Collections", ["Normal", "aging."]))
+    # disputes, by hand: back to the contracts, then to the coordinators and the approvals chase (John, 2026-11-13)
+    p.append(line("M900,298 V326"))
+    p.append(manual(838, 328, 117, 92, "Disputes", ["Marcee chases.", "$80K–$200K a year", "written off."]))
+    p.append(line("M838,395 H752"))
     p.append(store(560, 378, 190, 54, "Contracts, POs", "Files, Sheets, tribal knowledge.", True))
     p.append(line("M596,378 V306"))
     p.append(line("M730,378 V306"))
-    p.append('<text class="e" x="760" y="405" style="fill:#9a5a00">After work complete.</text>')
-    p.append(human(0, 350, "Role"))
-    p.append('<text class="e" x="64" y="364">Human in the loop: a person reviews or decides in a step.</text>')
-    p.append('<rect x="0" y="380" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'
-             '<text class="e" x="34" y="392">Manual junction: Human makes multiple system decisions.</text>'
-             '<rect x="0" y="404" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
-             '<rect x="0" y="404" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="416">A step in a system.</text>')
-    return f'<svg class="fig" viewBox="-2 -2 954 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
+    p.append('<text class="e" x="663" y="370" text-anchor="middle" style="fill:#9a5a00">After work complete.</text>')
+    p.append(line("M560,405 H520 V345 H240 V337"))
+    p.append('<text class="e" x="334" y="339" style="fill:#9a5a00">Rework: back to the coordinators.</text>')
+    p.append(human(0, 358, "Role"))
+    p.append('<text class="e" x="64" y="372">Human review and decision points.</text>')
+    p.append('<rect x="0" y="386" width="26" height="16" rx="6" fill="#eadbc4" stroke="#1c1b19" stroke-width="1.4"/>'
+             '<text class="e" x="34" y="398">Manual junction: Human makes multiple system decisions.</text>')
+    p.append('<rect x="0" y="410" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
+             '<rect x="0" y="410" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="422">Step in the system.</text>')
+    return f'<svg class="fig" viewBox="-2 -2 962 444" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
 
 
 LAND = """<style>
