@@ -241,10 +241,11 @@ def svg_application():
             p.append(f'<rect x="{x0}" y="{y0}" width="{x1-x0}" height="{y1-y0}" fill="{fill}" fill-opacity="0.82" '
                      f'stroke="#1c1b19" stroke-width="2"/>')
             cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-            w = len(name) * 8.6 + 64
-            p.append(f'<rect x="{cx-w/2}" y="{cy-24}" width="{w}" height="48" rx="8" fill="#fff" stroke="#1c1b19" stroke-width="1.6"/>'
-                     f'<text x="{cx-w/2+16}" y="{cy+12}" style="font-size:34px;font-weight:700;fill:#D07200">{n}</text>'
-                     f'<text x="{cx-w/2+46}" y="{cy+6}" style="font-size:16px;font-weight:700;fill:#1c1b19">{name}</text>')
+            label = f"{n}  {name}"
+            w = len(label) * 8.4 + 20
+            p.append(f'<rect x="{cx-w/2}" y="{cy-15}" width="{w}" height="30" rx="6" fill="#fff" stroke="#1c1b19" stroke-width="1.6"/>'
+                     f'<text x="{cx}" y="{cy+5.5}" text-anchor="middle" style="font-size:16px;font-weight:700;fill:#1c1b19;'
+                     f'white-space:pre">{label}</text>')
     return svg_recommended(gears_overlay, top=views, kinds=["screen", "human", "step", "gear"])
 
 
@@ -274,7 +275,7 @@ GEARS = [
     (489, 262, ["Auto push", "to queue."], "middle", 489, 284),
     (505, 88, ["One way update flow keeps", "everyone on same page."], "middle", 494, 108),
     (355, 346, ["Auto provide contract", "guardrails before work begins."], "end", 342, 344),
-    (715, 386, ["Auto draft invoice", "in required format."], "start", 728, 384),
+    (715, 338, ["Auto draft invoice", "in required format."], "start", 728, 336),
 ]
 
 
