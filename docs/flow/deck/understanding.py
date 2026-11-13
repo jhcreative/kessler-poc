@@ -79,7 +79,7 @@ def mid_arrows(p, segs):
         p.append(line(d))
 
 
-def svg_recommended():
+def svg_recommended(overlay=None):
     p = [ARROW]
     ways_in(p, 170, [190, 220, 250, 248], ["Their format, their rules.", "Starbucks stores, other clients.", "Smaller clients."])
     mid = len(p)  # everything after the ways in shifts left 20 to make room on the right
@@ -129,6 +129,8 @@ def svg_recommended():
     p[mid:] = ['<g transform="translate(-20,0)">'] + p[mid:] + ['</g>']
     p.append(human(0, 352, "Role"))
     p.append('<text class="e" x="64" y="366">Human review and decision points.</text>')
+    if overlay:
+        overlay(p)  # final coordinates: after the group's -20 shift
     p.append('<rect x="0" y="382" width="26" height="16" rx="3" fill="#fff" stroke="#9a968f" stroke-width="1.2"/>'
              '<rect x="0" y="382" width="4" height="16" fill="#F7941E"/><text class="e" x="34" y="394">Step in the system.</text>')
     return f'<svg class="fig" viewBox="-2 -2 962 440" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:22px">{"".join(p)}</svg>'
@@ -191,8 +193,40 @@ def svg_current():
 
 
 def svg_opportunities():
-    """Page 3 starts as the recommended flow; the opportunity pattern goes on top of it next (John, 2026-11-13)."""
-    return svg_recommended()
+    """Page 3: the recommended flow with its improvement opportunities on top. A black gear marks LLM-assisted
+    automation or an application benefit, with a short line of what it does (John, 2026-11-13)."""
+    def add(p):
+        # make room for two gears: lift "On Close." above its gear, move "Checked before" clear of its gear
+        p.append('<rect x="462" y="243" width="58" height="15" fill="#fff"/>'
+                 '<text class="e" x="467" y="246">On <tspan style="font-weight:700;font-style:normal;fill:#1c1b19">'
+                 'Close</tspan>.</text>')
+        p.append('<rect x="361" y="329" width="80" height="30" fill="#fff"/>'
+                 '<text class="e" x="372" y="340">Checked before</text><text class="e" x="372" y="354">work assigned.</text>')
+        for cx, cy, lines, anchor, tx, ty in GEARS:
+            p.append(gear(cx, cy))
+            for i, t in enumerate(lines):
+                p.append(f'<text x="{tx}" y="{ty+i*11.5}" text-anchor="{anchor}" '
+                         f'style="font-size:9.8px;font-weight:600;fill:#1c1b19;paint-order:stroke;stroke:#fff;stroke-width:3px">{t}</text>')
+        p.append(gear(10, 410) + '<text class="e" x="26" y="414">Automation or application benefit.</text>')
+    return svg_recommended(add)
+
+
+# (gear x, gear y, text lines, anchor, text x, text y): final coordinates on the recommended drawing
+GEARS = [
+    (204, 221, ["Auto draft", "job records", "from emails."], "middle", 204, 243),
+    (489, 262, ["Auto pushed", "to Controller", "queue."], "middle", 489, 284),
+    (495, 40, ["One way update flow", "keeps everyone", "on same page."], "middle", 495, 62),
+    (355, 328, ["Auto provide contract", "guardrails before", "work begins."], "end", 342, 346),
+    (715, 360, ["Auto draft invoice", "in required format."], "start", 728, 358),
+]
+
+
+def gear(cx, cy, r=7.5):
+    """A small black gear: eight teeth, a body and a white hub."""
+    teeth = "".join(f'<rect x="-2.3" y="{-r-3.2}" width="4.6" height="4.6" rx="0.8" transform="rotate({a})"/>'
+                    for a in range(0, 360, 45))
+    return (f'<g transform="translate({cx},{cy})" fill="#1c1b19">{teeth}<circle r="{r}"/>'
+            f'<circle r="{r*0.38}" fill="#fff"/></g>')
 
 
 LAND = """<style>
