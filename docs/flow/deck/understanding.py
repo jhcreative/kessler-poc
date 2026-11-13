@@ -45,12 +45,12 @@ def manual(x, y, w, h, name, subs):
     return "".join(out)
 
 
-def cylinder(x, y, w, h, title, lines, cx):
+def cylinder(x, y, w, h, title, lines, cx, dy=0):
     p = [f'<path d="M{x},{y} a{w/2},10 0 0 1 {w},0 V{y+h} a{w/2},10 0 0 1 {-w},0 Z" fill="#fdf1e1" stroke="#F7941E" stroke-width="1.8"/>',
          f'<path d="M{x},{y} a{w/2},10 0 0 0 {w},0" fill="none" stroke="#F7941E" stroke-width="1.8"/>',
-         f'<text class="h" x="{cx}" y="{y+42}" text-anchor="middle" style="font-weight:700;font-size:15px">{title}</text>']
+         f'<text class="h" x="{cx}" y="{y+42+dy}" text-anchor="middle" style="font-weight:700;font-size:15px">{title}</text>']
     for i, t in enumerate(lines):
-        p.append(f'<text class="s" x="{cx}" y="{y+62+i*14.5}" text-anchor="middle" style="font-size:11px">{t}</text>')
+        p.append(f'<text class="s" x="{cx}" y="{y+62+dy+i*14.5}" text-anchor="middle" style="font-size:11px">{t}</text>')
     return "".join(p)
 
 
@@ -74,7 +74,7 @@ def svg_recommended():
     ways_in(p, 170, [190, 220, 250, 248], ["Their format, their rules.", "Starbucks stores, other clients.", "Smaller clients."])
     mid = len(p)  # everything after the ways in shifts left 20 to make room on the right
     p.append(cylinder(270, 148, 210, 144, "Job records", ["One record per request.", "Contract guardrails",
-                      "applied to request.", "Maintains record state", "from Intake to Collections."], 360))
+                      "applied to request.", "Maintains record state", "from Intake to Collections."], 360, dy=8))
     # additional approvals: out of the record's top, back in, then on to dispatch (dotted inside, John 2026-11-13)
     p.append(box(270, 62, 175, 50, "Additional approvals", "Client sign-off, over a cap."))
     p.append(line("M300,140 V114"))
@@ -82,9 +82,11 @@ def svg_recommended():
     p.append(line("M410,158 V168 H478", dash=True))
     # inside the record: updates enter, billing exits (a gap where the approval path crosses)
     p.append(line("M458,154 V162 M458,174 V262 H478", dash=True))
+    # feedback that needs approval goes straight back out to additional approvals (John, 2026-11-13)
+    p.append(line("M458,180 H300 V144", dash=True))
     p.append(store(295, 378, 160, 54, "Contracts", "Maintained elsewhere, for now.", False))
     p.append(line("M375,378 V306"))
-    p.append('<text class="e" x="384" y="340">Read-only: applied to</text><text class="e" x="384" y="354">this one request.</text>')
+    p.append('<text class="e" x="384" y="340">Read-only: applied</text><text class="e" x="384" y="354">to each request.</text>')
     p.append(line("M480,168 H525 V130 H578"))
     p.append(box(580, 100, 160, 60, "Dispatch", "People, parts, routes."))
     p.append(line("M740,130 H788"))
@@ -94,7 +96,7 @@ def svg_recommended():
     p.append('<path d="M660,100 V70 V40" fill="none" stroke="#1c1b19" stroke-width="1.3" marker-mid="url(#ar)"/>')
     p.append('<text class="e" x="645" y="32" text-anchor="middle">Updates the record.</text>')
     p.append(line("M480,262 H538"))
-    p.append('<text class="e" x="485" y="243">Only after</text><text class="e" x="485" y="255">onsite.</text>')
+    p.append('<text class="e" x="487" y="254">On close.</text>')
     p.append(box(540, 232, 120, 60, "Billing", "Matched to the job."))
     p.append(line("M660,262 H683"))
     p.append(stack(685, 232, 155, 60, 6, "#fff", "#cfc9bf"))
