@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-14 (Anne, POC-04 done)
+Updated: 2026-11-14 (Anne, POC-05 done)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it on jhcreative)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
@@ -18,8 +18,9 @@ None.
 **Due Monday 2026-11-16.** The plan was approved 2026-11-14, and the sprint start passed RTS-1..6. **John's call: the
 app is built from Tailor's parts, not as a Tailor site** (ADR `2026-11-14-tailor-parts-not-a-tailor-site.md`; saved for
 future apps as agency ADR-0014). **POC-02 (lean), POC-03 and POC-04 are done:** typed tables, a deterministic seed,
-the commands with their rails, and the five role logins. The gate is green: 58 tests on Postgres. Next: POC-05, the
-WebSocket hub and replay on reconnect.
+the commands with their rails, the five role logins, and live updates over a WebSocket with replay (G1: 21 ms on the
+stack). The gate is green: 67 tests. Next: POC-06, the frontend shell and the overview.
+- **Demo logins (John, 2026-11-14):** the passwords are in `~/jhc/secrets/jahnel-poc/local-demo-logins.env`.
 - **Intake key (John, 2026-11-14):** the demo uses the existing key in `~/jhc/secrets/anthropic.env`. It's read at
   runtime and never copied into the repo or an image.
 - **Deploy:** to `ofs.apps.johnhiemstra.com` on a new JHC apps box (OVH VPS-2, edge mode), on John's go Monday.
@@ -34,5 +35,4 @@ WebSocket hub and replay on reconnect.
 | 2026-11-14 | Order the OVH VPS-2 (US) for the JHC apps box and renew the OVH API token (the trial token expired 2026-10-28) | Rob | |
 | 2026-11-14 | Create the repo: `! gh repo create jhcreative/jahnel-poc --private --source ~/jhc/prospects/jahnel-poc --remote origin --push`; the app instance repo follows the same pattern | Cesar | |
 | 2026-11-14 | Neale's and Ann-Marie's GitHub usernames, for the repo invites | Anne | |
-| 2026-11-14 | The five demo passwords are in `app/.env.demo-logins` (gitignored, 0600). The plan puts them in `~/jhc/secrets`: may I move them to `~/jhc/secrets/jahnel-poc/local-demo-logins.env`? | Orly | |
 | 2026-11-14 | Cloudflare: `ofs.apps.johnhiemstra.com` (and `apps.`) A records to the new box, grey cloud | Rob | |

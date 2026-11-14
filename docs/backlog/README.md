@@ -10,7 +10,7 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 3 | POC-02 | The app skeleton on Tailor's parts (ADR `2026-11-14-tailor-parts-not-a-tailor-site.md`) | Boots locally; health reads the database | Cesar | Done (11-14), rebuilt lean |
 | 4 | POC-03 | Tables, migrations, states, and the synthetic seed (§5, §7) | 45 jobs over every state; history in `job_events` | Pete, Jen | Done (11-14) |
 | 5 | POC-04 | Commands, the state machine and the rails, with tests; the five role logins | Every transition and rail tested | Pete, Jen, Orly | Done (11-14) |
-| 6 | POC-05 | WebSocket hub, topics, and replay on reconnect | G1; the replay test passes | Pete | Ready |
+| 6 | POC-05 | WebSocket hub, topics, and replay on reconnect | G1; the replay test passes | Pete | Done (11-14) |
 | 7 | POC-06 | Overview: every job by queue and state, live; the frontend shell, with TS types generated from the API's OpenAPI | G3; the gate fails if the TS drifts from the backend | Nathan | Ready |
 | 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Ready |
 | 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Ready |
@@ -80,3 +80,18 @@ instance-module seam. Its instance (`~/jhc/sites/jahnel-poc`) is stopped, and no
 - **On the running stack:** `coord@ofs.com` signs in, `/api/auth/me` answers, and `/api/jobs?mine=true` returns 18 jobs.
 - **A seed defect found and fixed:** 33 of 45 jobs were over their client's cap, against plan §7's "a few". It's now
   pinned by a test (3 to 12, and the drafts include one with no rule).
+
+**POC-05, 2026-11-14, `app/` at `77b2dad`.** `app/scripts/gate.sh`: **67 passed in 23.3 s**
+(`gate: green at 77b2dad 2026-11-14T16:59:36Z`). The socket tests run against a real uvicorn server with real
+WebSocket clients and cookies.
+- **G1:** a change made by the dispatcher reaches the coordinator's open view in under a second, with the job's new
+  state and who did it. On the running stack it took **21 ms** (job 1013 assigned, event 227).
+- **Replay:** a view that reconnects with its last id gets exactly what it missed, in order, then live events, with
+  nothing twice.
+- **Scoping:** a tech hears only their own jobs, live and in replay, and hears a job arrive on their schedule (T1).
+- **Honest publishing:** a refused command publishes nothing; publishing runs only after the commit.
+- **Refusals and upkeep:** no cookie is 4401; another site's Origin is 4403; a view too far behind gets resync (4409);
+  an idle socket is pinged and its login re-checked; a closed view leaves the hub at once.
+- **Found by the gate's run time:** the suite took 326 s because a socket missed its client's close until the next
+  ping. Fixed, and pinned by a test.
+- **Still open (R1):** the first WebSocket through edge-mode Caddy on the box. That's the POC-11 dry run.
