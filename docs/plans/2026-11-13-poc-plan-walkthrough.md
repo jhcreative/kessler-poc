@@ -41,3 +41,8 @@ Plan: `2026-11-13-poc-plan.md`. Deck: `opportunities/onefamilyservices-flows-and
 | Q5 | Role names only |
 | AG Grid | Use AG Grid for grid interfaces, not hand-rolled: the real-world model for commercial clients with large data sets after this project (ADR 2026-11-14) |
 | FacilIT | Real, and kept real as a unique wildcard; its line on the flows reads "Client portal manager"; leadership may not know how much of it some people already use |
+| AG1 | Community only until future demand |
+| N1 | "Bullseye" for the mock Target; the others are right |
+| Q6 | John's choice: deploy the app, share the repo, email a summary with the deck attached. Stretch: the Playwright narratives in an in-app help panel, hosted on John's YouTube |
+| Q8 | Defaulted: jhcreative |
+| Q10 | Defaulted: one login plus the role switcher |

@@ -21,4 +21,6 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 14 | POC-13 | Client approval when a rule fires | C3 | Pete, Nathan | Planned; cut first if we slip |
 | 15 | POC-14 | QuickBooks aging summary in the controller view | B3 | Jen, Nathan | Planned; cut first if we slip |
 | 16 | POC-15 | Simulator: live arrivals and truck movement; pause, resume, reset | §7 | Jen | Planned; cut first if we slip |
-| 17 | POC-16 | Deploy on John's go, the demo script rehearsal, README, the email | Monday | Rob, Angela, Lisa | Monday |
+| 17 | POC-17 | Playwright narratives N1–N4, recorded, captioned and uploaded unlisted to John's YouTube | Plan §11 | Jen, Henry, John | Monday |
+| 18 | POC-18 | Stretch: in-app help panel playing each view's narrative | Plan §11a | Nathan | Stretch |
+| 19 | POC-16 | Deploy on John's go, the demo script rehearsal, README, the email | Monday | Rob, Angela, Lisa | Monday |
