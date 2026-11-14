@@ -44,5 +44,5 @@ Plan: `2026-11-13-poc-plan.md`. Deck: `opportunities/onefamilyservices-flows-and
 | AG1 | Community only until future demand |
 | N1 | "Bullseye" for the mock Target; the others are right |
 | Q6 | John's choice: deploy the app, share the repo, email a summary with the deck attached. Stretch: the Playwright narratives in an in-app help panel, hosted on John's YouTube |
-| Q8 | Defaulted: jhcreative |
-| Q10 | Defaulted: one login plus the role switcher |
+| Q8 | jhcreative (agreed) |
+| Q10 | A login per role: coord@ofs.com, dispatch@ofs.com, and so on |
