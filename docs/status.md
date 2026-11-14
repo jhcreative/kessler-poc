@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-14 (Anne, POC-07 done)
+Updated: 2026-11-14 (Anne, POC-08 done)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it on jhcreative)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
@@ -21,7 +21,9 @@ future apps as agency ADR-0014). **POC-02 (lean), POC-03 and POC-04 are done:** 
 the commands with their rails, the five role logins, and live updates over a WebSocket with replay. **POC-06 is done:**
 the live overview at http://localhost:9219 (sign in as `exec@ofs.com`), typed end to end, with a browser e2e. **POC-07
 is done:** the coordinator workspace (`coord@ofs.com`), with Claude drafting each new request and the rules standing
-behind it, labelled; the client-approval rule (C3) is in it too. Next: POC-08, dispatch with the recommended tech.
+behind it, labelled; the client-approval rule (C3) is in it too. **POC-08 is done:** dispatch (`dispatch@ofs.com`), with
+the recommended tech and the reasons, one-click assign, and a recorded reason for an unqualified pick. Next: POC-09,
+the tech's phone view.
 - **Demo logins (John, 2026-11-14):** the passwords are in `~/jhc/secrets/jahnel-poc/local-demo-logins.env`.
 - **Intake key (John, 2026-11-14):** the demo uses the existing key in `~/jhc/secrets/anthropic.env`. It's read at
   runtime and never copied into the repo or an image.

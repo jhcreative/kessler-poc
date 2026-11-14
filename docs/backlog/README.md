@@ -13,11 +13,11 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 6 | POC-05 | WebSocket hub, topics, and replay on reconnect | G1; the replay test passes | Pete | Done (11-14) |
 | 7 | POC-06 | Overview: every job by queue and state, live; the frontend shell, with TS types generated from the API's OpenAPI | G3; the gate fails if the TS drifts from the backend | Nathan | Done (11-14) |
 | 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Done (11-14) |
-| 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Ready |
+| 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Done (11-14) |
 | 10 | POC-09 | Tech phone view: my queue, the schedule, complete, needs review | T1–T3 | Nathan | Ready |
 | 11 | POC-10 | Controller queue: billing queue, approve and submit to QuickBooks (simulated) | B1, B2 | Nathan, Pete | Ready |
 | 12 | POC-11 | Gate, cold review, deploy dry run to OVH (edge mode, IMAGES=local) | DOD-1, DOD-3; R1 verified | Cesar, Orly, Rob | Ready |
-| 13 | POC-12 | Needs-review decisions: reassign or ask to wait | T4 | Pete, Nathan | Planned; cut first if we slip |
+| 13 | POC-12 | Needs-review decisions: reassign or ask to wait | T4 | Pete, Nathan | Done (11-14), in POC-07 and POC-08; the tech's flag is POC-09 |
 | 14 | POC-13 | Client approval when a rule fires | C3 | Pete, Nathan | Done (11-14), inside POC-07 |
 | 15 | POC-14 | QuickBooks aging summary in the controller view | B3 | Jen, Nathan | Planned; cut first if we slip |
 | 16 | POC-15 | Simulator: live arrivals and truck movement; pause, resume, reset | §7 | Jen | Planned; cut first if we slip |
@@ -142,3 +142,27 @@ WebSocket clients and cookies.
   - Jony, from the screenshot: the queue grid hid its overflow (PQ-15), the issue type showed its code, and a
     superscript `$` sat in a label.
 - Screenshot: `docs/evidence/2026-11-14-poc-07-coordinator.png`.
+
+**POC-08 (and T4 of POC-12), 2026-11-14, `app/` at `85f625d`.** `gate: green at 49b35c0 2026-11-14T18:31:31Z`
+(backend 100 passed); `e2e: green at 85f625d 2026-11-14T18:38:38Z` (8 passed), then three clean runs in a row.
+- **The recommendation (D2):** a pure function. Hard filters are the skill and a license in the site's state; then
+  rank by km from the truck plus 40 per job on the board.
+  - **Jen's eval:** 20 cases whose answers were worked out by hand from a map before the code ran. All 20 passed on
+    the first run (`tests/test_recommend.py`).
+  - **Over HTTP:** every seeded ready job's top tech has the skill and the license, and says so.
+- **Dispatch in a real browser:**
+  - D1: a job the coordinator approves elsewhere appears in Ready within a second.
+  - D2: four reasons are shown.
+  - D3: one click assigns it, and it leaves Ready.
+  - The soft rail: an unqualified tech takes a reason, and the reason is on the event.
+  - T4: ask to wait puts a needs-review job back on site.
+- **The seed's geography (Jony, from the screenshot: a 409 km recommendation):**
+  - techs are now based where the sites cluster and licensed in their home state and its neighbours;
+  - the top recommendation is a median of 104 km and a 90th percentile of 266 km;
+  - John: "its good with a couple of outliers liek that".
+- **Login limit:** now per account and address (10 a minute) plus per address (60), after the e2e tripped the
+  per-address limit.
+- **Found by running the e2e four times:**
+  - a race in the tests (a count read before the list loaded);
+  - the limiter carrying over between back-to-back runs: `e2e.sh` now restarts the backend first.
+- Screenshot: `docs/evidence/2026-11-14-poc-08-dispatch.png`.
