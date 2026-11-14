@@ -48,7 +48,9 @@ export function useAuth(): Auth {
 }
 
 // Each role's home. A view is listed only once it's built: no screen promises what isn't there.
+// A role's home is the first view listed for it.
 export const VIEWS: { path: string; label: string; roles: Role[] }[] = [
+  { path: "/ops/coordinator", label: "Coordinator", roles: ["coordinator"] },
   { path: "/ops", label: "Overview", roles: ["exec", "coordinator", "dispatcher", "controller"] },
 ];
 

@@ -50,3 +50,28 @@ export const ISSUE_LABEL: Record<string, string> = {
   roofing: "Roofing",
   general: "General",
 };
+
+export const COMMAND_LABEL: Record<string, string> = {
+  draft_intake: "Drafted from the request",
+  qualify: "Qualified",
+  request_client_approval: "Asked the client for approval",
+  record_client_approval: "Recorded the client's approval",
+  approve_for_dispatch: "Approved for dispatch",
+  assign_tech: "Assigned a tech",
+  arrive: "Arrived on site",
+  set_needs_review: "Flagged for review",
+  reassign_tech: "Reassigned",
+  return_to_dispatch: "Returned to dispatch",
+  ask_to_wait: "Asked the tech to wait",
+  close_job: "Closed",
+  draft_invoice: "Drafted the invoice",
+  approve_invoice: "Approved the invoice",
+  send_back_invoice: "Sent the invoice back",
+  record_payment: "Payment recorded",
+  update_fields: "Updated fields",
+};
+
+// "Doors and locks" (or "doors_locks") back to the code the API takes.
+export const ISSUE_CODE: Record<string, string> = Object.fromEntries(
+  Object.entries(ISSUE_LABEL).flatMap(([code, label]) => [[label.toLowerCase(), code], [code, code]]),
+);

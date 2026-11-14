@@ -75,3 +75,12 @@ async def logins(seeded: AsyncSession) -> AsyncIterator[AsyncSession]:
     await seeded.flush()
     yield seeded
     auth._attempts.clear()
+
+
+@pytest.fixture(autouse=True)
+def _no_live_claude(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The gate never calls the model (test strategy): no key, so intake takes the labelled rules path."""
+    from ofs import intake
+
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.setattr(intake, "_client", None)

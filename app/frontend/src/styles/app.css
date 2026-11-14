@@ -96,3 +96,51 @@ main { padding: 16px 24px 40px; }
 .form-message { position: absolute; left: 0; right: 0; margin-top: 8px; font-size: 0.875rem; }
 
 @media (forced-colors: active) { .tile[aria-pressed="true"] { outline: 2px solid CanvasText; } }
+
+/* Workspaces: queues left, the record right, both in view (PQ-28). */
+.workspace { display: grid; grid-template-columns: minmax(520px, 1fr) minmax(460px, 1fr); gap: 16px; align-items: start; }
+.workspace > .error-line { grid-column: 1 / -1; }
+.queue-column { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.queue-grid { height: calc(100vh - 150px); }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); }
+.tabs button { min-height: 44px; padding: 0 12px; background: none; border: 0; border-bottom: 3px solid transparent; font: 500 0.9375rem var(--util); color: var(--muted); cursor: pointer; }
+.tabs button[aria-selected="true"] { color: var(--heading); border-bottom-color: var(--primary); }
+.tab-count { font-weight: 300; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.row-selected { background: #e8f0fa !important; }
+.record-column { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.pad { padding: 16px; }
+.record { padding: 0 16px 16px; }
+.record-title { position: sticky; top: 0; z-index: 2; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 12px 0; background: var(--surface); border-bottom: 1px solid var(--border); }
+.record-title h2 { margin: 0; font: 600 1.125rem var(--font); color: var(--heading); }
+.record-title .actions { display: flex; gap: 8px; }
+.muted { color: var(--muted); font-weight: 400; }
+.state-pill { font: 500 0.8125rem var(--util); padding: 2px 8px; border: 1px solid var(--border-strong); border-radius: var(--radius); }
+.secondary { block-size: 40px; padding: 0 14px; font: 500 0.9375rem var(--font); color: var(--primary); background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; }
+.secondary:disabled { color: #767676; cursor: not-allowed; }
+.primary.small { block-size: 32px; padding: 0 12px; }
+.drafted { margin: 12px 0 0; padding: 8px 10px; font: 300 0.9375rem var(--util); border: 1px solid var(--border); border-radius: var(--radius); background: var(--page); }
+.drafted::before { content: "✦ "; color: var(--link); }
+.drafted[data-by="rules"]::before { content: "◆ "; color: var(--muted); }
+.rule-line { margin: 12px 0 0; padding: 8px 10px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-weight: 500; }
+.record-body section { margin-top: 18px; }
+.record-body h3, .section-title h3 { margin: 0 0 8px; font: 500 0.8125rem var(--util); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.section-title { display: flex; gap: 12px; align-items: center; }
+.facts { display: grid; grid-template-columns: 140px 1fr; gap: 4px 12px; margin: 0; }
+.facts dt { font: 500 0.875rem var(--util); color: var(--muted); }
+.facts dd { margin: 0; }
+.source summary { cursor: pointer; color: var(--link); font: 500 0.9375rem var(--util); min-height: 32px; margin-top: 8px; }
+.source pre { white-space: pre-wrap; font: 400 0.875rem/1.5 var(--font); background: var(--page); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; }
+.field-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 12px; border: 0; padding: 0; margin: 0; }
+.field-grid .wide { grid-column: 1 / -1; }
+.field-grid .field { margin-bottom: 14px; }
+.field select { block-size: 40px; padding: 0 8px; font: inherit; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
+.inline-form { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin-top: 12px; }
+.inline-form .field { margin-bottom: 0; }
+.history { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.history .when { font: 300 0.875rem var(--util); color: var(--muted); display: inline-block; min-width: 110px; }
+
+/* Toast (PQ-14): fixed bottom-centre, over the page, moving nothing. */
+.toast-slot { position: fixed; left: 0; right: 0; bottom: 24px; display: flex; justify-content: center; pointer-events: none; z-index: 50; }
+.toast { pointer-events: auto; display: flex; gap: 16px; align-items: center; padding: 6px 8px 6px 16px; background: var(--primary); color: var(--on-primary); border-radius: var(--radius); box-shadow: 0 4px 16px rgb(0 0 0 / 0.2); }
+.toast .link-button { color: #cfe2ff; min-height: 36px; }
+.toast[data-error] { background: var(--error); }

@@ -14,3 +14,5 @@ export type CommandIn = S["CommandIn"];
 export type CommandResult = S["CommandResult"];
 export type Refusal = S["Refusal"];
 export type Role = S["Role"];
+export type ContractOut = S["ContractOut"];
+export type FieldsIn = S["FieldsIn"];

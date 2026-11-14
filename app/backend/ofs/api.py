@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import random
 import uuid
 from datetime import UTC, datetime
 from typing import Any
@@ -10,12 +11,12 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, Request
 from sqlalchemy import Select, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from . import schemas
+from . import intake, schemas, sources
 from .auth import CURRENT, Caller, check_origin
 from .commands import Actor, envelope, execute, job_out
 from .db import SESSION
 from .hub import Message, hub
-from .models import Job, JobEvent, Tech
+from .models import Client, Contract, Job, JobEvent, Site, Tech
 from .states import QUEUE, ActorKind, Role, State
 
 router = APIRouter(prefix="/api/jobs", tags=["jobs"])
@@ -151,3 +152,68 @@ async def overview(caller: Caller = CURRENT, session: AsyncSession = SESSION) ->
             )
         )
     return schemas.Overview(total=sum(s.open for s in steps), steps=steps, as_of=now)
+
+
+intake_router = APIRouter(prefix="/api/intake", tags=["intake"])
+
+
+@intake_router.post("/simulate", response_model=schemas.CommandResult, responses=_REFUSALS)
+async def simulate_request(
+    request: Request, background: BackgroundTasks, caller: Caller = CURRENT, session: AsyncSession = SESSION
+) -> schemas.CommandResult:
+    """The demo's "new request": the simulator writes a synthetic request, and it's drafted like any other (C2).
+    Labelled as the simulator on the event (G2). The arrivals every 45 s are POC-15's."""
+    check_origin(request)
+    if caller.role not in (Role.COORDINATOR, Role.EXEC):
+        raise HTTPException(403, "Only the coordinator's view and the demo controls send in a request")
+    rng = random.Random()  # noqa: S311 (synthetic demo data, not security)
+    rows = (
+        await session.execute(
+            select(Site, Client, Contract)
+            .join(Client, Client.id == Site.client_id)
+            .join(Contract, Contract.client_id == Client.id)
+        )
+    ).all()
+    site, client, _contract = rng.choice(rows)
+    prefix = {
+        "Bullseye": "BE-WO-",
+        "Starbrew Coffee": "SB-",
+        "Wellgreens Pharmacy": "WG-",
+        "CVR Pharmacy": "CVR-",
+        "Wegford Markets": "WF-",
+        "Aldo Foods": "AF-",
+        "Keystone Dental Group": "KD-",
+    }.get(client.name, "LVF-")
+    src = sources.make(
+        rng,
+        sources.SiteRef(client.name, client.channel, prefix, site.store_number, site.city, site.state, site.contact),
+    )
+    try:
+        job, event = await intake.draft_job(session, src.text, src.channel, intake.SIMULATOR)
+    except intake.IntakeError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    result = schemas.CommandResult(job=await job_out(session, job), events=[envelope(event, job.number)])
+    background.add_task(hub.publish, messages(result, None))
+    return result
+
+
+@router.get("/{job_id}/contract", response_model=schemas.ContractOut)
+async def job_contract(
+    job_id: uuid.UUID, caller: Caller = CURRENT, session: AsyncSession = SESSION
+) -> schemas.ContractOut:
+    job = await _one(session, caller, job_id)
+    client, contract = (
+        await session.execute(
+            select(Client, Contract).join(Contract, Contract.client_id == Client.id).where(Client.id == job.client_id)
+        )
+    ).one()
+    return schemas.ContractOut.model_validate(
+        {
+            "client_name": client.name,
+            "channel": client.channel,
+            "invoice_format": client.invoice_format,
+            "issue_types": contract.issue_types,
+            "rules": contract.rules,
+            "net_days": contract.net_days,
+        }
+    )

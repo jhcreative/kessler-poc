@@ -6,6 +6,7 @@ import {
   ModuleRegistry,
   NumberFilterModule,
   RowApiModule,
+  RowStyleModule,
   TextFilterModule,
   themeQuartz,
 } from "ag-grid-community";
@@ -18,6 +19,7 @@ ModuleRegistry.registerModules([
   TextFilterModule,
   NumberFilterModule,
   RowApiModule,
+  RowStyleModule, // the selected row in a queue
   HighlightChangesModule,
 ]);
 

@@ -1,34 +1,7 @@
 // POC-06 in a real browser (PP-14): sign in, the overview fills from the API, and a change made by another role
 // appears in it within a second, with no reload (G1, G3).
-import { expect, test, type APIRequestContext, type Page } from "@playwright/test";
-import { readFileSync } from "node:fs";
-
-const logins = Object.fromEntries(
-  readFileSync(process.env.E2E_LOGINS ?? "", "utf8")
-    .split("\n")
-    .filter((l) => l.includes("="))
-    .map((l) => [l.slice(0, l.indexOf("=")), l.slice(l.indexOf("=") + 1).trim()]),
-) as Record<string, string>;
-
-async function signIn(page: Page, email: string) {
-  await page.goto("/login");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill(logins[email] ?? "");
-  await page.getByRole("button", { name: "Sign in" }).click();
-}
-
-async function apiAs(request: APIRequestContext, email: string) {
-  const r = await request.post("/api/auth/login", { data: { email, password: logins[email] } });
-  expect(r.ok()).toBeTruthy();
-}
-
-function watchConsole(page: Page): string[] {
-  const errors: string[] = [];
-  // The one expected failure: before sign-in, the session check (/api/auth/me) answers 401 by design.
-  page.on("console", (m) => m.type() === "error" && !/status of 401/.test(m.text()) && errors.push(m.text()));
-  page.on("pageerror", (e) => errors.push(e.message));
-  return errors;
-}
+import { expect, test } from "@playwright/test";
+import { apiAs, signIn, watchConsole } from "./helpers";
 
 test("the exec signs in to a full, live overview", async ({ page }) => {
   const errors = watchConsole(page);
@@ -36,13 +9,14 @@ test("the exec signs in to a full, live overview", async ({ page }) => {
   await expect(page).toHaveURL(/\/ops$/);
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   await expect(page.locator(".live")).toHaveText("Live");
-  await expect(page.getByText("45 of 45 jobs")).toBeVisible();
+  const showing = page.locator(".showing");
+  await expect(showing).toHaveText(/^(\d+) of \1 jobs$/); // every job (45 seeded, plus any a test added)
   await expect(page.locator(".tile")).toHaveCount(11);
   await expect(page.locator(".ag-row")).not.toHaveCount(0);
   await page.locator(".tile", { hasText: "Ready for dispatch" }).click();
-  await expect(page.getByText(/of 45 jobs, Ready for dispatch/)).toBeVisible();
+  await expect(showing).toHaveText(/^\d+ of \d+ jobs, Ready for dispatch$/);
   await page.getByRole("button", { name: "Clear Filter" }).click();
-  await expect(page.getByText("45 of 45 jobs")).toBeVisible();
+  await expect(showing).toHaveText(/^(\d+) of \1 jobs$/);
   expect(errors, errors.join("\n")).toEqual([]); // no CSP violation, no runtime error
 });
 

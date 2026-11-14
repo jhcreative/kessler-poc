@@ -19,6 +19,7 @@ app = FastAPI(title="OneFamilyServices ops", docs_url=None, redoc_url=None, open
 app.include_router(auth.router)
 app.include_router(api.router)
 app.include_router(api.overview_router)
+app.include_router(api.intake_router)
 app.include_router(ws.router)
 
 

@@ -74,7 +74,7 @@ async def _record(
     session: AsyncSession,
     job: Job,
     command: str,
-    source: State,
+    source: State | None,
     target: State,
     actor: Actor,
     payload: dict[str, Any],
@@ -88,7 +88,7 @@ async def _record(
         actor_id=actor.person.id if actor.person else None,
         actor_label=actor.label,
         command=command,
-        from_state=source.value,
+        from_state=source.value if source else None,
         to_state=target.value,
         payload=payload,
         override_reason=override_reason,
@@ -425,6 +425,7 @@ async def job_out(session: AsyncSession, job: Job) -> schemas.JobOut:
         client_po=job.client_po,
         site_contact=job.site_contact,
         source=job.source,  # type: ignore[arg-type]
+        source_text=job.source_text,
         drafted_by=job.drafted_by,  # type: ignore[arg-type]
         issue_type=job.issue_type,
         parts=job.parts,  # type: ignore[arg-type]

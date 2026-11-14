@@ -77,8 +77,14 @@ class NoPayload(_Strict):
 
 
 class DraftIntakePayload(_Strict):
+    """Who drafted the job from its source, and what it cost (plan §7: tokens logged on the event)."""
+
     source: Source
     drafted_by: DraftedBy
+    model: str | None = None  # the model that served the draft, when Claude did
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    fallback_reason: str | None = None  # why the rules drafted it instead of Claude
 
 
 class AssignPayload(_Strict):
@@ -209,6 +215,7 @@ class JobOut(BaseModel):
     client_po: str | None
     site_contact: str
     source: Source
+    source_text: str  # the request as it arrived: the coordinator checks the draft against it (C2)
     drafted_by: DraftedBy | None
     # B: working fields, two-way
     issue_type: str
@@ -293,3 +300,14 @@ class LiveResync(BaseModel):
 
 LiveMessage = Annotated[LiveHello | LiveEvent | LivePing | LiveResync, Field(discriminator="type")]
 LIVE_MESSAGE: TypeAdapter[LiveHello | LiveEvent | LivePing | LiveResync] = TypeAdapter(LiveMessage)
+
+
+class ContractOut(BaseModel):
+    """The contract panel: read-only to the job (page 2: checked before work is assigned)."""
+
+    client_name: str
+    channel: Source
+    invoice_format: str
+    issue_types: list[str]
+    rules: list[Rule]
+    net_days: int

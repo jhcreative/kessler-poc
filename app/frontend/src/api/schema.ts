@@ -76,6 +76,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/intake/simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Simulate Request
+         * @description The demo's "new request": the simulator writes a synthetic request, and it's drafted like any other (C2).
+         *     Labelled as the simulator on the event (G2). The arrivals every 45 s are POC-15's.
+         */
+        post: operations["simulate_request_api_intake_simulate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/jobs": {
         parameters: {
             query?: never;
@@ -121,6 +142,23 @@ export interface paths {
         put?: never;
         /** Run Command */
         post: operations["run_command_api_jobs__job_id__commands_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{job_id}/contract": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Job Contract */
+        get: operations["job_contract_api_jobs__job_id__contract_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -196,6 +234,53 @@ export interface components {
             /** Client Ref */
             client_ref: string;
         };
+        /** AssignPayload */
+        AssignPayload: {
+            /** Tech */
+            tech: string;
+            /**
+             * Window Start
+             * @default null
+             */
+            window_start?: string | null;
+        };
+        /** CapRule */
+        CapRule: {
+            /** Amount Cents */
+            amount_cents: number;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "cap";
+            /** Text */
+            text: string;
+        };
+        /** ClientApprovalPayload */
+        ClientApprovalPayload: {
+            /** By */
+            by: string;
+            /** Client Ref */
+            client_ref: string;
+        };
+        /**
+         * ClosePayload
+         * @description Plan §4: no close without a sign-off or a reason.
+         */
+        ClosePayload: {
+            /** Actual Hours */
+            actual_hours: number;
+            /**
+             * No Sign Off Reason
+             * @default null
+             */
+            no_sign_off_reason?: string | null;
+            /**
+             * Sign Off By
+             * @default null
+             */
+            sign_off_by?: string | null;
+        };
         /**
          * CommandIn
          * @description POST /api/modules/fieldops/jobs/{job_id}/commands
@@ -220,6 +305,63 @@ export interface components {
             /** Events */
             events: components["schemas"]["EventEnvelope"][];
             job: components["schemas"]["JobOut"];
+        };
+        /**
+         * ContractOut
+         * @description The contract panel: read-only to the job (page 2: checked before work is assigned).
+         */
+        ContractOut: {
+            /**
+             * Channel
+             * @enum {string}
+             */
+            channel: "portal" | "email" | "facilit";
+            /** Client Name */
+            client_name: string;
+            /** Invoice Format */
+            invoice_format: string;
+            /** Issue Types */
+            issue_types: string[];
+            /** Net Days */
+            net_days: number;
+            /** Rules */
+            rules: (components["schemas"]["CapRule"] | components["schemas"]["ReviewRule"])[];
+        };
+        /**
+         * DraftIntakePayload
+         * @description Who drafted the job from its source, and what it cost (plan §7: tokens logged on the event).
+         */
+        DraftIntakePayload: {
+            /**
+             * Drafted By
+             * @enum {string}
+             */
+            drafted_by: "claude" | "rules";
+            /**
+             * Fallback Reason
+             * @default null
+             */
+            fallback_reason?: string | null;
+            /**
+             * Input Tokens
+             * @default null
+             */
+            input_tokens?: number | null;
+            /**
+             * Model
+             * @default null
+             */
+            model?: string | null;
+            /**
+             * Output Tokens
+             * @default null
+             */
+            output_tokens?: number | null;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "portal" | "email" | "facilit";
         };
         /**
          * EventEnvelope
@@ -251,6 +393,52 @@ export interface components {
                 [key: string]: unknown;
             };
             to_state: components["schemas"]["State"];
+        };
+        /**
+         * FieldsIn
+         * @description Part B, the working fields: two-way, office and field. Part A (identity) is never editable.
+         */
+        FieldsIn: {
+            /**
+             * Actual Hours
+             * @default null
+             */
+            actual_hours?: number | null;
+            /**
+             * Est Hours
+             * @default null
+             */
+            est_hours?: number | null;
+            /**
+             * Estimate Cents
+             * @default null
+             */
+            estimate_cents?: number | null;
+            /**
+             * Extenuating
+             * @default null
+             */
+            extenuating?: ("access_denied" | "after_hours" | "return_visit" | "scope_changed" | "safety_hold" | "parts_delay" | "other")[] | null;
+            /**
+             * Extenuating Note
+             * @default null
+             */
+            extenuating_note?: string | null;
+            /**
+             * Issue Type
+             * @default null
+             */
+            issue_type?: string | null;
+            /**
+             * Part Numbers
+             * @default null
+             */
+            part_numbers?: string[] | null;
+            /**
+             * Parts
+             * @default null
+             */
+            parts?: ("none" | "on_truck" | "special_order") | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -340,6 +528,8 @@ export interface components {
              * @enum {string}
              */
             source: "portal" | "email" | "facilit";
+            /** Source Text */
+            source_text: string;
             state: components["schemas"]["State"];
             /** Tech Id */
             tech_id: string | null;
@@ -412,6 +602,8 @@ export interface components {
             person_id: string;
             role: components["schemas"]["Role"];
         };
+        /** NoPayload */
+        NoPayload: Record<string, never>;
         /** Overview */
         Overview: {
             /**
@@ -423,6 +615,16 @@ export interface components {
             steps: components["schemas"]["StepTurnaround"][];
             /** Total */
             total: number;
+        };
+        /** QbPayload */
+        QbPayload: {
+            /** Qb Doc Number */
+            qb_doc_number: string;
+        };
+        /** ReasonPayload */
+        ReasonPayload: {
+            /** Reason */
+            reason: string;
         };
         /**
          * Refusal
@@ -436,6 +638,18 @@ export interface components {
             code: "not_allowed" | "stale" | "role" | "rail";
             /** Reason */
             reason: string;
+        };
+        /** ReviewRule */
+        ReviewRule: {
+            /** Issue Type */
+            issue_type: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "review";
+            /** Text */
+            text: string;
         };
         /**
          * Role
@@ -588,6 +802,62 @@ export interface operations {
             };
         };
     };
+    simulate_request_api_intake_simulate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommandResult"];
+                };
+            };
+            /** @description Your role can't do this */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Refusal"];
+                };
+            };
+            /** @description Not a job you can see */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Refusal"];
+                };
+            };
+            /** @description Stale, or the wrong state */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Refusal"];
+                };
+            };
+            /** @description The payload or a rail */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Refusal"];
+                };
+            };
+        };
+    };
     list_jobs_api_jobs_get: {
         parameters: {
             query?: {
@@ -711,6 +981,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Refusal"];
+                };
+            };
+        };
+    };
+    job_contract_api_jobs__job_id__contract_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContractOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

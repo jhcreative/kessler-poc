@@ -25,7 +25,14 @@ services:
       postgres: {condition: service_healthy}
   backend:
     build: ./backend
-    environment: *env
+    environment:
+      <<: *env
+      OFS_CLAUDE_DAILY_LIMIT: ${OFS_CLAUDE_DAILY_LIMIT:-300}
+    # The Anthropic key, read at runtime from outside the repo (~/jhc/secrets/anthropic.env locally). Absent: the
+    # rules draft intake, labelled as such.
+    env_file:
+      - path: ${ANTHROPIC_ENV_FILE:-/dev/null}
+        required: false
     depends_on:
       migrate: {condition: service_completed_successfully}
   web:

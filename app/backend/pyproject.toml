@@ -12,7 +12,10 @@ select = ["E", "F", "I", "B", "UP", "S", "ASYNC"]
 ignore = ["S101"]  # assert is how pytest tests
 
 [tool.ruff.lint.per-file-ignores]
-"ofs/seed.py" = ["S311", "S608"]  # a seeded PRNG is the point; counts read a fixed list of our own tables
+# A seeded PRNG is the point: synthetic, deterministic data. The seed's counts read a fixed list of our own tables.
+"ofs/seed.py" = ["S311", "S608"]
+"ofs/sources.py" = ["S311"]
+"tests/*" = ["S311"]
 "migrations/versions/*" = ["E501"]  # generated from the models
 
 [tool.mypy]
