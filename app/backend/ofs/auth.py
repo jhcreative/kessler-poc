@@ -15,6 +15,7 @@ cookie lasts 12 hours. Outbound email is off: there's no password reset, because
 
 from __future__ import annotations
 
+import asyncio
 import os
 import time
 import uuid
@@ -94,6 +95,9 @@ def _rate_limited(key: str, rule: tuple[int, float] = LOGIN_LIMIT) -> bool:
     if len(q) >= limit:
         return True
     q.append(now)
+    if len(_attempts) > 10_000:  # bounded memory: forget keys with nothing in the window (cold review, finding 14)
+        for k in [k for k, d in _attempts.items() if not d or now - d[-1] > window]:
+            del _attempts[k]
     return False
 
 
@@ -142,7 +146,12 @@ async def login(body: LoginIn, request: Request, response: Response, session: As
     if _rate_limited(f"{address} {email}") or _rate_limited(address, LOGIN_LIMIT_ADDRESS):
         raise HTTPException(429, "Too many attempts; wait a minute")
     user = await session.scalar(select(User).where(User.email == email, User.disabled.is_(False)))
-    ok = bcrypt.checkpw(body.password.encode(), (user.password_hash.encode() if user else _DUMMY_HASH))
+    # bcrypt reads 72 bytes at most and raises past that: check the first 72, then refuse anything longer, so a long
+    # password is a 401 and takes the same time (cold review, finding 11). In a thread: it's slow by design, and
+    # every open socket shares this event loop.
+    password = body.password.encode()
+    stored = user.password_hash.encode() if user else _DUMMY_HASH
+    ok = await asyncio.to_thread(bcrypt.checkpw, password[:72], stored) and len(password) <= 72
     person = await _person_for(session, email) if user and ok else None
     if person is None:
         raise HTTPException(401, "That email and password don't match")

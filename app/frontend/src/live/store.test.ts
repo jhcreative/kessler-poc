@@ -43,6 +43,12 @@ describe("the live store", () => {
     expect(s.flashed.size).toBe(0);
   });
 
+  it("keeps buffered frames to the view's scope", () => {
+    const mine = (j: Job) => j.tech_id === "t1";
+    const s = load([job("a", 3, { tech_id: "t1" })], [msg(job("a", 4, { tech_id: "t2" }))], mine);
+    expect(s.jobs.has("a")).toBe(false);
+  });
+
   it("lists newest first", () => {
     expect(newestFirst(load([job("a", 1), job("b", 5)]).jobs).map((j) => j.id)).toEqual(["b", "a"]);
   });

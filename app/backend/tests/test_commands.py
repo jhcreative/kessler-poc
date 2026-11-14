@@ -30,6 +30,10 @@ async def test_every_wrong_state_is_refused_and_writes_nothing(seeded: AsyncSess
         with pytest.raises(Refused) as exc:
             await execute(seeded, job.id, cmd(job, command), actor)
         assert exc.value.code == "not_allowed", (command, state)
+        # The wrong state is a 409; a tech's 404 is the job not being theirs, which the ownership test covers.
+        assert exc.value.status == (404 if Role.TECH in t.roles and exc.value.status == 404 else 409), (command, state)
+        if Role.TECH not in t.roles:
+            assert exc.value.status == 409 and "while the job is" in exc.value.reason, (command, state)
         assert await event_count(seeded) == before and job.state == state.value and job.last_event_id == last
 
 

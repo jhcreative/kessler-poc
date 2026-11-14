@@ -62,6 +62,12 @@ def km(a_lat: float, a_lng: float, b_lat: float, b_lng: float) -> float:
     return 2 * r * math.asin(math.sqrt(h))
 
 
+def _natural(label: str) -> tuple[str, int]:
+    """ "Tech 2" before "Tech 10" (cold review, finding 19)."""
+    head, _, tail = label.rpartition(" ")
+    return (head, int(tail)) if tail.isdigit() else (label, 0)
+
+
 def recommend(issue_type: str, site: Place, techs: list[TechIn], issue_label: str | None = None) -> list[Candidate]:
     """Every tech, the eligible ones first by score; the first one is the recommendation."""
     label = issue_label or issue_type
@@ -86,6 +92,11 @@ def recommend(issue_type: str, site: Place, techs: list[TechIn], issue_label: st
             Candidate(tech=t, eligible=not gaps, distance_km=round(d, 1), score=score, reasons=reasons, gaps=gaps)
         )
     out.sort(
-        key=lambda c: (not c.eligible, c.score if c.score is not None else c.distance_km, c.tech.load, c.tech.label)
+        key=lambda c: (
+            not c.eligible,
+            c.score if c.score is not None else c.distance_km,
+            c.tech.load,
+            _natural(c.tech.label),
+        )
     )
     return out

@@ -19,6 +19,13 @@ from .states import Role
 
 QUEUE_LIMIT = 1000  # a view this far behind is told to reload rather than flooded
 
+# One writer at a time (cold review, finding 1). Event ids are assigned at flush, not at commit, so two commands in
+# flight could commit and publish out of id order, and a view that has seen id 101 would drop id 100 as already
+# sent. Every write takes this lock, commits, and publishes before letting go, so id order, commit order and publish
+# order are one order. It's in-process, which is right for one uvicorn process (plan §4); a second process would need
+# a database lock and an outbox instead.
+WRITE_LOCK = asyncio.Lock()
+
 
 @dataclass(eq=False)
 class Subscriber:

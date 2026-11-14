@@ -3,19 +3,20 @@
 from __future__ import annotations
 
 import random
+import time
 import uuid
 from datetime import UTC, datetime
 from typing import Any
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, Request
-from sqlalchemy import Select, func, select, text
+from fastapi import APIRouter, HTTPException, Query, Request
+from sqlalchemy import Select, false, func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import intake, recommend, schemas, sources
 from .auth import CURRENT, Caller, check_origin
 from .commands import Actor, envelope, execute, job_out
 from .db import SESSION
-from .hub import Message, hub
+from .hub import WRITE_LOCK, Message, hub
 from .models import Client, Contract, FleetPosition, Invoice, Job, JobEvent, Person, QbLedger, Site, Tech
 from .states import QUEUE, ActorKind, Role, State
 
@@ -26,7 +27,7 @@ async def _scoped(session: AsyncSession, caller: Caller) -> Select[Job]:
     q = select(Job)
     if caller.role is Role.TECH:
         tech = await session.scalar(select(Tech).where(Tech.person_id == caller.person.id))
-        q = q.where(Job.tech_id == (tech.id if tech else None))
+        q = q.where(Job.tech_id == tech.id) if tech else q.where(false())  # no tech row: nothing, never IS NULL
     return q
 
 
@@ -86,18 +87,20 @@ async def run_command(
     job_id: uuid.UUID,
     cmd: schemas.CommandIn,
     request: Request,
-    background: BackgroundTasks,
     caller: Caller = CURRENT,
     session: AsyncSession = SESSION,
 ) -> schemas.CommandResult:
     check_origin(request)
     if caller.role is Role.EXEC:
         raise HTTPException(403, "The overview is read-only")
-    before = await session.scalar(select(Job.tech_id).where(Job.id == job_id))
-    job, events = await execute(session, job_id, cmd, Actor(ActorKind.PERSON, caller.person, caller.role))
-    result = schemas.CommandResult(job=await job_out(session, job), events=[envelope(e, job.number) for e in events])
-    # Runs after the session commits (function scope, ADR-0102): only committed changes are ever published.
-    background.add_task(hub.publish, messages(result, before))
+    async with WRITE_LOCK:  # write, commit, then publish, one command at a time (hub.py)
+        before = await session.scalar(select(Job.tech_id).where(Job.id == job_id))
+        job, events = await execute(session, job_id, cmd, Actor(ActorKind.PERSON, caller.person, caller.role))
+        result = schemas.CommandResult(
+            job=await job_out(session, job), events=[envelope(e, job.number) for e in events]
+        )
+        await session.commit()  # a commit that fails raises here, and nothing is published
+        hub.publish(messages(result, before))
     return result
 
 
@@ -155,17 +158,24 @@ async def overview(caller: Caller = CURRENT, session: AsyncSession = SESSION) ->
 
 
 intake_router = APIRouter(prefix="/api/intake", tags=["intake"])
+SIMULATE_EVERY = 3.0  # seconds
+_last_request: dict[uuid.UUID, float] = {}
 
 
 @intake_router.post("/simulate", response_model=schemas.CommandResult, responses=_REFUSALS)
 async def simulate_request(
-    request: Request, background: BackgroundTasks, caller: Caller = CURRENT, session: AsyncSession = SESSION
+    request: Request, caller: Caller = CURRENT, session: AsyncSession = SESSION
 ) -> schemas.CommandResult:
     """The demo's "new request": the simulator writes a synthetic request, and it's drafted like any other (C2).
     Labelled as the simulator on the event (G2). The arrivals every 45 s are POC-15's."""
     check_origin(request)
     if caller.role not in (Role.COORDINATOR, Role.EXEC):
         raise HTTPException(403, "Only the coordinator's view and the demo controls send in a request")
+    # One new request every few seconds per person (cold review, finding 15): a public demo login can't flood the board.
+    now = time.monotonic()
+    if now - _last_request.get(caller.person.id, -SIMULATE_EVERY) < SIMULATE_EVERY:
+        raise HTTPException(429, "One new request every few seconds")
+    _last_request[caller.person.id] = now
     rng = random.Random()  # noqa: S311 (synthetic demo data, not security)
     rows = (
         await session.execute(
@@ -188,12 +198,15 @@ async def simulate_request(
         rng,
         sources.SiteRef(client.name, client.channel, prefix, site.store_number, site.city, site.state, site.contact),
     )
-    try:
-        job, event = await intake.draft_job(session, src.text, src.channel, intake.SIMULATOR)
-    except intake.IntakeError as exc:
-        raise HTTPException(422, str(exc)) from exc
-    result = schemas.CommandResult(job=await job_out(session, job), events=[envelope(event, job.number)])
-    background.add_task(hub.publish, messages(result, None))
+    drafted = await intake.draft(session, src.text)  # seconds with Claude: before the lock, so no write waits on it
+    async with WRITE_LOCK:
+        try:
+            job, event = await intake.draft_job(session, src.text, src.channel, intake.SIMULATOR, drafted=drafted)
+        except intake.IntakeError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        result = schemas.CommandResult(job=await job_out(session, job), events=[envelope(event, job.number)])
+        await session.commit()
+        hub.publish(messages(result, None))
     return result
 
 

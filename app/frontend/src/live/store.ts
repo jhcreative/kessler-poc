@@ -11,13 +11,18 @@ export interface LiveState {
 
 export const empty: LiveState = { jobs: new Map(), lastEventId: 0, flashed: new Map() };
 
-export function load(jobs: readonly Job[], buffered: readonly LiveEvent[] = []): LiveState {
+export function load(
+  jobs: readonly Job[],
+  buffered: readonly LiveEvent[] = [],
+  inScope: (job: Job) => boolean = () => true,
+): LiveState {
   const state: LiveState = {
     jobs: new Map(jobs.map((j) => [j.id, j])),
     lastEventId: Math.max(0, ...jobs.map((j) => j.last_event_id)),
     flashed: new Map(),
   };
-  return buffered.reduce((s, m) => apply(s, m, { flash: false }), state);
+  // Buffered frames keep to the view's scope too (cold review, finding 12): a job reassigned away mid-load stays away.
+  return buffered.reduce((s, m) => apply(s, m, { flash: false, inScope }), state);
 }
 
 export function apply(

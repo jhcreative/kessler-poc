@@ -21,9 +21,10 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from sqlalchemy import text
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from .commands import invoice_check
 from .models import (
     Client,
     Contract,
@@ -466,16 +467,25 @@ async def seed(session: AsyncSession, seed: int = DEFAULT_SEED, now: datetime | 
                 job.extenuating_note = "Needs a decision before the work continues"
                 payload = {"reason": job.extenuating[0]}
             elif command == "close_job":
+                # Whether the invoice will pass its check is decided here, the way it is in the field: a job sent
+                # back (CLOSED) had no sign-off; about a quarter of those in billing review ran over the estimate;
+                # anything approved passed. The check itself is the backend's own (commands.invoice_check).
+                over = target is State.BILLING_REVIEW and w.rng.random() < 0.25
                 job.actual_hours = round((job.est_hours or 4) * w.rng.uniform(0.7, 1.4), 1)
-                job.final_cents = round(estimate * w.rng.uniform(0.85, 1.1) / 100) * 100
+                factor = w.rng.uniform(1.12, 1.3) if over else w.rng.uniform(0.85, 1.05)
+                job.final_cents = round(estimate * factor / 100) * 100
                 job.parts = w.rng.choice(["none", "on_truck", "special_order"])
                 job.part_numbers = [f"PN-{w.rng.randrange(10000, 99999)}"] if job.parts == "special_order" else []
-                job.sign_off = {"by": "Store manager", "at": t.isoformat()}
-                payload = {"actual_hours": job.actual_hours, "sign_off_by": "Store manager"}
+                if target is State.CLOSED:
+                    job.sign_off, job.extenuating_note = None, "Store manager not on site"
+                    payload = {"actual_hours": job.actual_hours, "no_sign_off_reason": "Store manager not on site"}
+                else:
+                    job.sign_off = {"by": "Store manager", "at": t.isoformat()}
+                    payload = {"actual_hours": job.actual_hours, "sign_off_by": "Store manager"}
             elif command == "draft_invoice":
                 final = job.final_cents or estimate
                 labor = round(final * 0.6 / 100) * 100
-                passed = target is not State.CLOSED and w.rng.random() > 0.25
+                note = invoice_check(job)
                 invoice = Invoice(
                     id=w.uuid(),
                     job_id=job.id,
@@ -487,14 +497,15 @@ async def seed(session: AsyncSession, seed: int = DEFAULT_SEED, now: datetime | 
                         {"desc": "Parts and materials", "cents": final - labor},
                     ],
                     total_cents=final,
-                    check_passed=passed,
-                    check_note=None if passed else "Final is over the approved estimate; check the change order",
+                    check_passed=note is None,
+                    check_note=note,
                 )
             elif command == "send_back_invoice" and invoice:
                 invoice.state = "sent_back"
                 payload = {"reason": invoice.check_note}
             elif command == "approve_invoice" and invoice:
-                invoice.check_passed, invoice.check_note = True, None
+                if not invoice.check_passed:  # the backend refuses this; so does the seed
+                    raise ValueError(f"seed would approve a failed invoice: {invoice.check_note}")
                 invoice.state, invoice.qb_doc_number = "submitted", f"QB-{doc_no}"
                 payload = {"qb_doc_number": invoice.qb_doc_number}
                 session.add(invoice)
@@ -544,6 +555,16 @@ async def seed(session: AsyncSession, seed: int = DEFAULT_SEED, now: datetime | 
         await session.flush()
         job.last_event_id = events[-1].id
         job.updated_at = events[-1].at
+
+    # Trucks stand where their techs are working (cold review, finding 18): a tech on site has the truck at the site.
+    trucks = {t.id: t.truck for t in techs}
+    on_site = (
+        await session.execute(select(Job, Site).join(Site, Site.id == Job.site_id).where(Job.state == "onsite"))
+    ).all()
+    for working, at_site in on_site:
+        pos = await session.get(FleetPosition, trucks[working.tech_id]) if working.tech_id else None
+        if pos:
+            pos.lat, pos.lng, pos.status = at_site.lat, at_site.lng, "onsite"
 
     # Historical QuickBooks invoices: three open ones in every aging bucket, then the rest at random.
     ledger: list[QbLedger] = []

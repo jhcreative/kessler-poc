@@ -12,12 +12,20 @@ export type LiveStatus = "connecting" | "live" | "reconnecting";
 
 type Action = { kind: "load"; jobs: Job[]; buffered: LiveEvent[] } | { kind: "event"; msg: LiveEvent };
 
-export function useLive(opts: { query?: string; inScope?: (job: Job) => boolean; onSignedOut: () => void }) {
-  const { query = "", inScope, onSignedOut } = opts;
+export function useLive(opts: {
+  query?: string;
+  inScope?: (job: Job) => boolean;
+  onSignedOut: () => void;
+  // Reload the list after a drop instead of replaying (cold review, finding 2): replay is filtered by who holds a
+  // job now, so a job reassigned away while a tech was offline would never be replayed to them. A tech's list is
+  // short; a reload is cheap and always right.
+  reloadOnReconnect?: boolean;
+}) {
+  const { query = "", inScope, onSignedOut, reloadOnReconnect = false } = opts;
   const scope = useRef(inScope);
   scope.current = inScope;
   const [state, dispatch] = useReducer((s: LiveState, a: Action): LiveState => {
-    if (a.kind === "load") return load(a.jobs, a.buffered);
+    if (a.kind === "load") return load(a.jobs, a.buffered, scope.current);
     return apply(s, a.msg, scope.current ? { inScope: scope.current } : {});
   }, empty);
   const [status, setStatus] = useState<LiveStatus>("connecting");
@@ -66,6 +74,7 @@ export function useLive(opts: { query?: string; inScope?: (job: Job) => boolean;
         if (stopped) return;
         if (ev.code === 4401) return onSignedOut();
         setStatus("reconnecting");
+        if (reloadOnReconnect) listLoaded = false;
         attempt += 1;
         timer = window.setTimeout(connect, Math.min(10_000, 500 * 2 ** attempt));
       };
@@ -76,7 +85,7 @@ export function useLive(opts: { query?: string; inScope?: (job: Job) => boolean;
       window.clearTimeout(timer);
       socket?.close();
     };
-  }, [query, onSignedOut]);
+  }, [query, onSignedOut, reloadOnReconnect]);
 
   return { state, status, loaded, error };
 }

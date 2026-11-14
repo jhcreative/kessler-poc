@@ -51,7 +51,11 @@ type Ready = { id: string; number: number; last_event_id: number; requires_appro
  * approved for dispatch. Tests make their own rather than use up the seed's handful. */
 export async function makeReadyJob(playwright: PlaywrightWorkerArgs["playwright"], baseURL: string): Promise<Ready> {
   const request = await office(playwright, baseURL, "coord@ofs.com");
-  const made = await request.post("/api/intake/simulate");
+  let made = await request.post("/api/intake/simulate");
+  for (let i = 0; made.status() === 429 && i < 3; i++) {
+    await new Promise((r) => setTimeout(r, 3100)); // one new request every few seconds per person
+    made = await request.post("/api/intake/simulate");
+  }
   expect(made.ok(), await made.text()).toBeTruthy();
   const id = ((await made.json()) as { job: Ready }).job.id;
   const step = async (command: string, payload: object = {}) => {

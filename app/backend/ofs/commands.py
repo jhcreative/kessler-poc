@@ -37,6 +37,8 @@ from .models import Client, Contract, FleetPosition, Invoice, Job, JobEvent, Per
 from .rules import evaluate
 from .states import FIELD_EDITORS, FINAL, QUEUE, TRANSITIONS, UPDATE_FIELDS, ActorKind, Role, State
 
+BEFORE_DISPATCH = frozenset({State.INTAKE_DRAFT, State.QUALIFIED, State.NEEDS_CLIENT_APPROVAL})
+
 
 class Refused(Exception):
     """A command the backend won't run. `reason` is a sentence the person can act on."""
@@ -389,8 +391,17 @@ async def _update_fields(
     changes = req.model_dump(exclude_unset=True)
     if not changes:
         raise Refused(422, "not_allowed", "Nothing to change")
-    if "estimate_cents" in changes and actor.role is not Role.COORDINATOR:
-        raise Refused(403, "role", "Only the coordinator changes the estimate")
+    priced = {"issue_type", "estimate_cents"} & changes.keys()
+    if priced and actor.role is not Role.COORDINATOR:
+        raise Refused(403, "role", "Only the coordinator changes the issue type or the estimate")
+    # The contract rail is checked at dispatch, so what it checks can't move after dispatch (cold review, finding 3).
+    if priced and state not in BEFORE_DISPATCH:
+        raise Refused(
+            409, "rail", "The issue type and estimate are fixed once the job is dispatched. Flag it for review instead"
+        )
+    # An approval covers the amount it was given for: raise the estimate, and the client approves again.
+    if "estimate_cents" in changes and job.approval and changes["estimate_cents"] > job.estimate_cents:
+        job.approval = None
     if "issue_type" in changes:
         contract = await _contract(session, job)
         if changes["issue_type"] not in contract.issue_types:

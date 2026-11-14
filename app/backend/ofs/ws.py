@@ -16,17 +16,18 @@ What this defends against, and how:
 - Another site opening a socket with the user's cookie (cross-site WebSocket hijacking): browsers always send Origin
   on a WebSocket, and it must be one of ours (close 4403).
 - A tech reading other techs' jobs: the hub filters by role on the server, and so does the replay.
-- A login removed while its socket is open: the account is re-checked with every ping (close 4401).
+- A login removed while its socket is open: the account is re-checked every 25 s, busy or idle (close 4401).
 """
 
 from __future__ import annotations
 
 import asyncio
 import contextlib
+import time
 from typing import Any
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from sqlalchemy import select
+from sqlalchemy import false, select
 
 from .auth import COOKIE, Caller, allowed_origins, caller_for
 from .commands import envelope, job_out
@@ -52,7 +53,7 @@ async def _replay(caller: Caller, tech_id: Any, after: int) -> list[dict[str, An
     async with open_session() as session:
         q = select(JobEvent, Job).join(Job, Job.id == JobEvent.job_id).where(JobEvent.id > after)
         if caller.role is Role.TECH:
-            q = q.where(Job.tech_id == tech_id)
+            q = q.where(Job.tech_id == tech_id) if tech_id else q.where(false())
         rows = (await session.execute(q.order_by(JobEvent.id).limit(REPLAY_LIMIT + 1))).all()
         if len(rows) > REPLAY_LIMIT:
             return None
@@ -104,7 +105,16 @@ async def socket(ws: WebSocket, after: int | None = None) -> None:
                 sent = max(sent, msg["event"]["id"])
         await ws.send_json(LiveHello(last_event_id=sent).model_dump())
         gone = asyncio.create_task(_until_gone(ws))  # notice a closed view at once, not at the next ping
+        checked = time.monotonic()
         while True:
+            # The login is re-checked every PING_SECONDS, busy or idle (cold review, finding 5): a disabled or expired
+            # session stops hearing events even when events never stop.
+            if time.monotonic() - checked >= PING_SECONDS:
+                async with open_session() as session:
+                    if await caller_for(session, ws.cookies.get(COOKIE)) is None:
+                        await ws.close(code=4401, reason="Your session has ended")
+                        return
+                checked = time.monotonic()
             get = asyncio.create_task(sub.queue.get())
             done, _ = await asyncio.wait({get, gone}, timeout=PING_SECONDS, return_when=asyncio.FIRST_COMPLETED)
             if gone in done:
@@ -112,10 +122,6 @@ async def socket(ws: WebSocket, after: int | None = None) -> None:
                 return
             if get not in done:
                 get.cancel()
-                async with open_session() as session:
-                    if await caller_for(session, ws.cookies.get(COOKIE)) is None:
-                        await ws.close(code=4401, reason="Your session has ended")
-                        return
                 await ws.send_json(LivePing().model_dump())
                 continue
             msg = get.result()

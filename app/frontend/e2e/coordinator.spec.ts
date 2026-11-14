@@ -13,8 +13,17 @@ test("a request goes from draft to dispatch, through the approval rule, and move
   await expect(page.locator(".live")).toHaveText("Live");
 
   // C2: a request arrives and is drafted, by Claude or, labelled, by the rules.
+  // One new request every few seconds per person: earlier tests sent some as this coordinator, so the first click
+  // may be told to wait, as a person would be. Then try again.
   await page.getByRole("button", { name: "New request" }).click();
-  await expect(page.locator(".toast")).toContainText(/New request from .+, drafted by (Claude|the rules)/, { timeout: 20_000 });
+  const toast = page.locator(".toast");
+  await expect(toast).toContainText(/New request from|One new request every few seconds/, { timeout: 20_000 });
+  if ((await toast.textContent())?.includes("every few seconds")) {
+    await toast.getByRole("button", { name: "Dismiss" }).click();
+    await page.waitForTimeout(3100);
+    await page.getByRole("button", { name: "New request" }).click();
+  }
+  await expect(toast).toContainText(/New request from .+, drafted by (Claude|the rules)/, { timeout: 20_000 });
   const record = page.locator(".record");
   await expect(record.locator(".state-pill")).toHaveText("Intake draft");
   await expect(record.locator(".drafted")).toContainText(/Drafted by (Claude|the rules) from source/);

@@ -124,6 +124,7 @@ async def test_a_techs_replay_is_their_own_jobs_only(
         await logins.execute(select(Tech).join(Person, Person.id == Tech.person_id).where(Person.label == "Tech 1"))
     ).scalar_one()
     theirs = {str(j) for j in (await logins.execute(select(Job.id).where(Job.tech_id == tech1.id))).scalars()}
+    assert theirs  # otherwise the check below passes with nothing to check
     cookie = await sign_in(client, "tech@ofs.com")
     async with opener(f"{server}?after=0", cookie) as tech:
         seen = set()

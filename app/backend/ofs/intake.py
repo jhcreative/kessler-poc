@@ -130,6 +130,8 @@ async def claude_drafter(text: str, clients: list[str]) -> Drafted:
         return rules_draft(text, clients, "Claude is rate limited")
     except anthropic.APIStatusError as exc:
         return rules_draft(text, clients, f"Claude answered {exc.status_code}")
+    except Exception as exc:  # anything else (a malformed response, a validation error): the demo never stalls
+        return rules_draft(text, clients, f"Claude's draft failed ({type(exc).__name__})")
     if response.stop_reason == "refusal" or response.parsed_output is None:
         return rules_draft(text, clients, f"Claude didn't draft it ({response.stop_reason})")
     return Drafted(
@@ -197,11 +199,16 @@ async def draft_job(
     actor: Actor,
     drafter: Drafter = claude_drafter,
     now: datetime | None = None,
+    drafted: Drafted | None = None,
 ) -> tuple[Job, Any]:
-    """Draft a job from a request, in the caller's transaction. Returns the job and its `draft_intake` event."""
+    """Draft a job from a request, in the caller's transaction. Returns the job and its `draft_intake` event.
+
+    Pass `drafted` (from `draft()`) to keep the model call out of the write lock: the call takes seconds, and the
+    lock holds every other write while it's held.
+    """
     now = now or datetime.now(UTC)
     clients = {c.name: c for c in (await session.execute(select(Client))).scalars()}
-    result = await drafter(text, sorted(clients))
+    result = drafted or await drafter(text, sorted(clients))
     site = await _site(session, clients, result.draft) if result.draft.client_name in clients else None
     if site is None and result.by == "claude":  # Claude named something we don't have: the rules try instead
         result = rules_draft(text, sorted(clients), "Claude's draft named a client or store we don't have")
@@ -248,6 +255,12 @@ async def draft_job(
     payload = {k: v for k, v in payload.items() if v is not None}
     event = await _record(session, job, "draft_intake", None, State.INTAKE_DRAFT, actor, payload, None, now)
     return job, event
+
+
+async def draft(session: AsyncSession, text: str, drafter: Drafter = claude_drafter) -> Drafted:
+    """The model call alone, outside any lock: Claude, or the rules when Claude can't."""
+    names = sorted((await session.execute(select(Client.name))).scalars())
+    return await drafter(text, names)
 
 
 async def _site(session: AsyncSession, clients: dict[str, Client], d: ClaudeDraft) -> Site | None:

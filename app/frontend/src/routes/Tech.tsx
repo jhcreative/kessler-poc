@@ -35,7 +35,7 @@ export function Tech() {
   const { me, signedOut } = useAuth();
   const { jobId } = useParams();
   const mine = useMemo(() => (j: Job) => j.tech_id === me?.tech_id, [me?.tech_id]);
-  const { state, status, loaded, error } = useLive({ onSignedOut: signedOut, inScope: mine }); // a job reassigned away leaves
+  const { state, status, loaded, error } = useLive({ onSignedOut: signedOut, inScope: mine, reloadOnReconnect: true }); // a job reassigned away leaves
   const skeleton = useDelayed(!loaded);
   const jobs = useMemo(() => schedule(state.jobs.values()), [state.jobs]);
   const done = useMemo(() => [...state.jobs.values()].filter((j) => DONE.includes(j.state)).length, [state.jobs]);

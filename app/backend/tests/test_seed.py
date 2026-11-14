@@ -81,7 +81,7 @@ async def test_rails_hold_in_the_seed(session: AsyncSession) -> None:
         if job.requires_approval and job.state in dispatched:
             assert job.approval and job.approval["client_ref"]  # no dispatch over the cap without it
         if job.state in ("closed", "billing_review", "invoiced", "paid"):
-            assert job.sign_off  # no close without a sign-off
+            assert job.sign_off or job.extenuating_note  # no close without a sign-off or a reason
     for inv in (await session.execute(select(Invoice).where(Invoice.state == "submitted"))).scalars():
         assert inv.check_passed  # no approved invoice that failed the check
 
