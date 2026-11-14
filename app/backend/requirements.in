@@ -1,0 +1,10 @@
+# Direct dependencies, at Tailor v1.1.5's pinned versions. requirements.lock is the full resolved set.
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+sqlalchemy[asyncio]==2.1.1
+asyncpg==0.31.0
+alembic==1.20.0
+pydantic==2.13.5
+bcrypt==5.0.0
+pyjwt==2.15.0
+websockets==17.1
