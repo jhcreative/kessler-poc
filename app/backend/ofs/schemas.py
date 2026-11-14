@@ -210,6 +210,7 @@ class JobOut(BaseModel):
     client_name: str
     site_id: uuid.UUID
     site_label: str
+    site_address: str  # street, city, state: where the tech drives
     site_state: str
     client_wo: str
     client_po: str | None

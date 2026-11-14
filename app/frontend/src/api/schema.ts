@@ -576,6 +576,8 @@ export interface components {
             /** Rule Fired */
             rule_fired: string | null;
             sign_off: components["schemas"]["SignOff"] | null;
+            /** Site Address */
+            site_address: string;
             /** Site Contact */
             site_contact: string;
             /**
@@ -665,6 +667,8 @@ export interface components {
              */
             person_id: string;
             role: components["schemas"]["Role"];
+            /** Tech Id */
+            tech_id?: string | null;
         };
         /** NoPayload */
         NoPayload: Record<string, never>;

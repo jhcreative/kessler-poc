@@ -29,7 +29,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .db import SESSION
-from .models import Person, User
+from .models import Person, Tech, User
 from .states import Role
 
 COOKIE = "ofs_session"
@@ -74,6 +74,12 @@ class Me(BaseModel):
     label: str
     role: Role
     email: str
+    tech_id: uuid.UUID | None = None  # a tech's own id: the phone keeps to the jobs that carry it
+
+
+async def _me(session: AsyncSession, person: Person, email: str) -> Me:
+    tech_id = await session.scalar(select(Tech.id).where(Tech.person_id == person.id))
+    return Me(person_id=person.id, label=person.label, role=Role(person.role), email=email, tech_id=tech_id)
 
 
 _attempts: dict[str, deque[float]] = defaultdict(deque)
@@ -142,7 +148,7 @@ async def login(body: LoginIn, request: Request, response: Response, session: As
         raise HTTPException(401, "That email and password don't match")
     token = jwt.encode({"sub": email, "exp": int(time.time()) + TTL_SECONDS}, _secret(), algorithm="HS256")
     response.set_cookie(COOKIE, token, max_age=TTL_SECONDS, httponly=True, secure=_secure(), samesite="lax", path="/")
-    return Me(person_id=person.id, label=person.label, role=Role(person.role), email=email)
+    return await _me(session, person, email)
 
 
 @router.post("/logout", status_code=204)
@@ -152,5 +158,5 @@ async def logout(request: Request, response: Response) -> None:
 
 
 @router.get("/me", response_model=Me)
-async def me(caller: Caller = CURRENT) -> Me:
-    return Me(person_id=caller.person.id, label=caller.person.label, role=caller.role, email=caller.person.email or "")
+async def me(caller: Caller = CURRENT, session: AsyncSession = SESSION) -> Me:
+    return await _me(session, caller.person, caller.person.email or "")

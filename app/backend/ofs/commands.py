@@ -420,6 +420,7 @@ async def job_out(session: AsyncSession, job: Job) -> schemas.JobOut:
         client_name=client.name,
         site_id=site.id,
         site_label=site.label,
+        site_address=f"{site.address}, {site.city}, {site.state}",
         site_state=site.state,
         client_wo=job.client_wo,
         client_po=job.client_po,

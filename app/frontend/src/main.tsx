@@ -4,12 +4,12 @@ import { Navigate, Outlet, RouterProvider, createBrowserRouter } from "react-rou
 import { AuthProvider, homeFor, useAuth } from "./auth";
 import { Login } from "./routes/Login";
 import { Shell } from "./routes/Shell";
-import { TechHome } from "./routes/TechHome";
 import { ToastProvider } from "./Toast";
 import "./styles/app.css";
 
 // The grid (AG Grid) loads only with the views that use it, so signing in stays light.
 const Overview = lazy(() => import("./routes/Overview").then((m) => ({ default: m.Overview })));
+const Tech = lazy(() => import("./routes/Tech").then((m) => ({ default: m.Tech })));
 const Dispatch = lazy(() => import("./routes/Dispatch").then((m) => ({ default: m.Dispatch })));
 const Coordinator = lazy(() => import("./routes/Coordinator").then((m) => ({ default: m.Coordinator })));
 
@@ -41,7 +41,8 @@ const router = createBrowserRouter([
           { path: "/ops", element: <Suspense fallback={null}><Overview /></Suspense> },
           { path: "/ops/coordinator", element: <Suspense fallback={null}><Coordinator /></Suspense> },
           { path: "/ops/dispatch", element: <Suspense fallback={null}><Dispatch /></Suspense> },
-          { path: "/ops/tech", element: <TechHome /> },
+          { path: "/ops/tech", element: <Suspense fallback={null}><Tech /></Suspense> },
+          { path: "/ops/tech/:jobId", element: <Suspense fallback={null}><Tech /></Suspense> },
         ],
       },
       { path: "*", element: <Home /> },

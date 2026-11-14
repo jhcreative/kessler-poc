@@ -156,3 +156,32 @@ main { padding: 16px 24px 40px; }
 .override { display: flex; gap: 8px; align-items: center; }
 .override input { block-size: 32px; padding: 0 8px; font: inherit; border: 1px solid var(--border-strong); border-radius: var(--radius); }
 .secondary.small { block-size: 32px; padding: 0 10px; }
+
+/* The tech's phone (POC-09): one column, big targets (PQ-25), the action at the thumb. */
+.phone { max-width: 480px; margin: 0 auto; padding: 12px 16px 96px; }
+.cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.job-card { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 12px 14px; min-height: 88px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); text-decoration: none; }
+.job-card[data-state="onsite"] { border-color: var(--primary); }
+.job-card.skeleton { margin-bottom: 10px; border: 0; }
+.card-time { font: 500 0.875rem var(--util); color: var(--muted); grid-column: 1; }
+.card-title { font: 600 1rem var(--font); color: var(--heading); grid-column: 1; }
+.card-line { font-size: 0.875rem; color: var(--muted); margin: 0; grid-column: 1; }
+.job-card .state-pill { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+.back { display: inline-flex; align-items: center; min-height: 44px; font: 500 0.9375rem var(--util); }
+.back::before { content: "‹"; margin-right: 6px; font-size: 1.25rem; }
+.job-head h2 { margin: 6px 0 2px; font: 600 1.125rem var(--font); color: var(--heading); }
+.rails { margin: 16px 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+.rails h3, .phone h3 { margin: 0 0 6px; font: 500 0.8125rem var(--util); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.rails ul { margin: 0; padding-left: 18px; }
+.phone .field input, .phone .field select { block-size: 48px; font-size: 1rem; }
+.primary.block, .secondary.block { inline-size: 100%; block-size: 52px; font-size: 1rem; }
+.phone-actions { position: sticky; bottom: 0; display: flex; flex-direction: column; gap: 8px; padding: 12px 0; background: var(--page); }
+.phone-form { margin-top: 16px; padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; }
+.phone-form .link-button { align-self: center; }
+.choice { border: 0; padding: 0; margin: 0 0 16px; display: flex; flex-direction: column; gap: 4px; }
+.choice legend { font: 500 0.875rem var(--util); margin-bottom: 4px; }
+.choice label { display: flex; gap: 8px; align-items: center; min-height: 44px; }
+@media (max-width: 600px) {
+  .top { padding: 8px 16px; gap: 12px; }
+  .top h1 { font-size: 1.125rem; }
+}

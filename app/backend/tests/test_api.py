@@ -73,7 +73,8 @@ async def test_a_tech_sees_only_their_queue(logins: AsyncSession, client: httpx.
     other = await job_in(logins, "paid")
     if other.id not in {j["id"] for j in jobs}:
         assert (await client.get(f"/api/jobs/{other.id}")).status_code == 404
-    assert me["role"] == "tech"
+    assert me["role"] == "tech" and me["tech_id"]
+    assert all(j["tech_id"] == me["tech_id"] for j in jobs)  # the phone's scope is the tech's own id
 
 
 async def test_queues_and_mine_filter(logins: AsyncSession, client: httpx.AsyncClient) -> None:
