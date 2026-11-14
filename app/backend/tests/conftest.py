@@ -57,3 +57,21 @@ async def seeded(session: AsyncSession) -> AsyncSession:
 
     await seed(session, now=NOW)
     return session
+
+
+@pytest.fixture
+async def logins(seeded: AsyncSession) -> AsyncIterator[AsyncSession]:
+    from ofs import auth
+    from ofs.auth import hash_password
+    from ofs.models import User
+    from ofs.seed import DEMO_LOGINS
+
+    from .helpers import PASSWORD
+
+    auth._attempts.clear()
+    hashed = hash_password(PASSWORD)
+    for email in DEMO_LOGINS.values():
+        seeded.add(User(email=email, password_hash=hashed))
+    await seeded.flush()
+    yield seeded
+    auth._attempts.clear()

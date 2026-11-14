@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -41,3 +42,11 @@ async def get_session() -> AsyncIterator[AsyncSession]:
 
 
 SESSION = Depends(get_session, scope="function")
+
+
+@asynccontextmanager
+async def open_session() -> AsyncIterator[AsyncSession]:
+    """A short session outside a request: the WebSocket takes one per read, never one for the whole connection,
+    so a hundred open views don't hold a hundred pooled connections."""
+    async with SessionFactory() as session:
+        yield session

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import httpx
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -49,3 +50,22 @@ def cmd(job: Job, command: str, payload: dict[str, Any] | None = None, override:
 
 async def event_count(session: AsyncSession) -> int:
     return int(await session.scalar(select(func.count()).select_from(JobEvent)) or 0)
+
+
+PASSWORD = "correct horse battery"  # noqa: S105 (a test fixture, not a credential)
+
+
+async def sign_in(client: httpx.AsyncClient, email: str) -> str:
+    """Sign in and return the session cookie's value."""
+    client.cookies.clear()
+    r = await client.post("/api/auth/login", json={"email": email, "password": PASSWORD})
+    assert r.status_code == 200, r.text
+    return str(client.cookies["ofs_session"])
+
+
+async def run(
+    client: httpx.AsyncClient, job_id: object, command: str, payload: dict[str, Any] | None = None, **extra: object
+) -> httpx.Response:
+    job = (await client.get(f"/api/jobs/{job_id}")).json()
+    body = {"command": command, "expected_event_id": job["last_event_id"], "payload": payload or {}, **extra}
+    return await client.post(f"/api/jobs/{job_id}/commands", json=body)

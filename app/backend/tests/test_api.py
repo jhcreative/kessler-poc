@@ -2,45 +2,14 @@
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
-
 import httpx
 import pytest
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ofs import auth
-from ofs.auth import hash_password
 from ofs.models import QbLedger, User
-from ofs.seed import DEMO_LOGINS
 
-from .helpers import job_in
-
-PASSWORD = "correct horse battery"  # noqa: S105 (a test fixture, not a credential)
-
-
-@pytest.fixture
-async def logins(seeded: AsyncSession) -> AsyncIterator[AsyncSession]:
-    auth._attempts.clear()
-    for email in DEMO_LOGINS.values():
-        seeded.add(User(email=email, password_hash=hash_password(PASSWORD)))
-    await seeded.flush()
-    yield seeded
-    auth._attempts.clear()
-
-
-async def sign_in(client: httpx.AsyncClient, email: str) -> None:
-    client.cookies.clear()
-    r = await client.post("/api/auth/login", json={"email": email, "password": PASSWORD})
-    assert r.status_code == 200, r.text
-
-
-async def run(
-    client: httpx.AsyncClient, job_id: object, command: str, payload: dict[str, object] | None = None, **extra: object
-) -> httpx.Response:
-    job = (await client.get(f"/api/jobs/{job_id}")).json()
-    body = {"command": command, "expected_event_id": job["last_event_id"], "payload": payload or {}, **extra}
-    return await client.post(f"/api/jobs/{job_id}/commands", json=body)
+from .helpers import PASSWORD, job_in, run, sign_in
 
 
 async def test_login_sets_a_safe_cookie_and_me_answers(logins: AsyncSession, client: httpx.AsyncClient) -> None:

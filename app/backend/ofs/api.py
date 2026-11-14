@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, Request
 from sqlalchemy import Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,6 +12,7 @@ from . import schemas
 from .auth import CURRENT, Caller, check_origin
 from .commands import Actor, envelope, execute, job_out
 from .db import SESSION
+from .hub import Message, hub
 from .models import Job, JobEvent, Tech
 from .states import QUEUE, ActorKind, Role, State
 
@@ -71,11 +72,22 @@ async def run_command(
     job_id: uuid.UUID,
     cmd: schemas.CommandIn,
     request: Request,
+    background: BackgroundTasks,
     caller: Caller = CURRENT,
     session: AsyncSession = SESSION,
 ) -> schemas.CommandResult:
     check_origin(request)
     if caller.role is Role.EXEC:
         raise HTTPException(403, "The overview is read-only")
+    before = await session.scalar(select(Job.tech_id).where(Job.id == job_id))
     job, events = await execute(session, job_id, cmd, Actor(ActorKind.PERSON, caller.person, caller.role))
-    return schemas.CommandResult(job=await job_out(session, job), events=[envelope(e, job.number) for e in events])
+    result = schemas.CommandResult(job=await job_out(session, job), events=[envelope(e, job.number) for e in events])
+    # Runs after the session commits (function scope, ADR-0102): only committed changes are ever published.
+    background.add_task(hub.publish, messages(result, before))
+    return result
+
+
+def messages(result: schemas.CommandResult, tech_before: uuid.UUID | None) -> list[Message]:
+    techs = frozenset(t for t in (tech_before, result.job.tech_id) if t)
+    job = result.job.model_dump(mode="json")
+    return [Message({"type": "event", "event": e.model_dump(mode="json"), "job": job}, techs) for e in result.events]

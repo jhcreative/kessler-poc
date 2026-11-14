@@ -1,4 +1,4 @@
-"""The app: auth, the job API and its commands, the health check. The WebSocket follows (POC-05)."""
+"""The app: auth, the job API and its commands, the live socket, the health check."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from . import api, auth
+from . import api, auth, ws
 from .commands import Refused
 from .db import SESSION
 from .models import Job, JobEvent
@@ -17,6 +17,7 @@ from .schemas import Refusal
 app = FastAPI(title="OneFamilyServices ops", docs_url=None, redoc_url=None)
 app.include_router(auth.router)
 app.include_router(api.router)
+app.include_router(ws.router)
 
 
 @app.exception_handler(Refused)

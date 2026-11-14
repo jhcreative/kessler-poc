@@ -103,18 +103,23 @@ async def _person_for(session: AsyncSession, email: str) -> Person | None:
     return await session.scalar(select(Person).where(Person.email == email))
 
 
-async def current(request: Request, session: AsyncSession = SESSION) -> Caller:
-    token = request.cookies.get(COOKIE)
+async def caller_for(session: AsyncSession, token: str | None) -> Caller | None:
+    """The caller a session cookie names, or None: no cookie, a bad or expired one, or a login since removed."""
     if not token:
-        raise HTTPException(401, "Sign in first")
+        return None
     try:
         claims = jwt.decode(token, _secret(), algorithms=["HS256"], options={"require": ["exp", "sub"]})
-    except jwt.PyJWTError as exc:
-        raise HTTPException(401, "Your session has ended; sign in again") from exc
+    except jwt.PyJWTError:
+        return None
     person = await _person_for(session, str(claims["sub"]))
-    if person is None:
-        raise HTTPException(401, "This login no longer exists")
-    return Caller(person=person, role=Role(person.role))
+    return Caller(person=person, role=Role(person.role)) if person else None
+
+
+async def current(request: Request, session: AsyncSession = SESSION) -> Caller:
+    caller = await caller_for(session, request.cookies.get(COOKIE))
+    if caller is None:
+        raise HTTPException(401, "Sign in first, or again: your session has ended")
+    return caller
 
 
 CURRENT = Depends(current)
