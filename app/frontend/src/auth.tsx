@@ -52,6 +52,7 @@ export function useAuth(): Auth {
 export const VIEWS: { path: string; label: string; roles: Role[] }[] = [
   { path: "/ops/coordinator", label: "Coordinator", roles: ["coordinator"] },
   { path: "/ops/dispatch", label: "Dispatch", roles: ["dispatcher"] },
+  { path: "/ops/controller", label: "Controller", roles: ["controller"] },
   { path: "/ops", label: "Overview", roles: ["exec", "coordinator", "dispatcher", "controller"] },
 ];
 

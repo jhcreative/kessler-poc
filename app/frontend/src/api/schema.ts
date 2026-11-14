@@ -182,6 +182,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/jobs/{job_id}/invoice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Job Invoice */
+        get: operations["job_invoice_api_jobs__job_id__invoice_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/jobs/{job_id}/recommendation": {
         parameters: {
             query?: never;
@@ -214,6 +231,26 @@ export interface paths {
          * @description G3 and Q9: every job by state and queue, and how long each step takes. Office roles and exec only.
          */
         get: operations["overview_api_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/qb/aging": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Aging
+         * @description B3, from qb_ledger: every open invoice, by days past due. Paid invoices aren't aging.
+         */
+        get: operations["aging_api_qb_aging_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -259,6 +296,32 @@ export interface components {
          * @enum {string}
          */
         ActorKind: "person" | "simulator" | "system";
+        /**
+         * Aging
+         * @description B3: open invoices in QuickBooks (simulated) by days past due, as of now.
+         */
+        Aging: {
+            /**
+             * As Of
+             * Format: date-time
+             */
+            as_of: string;
+            /** Buckets */
+            buckets: components["schemas"]["AgingBucket"][];
+            /** Open Cents */
+            open_cents: number;
+            /** Open Count */
+            open_count: number;
+        };
+        /** AgingBucket */
+        AgingBucket: {
+            /** Amount Cents */
+            amount_cents: number;
+            /** Count */
+            count: number;
+            /** Label */
+            label: string;
+        };
         /**
          * Approval
          * @description Plan §5 C: who approved, when, and the client's own reference.
@@ -515,6 +578,46 @@ export interface components {
             events: number;
             /** Jobs */
             jobs: number;
+        };
+        /** InvoiceLine */
+        InvoiceLine: {
+            /** Cents */
+            cents: number;
+            /** Desc */
+            desc: string;
+        };
+        /**
+         * InvoiceOut
+         * @description The drafted invoice, in the client's format, with the check that guards approval (plan §4, B2).
+         */
+        InvoiceOut: {
+            /** Check Note */
+            check_note: string | null;
+            /** Check Passed */
+            check_passed: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Format */
+            format: string;
+            /**
+             * Job Id
+             * Format: uuid
+             */
+            job_id: string;
+            /** Lines */
+            lines: components["schemas"]["InvoiceLine"][];
+            /** Qb Doc Number */
+            qb_doc_number: string | null;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "draft" | "submitted" | "sent_back";
+            /** Total Cents */
+            total_cents: number;
         };
         /**
          * JobOut
@@ -1158,6 +1261,37 @@ export interface operations {
             };
         };
     };
+    job_invoice_api_jobs__job_id__invoice_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvoiceOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     job_recommendation_api_jobs__job_id__recommendation_get: {
         parameters: {
             query?: never;
@@ -1205,6 +1339,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Overview"];
+                };
+            };
+        };
+    };
+    aging_api_qb_aging_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Aging"];
                 };
             };
         };

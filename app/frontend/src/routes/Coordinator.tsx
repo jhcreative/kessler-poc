@@ -175,6 +175,11 @@ function JobRecord({ job }: { job: Job }) {
               Approve for dispatch
             </button>
           )}
+          {job.state === "closed" && (
+            <button type="button" className="primary" disabled={busy} onClick={() => void run("draft_invoice", {}, `Redrafted the invoice: job ${job.number}`)}>
+              Redraft invoice
+            </button>
+          )}
           {job.state === "needs_review" && (
             <>
               <button type="button" className="primary" disabled={busy} onClick={() => void run("ask_to_wait")}>

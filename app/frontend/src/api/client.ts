@@ -1,5 +1,5 @@
 // Typed calls to the API. Same origin: Caddy serves the views and proxies /api, so the session cookie just works.
-import type { CommandIn, CommandResult, ContractOut, EventEnvelope, Job, Me, Overview, Recommendation, Refusal, TechOut } from "./types";
+import type { Aging, CommandIn, CommandResult, ContractOut, EventEnvelope, InvoiceOut, Job, Me, Overview, Recommendation, Refusal, TechOut } from "./types";
 
 export class ApiError extends Error {
   constructor(
@@ -38,6 +38,8 @@ export const api = {
   contract: (jobId: string) => call<ContractOut>(`/api/jobs/${jobId}/contract`),
   recommendation: (jobId: string) => call<Recommendation>(`/api/jobs/${jobId}/recommendation`),
   techs: () => call<TechOut[]>("/api/techs"),
+  invoice: (jobId: string) => call<InvoiceOut>(`/api/jobs/${jobId}/invoice`),
+  aging: () => call<Aging>("/api/qb/aging"),
   simulateRequest: () => call<CommandResult>("/api/intake/simulate", { method: "POST" }),
   command: (jobId: string, cmd: CommandIn) =>
     call<CommandResult>(`/api/jobs/${jobId}/commands`, { method: "POST", body: JSON.stringify(cmd) }),

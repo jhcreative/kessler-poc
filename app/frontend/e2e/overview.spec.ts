@@ -55,7 +55,7 @@ test("a tech is kept to their own view", async ({ page }) => {
 });
 
 test("signing out ends the session", async ({ page }) => {
-  await signIn(page, "controller@ofs.com");
+  await signIn(page, "exec@ofs.com");
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   await page.getByRole("button", { name: "Sign Out" }).click();
   await expect(page).toHaveURL(/\/login$/);

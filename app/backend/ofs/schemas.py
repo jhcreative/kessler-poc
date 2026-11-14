@@ -345,3 +345,32 @@ class TechOut(BaseModel):
     lat: float
     lng: float
     load: int  # jobs on their board: assigned, onsite or needs review
+
+
+class InvoiceOut(BaseModel):
+    """The drafted invoice, in the client's format, with the check that guards approval (plan §4, B2)."""
+
+    job_id: uuid.UUID
+    lines: list[InvoiceLine]
+    total_cents: int
+    format: str
+    state: Literal["draft", "submitted", "sent_back"]
+    check_passed: bool
+    check_note: str | None
+    qb_doc_number: str | None
+    created_at: datetime
+
+
+class AgingBucket(BaseModel):
+    label: str  # "Current", "1 to 30", "31 to 60", "61 to 90", "Over 90" (days past due)
+    count: int
+    amount_cents: int
+
+
+class Aging(BaseModel):
+    """B3: open invoices in QuickBooks (simulated) by days past due, as of now."""
+
+    as_of: datetime
+    buckets: list[AgingBucket]
+    open_count: int
+    open_cents: int

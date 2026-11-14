@@ -16,7 +16,7 @@ from .auth import CURRENT, Caller, check_origin
 from .commands import Actor, envelope, execute, job_out
 from .db import SESSION
 from .hub import Message, hub
-from .models import Client, Contract, FleetPosition, Job, JobEvent, Person, Site, Tech
+from .models import Client, Contract, FleetPosition, Invoice, Job, JobEvent, Person, QbLedger, Site, Tech
 from .states import QUEUE, ActorKind, Role, State
 
 router = APIRouter(prefix="/api/jobs", tags=["jobs"])
@@ -309,3 +309,47 @@ async def techs(caller: Caller = CURRENT, session: AsyncSession = SESSION) -> li
 
 
 ISSUE_LABEL = {"hvac": "HVAC", "doors_locks": "doors and locks", "general": "general repair"}
+
+
+BILLING = (Role.CONTROLLER, Role.COORDINATOR, Role.EXEC)
+
+
+@router.get("/{job_id}/invoice", response_model=schemas.InvoiceOut)
+async def job_invoice(
+    job_id: uuid.UUID, caller: Caller = CURRENT, session: AsyncSession = SESSION
+) -> schemas.InvoiceOut:
+    if caller.role not in BILLING:
+        raise HTTPException(403, "Invoices are for billing")
+    job = await _one(session, caller, job_id)
+    invoice = await session.scalar(select(Invoice).where(Invoice.job_id == job.id))
+    if invoice is None:
+        raise HTTPException(404, "This job has no invoice yet: it's drafted when the job closes")
+    return schemas.InvoiceOut.model_validate(invoice, from_attributes=True)
+
+
+qb_router = APIRouter(prefix="/api/qb", tags=["quickbooks (simulated)"])
+
+# Days past due: current is not yet due (zero or less); then four 30-day bands.
+_BANDS = (("Current", None, 0), ("1 to 30", 1, 30), ("31 to 60", 31, 60), ("61 to 90", 61, 90), ("Over 90", 91, None))
+
+
+@qb_router.get("/aging", response_model=schemas.Aging)
+async def aging(caller: Caller = CURRENT, session: AsyncSession = SESSION) -> schemas.Aging:
+    """B3, from qb_ledger: every open invoice, by days past due. Paid invoices aren't aging."""
+    if caller.role not in (Role.CONTROLLER, Role.EXEC):
+        raise HTTPException(403, "Aging is for the controller")
+    now = datetime.now(UTC)
+    open_rows = (await session.execute(select(QbLedger).where(QbLedger.paid_at.is_(None)))).scalars().all()
+    buckets = []
+    for label, lo, hi in _BANDS:
+        rows = [
+            r
+            for r in open_rows
+            if (lo is None or (now - r.due_at).days >= lo) and (hi is None or (now - r.due_at).days <= hi)
+        ]
+        buckets.append(
+            schemas.AgingBucket(label=label, count=len(rows), amount_cents=sum(r.amount_cents for r in rows))
+        )
+    return schemas.Aging(
+        as_of=now, buckets=buckets, open_count=len(open_rows), open_cents=sum(r.amount_cents for r in open_rows)
+    )

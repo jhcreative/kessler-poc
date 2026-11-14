@@ -1,7 +1,7 @@
 // POC-08 in a real browser: N2's dispatch half (plan §11). D1: an approved job arrives live. D2: it shows the
 // recommended tech and why. D3: one click assigns it. Then the soft rail (a reason on record) and T4.
 import { expect, test, type APIRequestContext } from "@playwright/test";
-import { apiAs, signIn, watchConsole } from "./helpers";
+import { apiAs, office, signIn, watchConsole } from "./helpers";
 
 type J = { id: string; number: number; last_event_id: number; requires_approval: boolean; state: string };
 
@@ -22,15 +22,13 @@ test("an approved job arrives in dispatch with its recommended tech, and one cli
   const before = Number(await readyTab.locator(".tab-count").textContent());
 
   // D1: the coordinator approves a draft elsewhere; it lands in Ready.
-  const coord = await playwright.request.newContext({ baseURL: baseURL ?? "", extraHTTPHeaders: { Origin: baseURL ?? "" } });
-  await apiAs(coord, "coord@ofs.com");
+  const coord = await office(playwright, baseURL ?? "", "coord@ofs.com");
   const drafts = (await (await coord.get("/api/jobs?state=intake_draft")).json()) as J[];
   const job = drafts.find((j) => !j.requires_approval);
   if (!job) throw new Error("no draft without a rule");
   await command(coord, job, "qualify");
   await command(coord, job, "approve_for_dispatch");
   await expect(readyTab.locator(".tab-count")).toHaveText(String(before + 1), { timeout: 1000 });
-  await coord.dispose();
 
   // D2: open it; the recommendation says who and why.
   await page.locator(".ag-row", { has: page.locator('[col-id="number"]', { hasText: String(job.number) }) }).click();

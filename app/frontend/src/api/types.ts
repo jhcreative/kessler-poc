@@ -19,3 +19,5 @@ export type FieldsIn = S["FieldsIn"];
 export type Recommendation = S["Recommendation"];
 export type CandidateOut = S["CandidateOut"];
 export type TechOut = S["TechOut"];
+export type InvoiceOut = S["InvoiceOut"];
+export type Aging = S["Aging"];

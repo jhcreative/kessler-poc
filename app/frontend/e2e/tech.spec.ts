@@ -1,22 +1,17 @@
 // POC-09 in a real browser, at phone size: N2's field half (plan §11). T1: a job dispatch assigns lands on the
 // phone. T2: arrive, update the record, sign off, close. T3: needs review from the field shows at once in dispatch.
-import { expect, test, type APIRequestContext, type Browser } from "@playwright/test";
-import { apiAs, signIn, watchConsole } from "./helpers";
+import { expect, test, type Browser, type PlaywrightWorkerArgs } from "@playwright/test";
+import { makeReadyJob, office, signIn, watchConsole } from "./helpers";
 
 test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 });
 
 type J = { id: string; number: number; last_event_id: number; state: string; sign_off: { by: string } | null; part_numbers: string[] };
 
-async function office(playwright: { request: { newContext: (o: object) => Promise<APIRequestContext> } }, baseURL: string, email: string) {
-  const ctx = await playwright.request.newContext({ baseURL, extraHTTPHeaders: { Origin: baseURL } });
-  await apiAs(ctx, email);
-  return ctx;
-}
 
-async function assignReadyToTech1(dispatch: APIRequestContext): Promise<J> {
-  const ready = (await (await dispatch.get("/api/jobs?state=ready_for_dispatch")).json()) as J[];
-  const job = ready[0];
-  if (!job) throw new Error("no ready job");
+/** A fresh ready job (the coordinator's), assigned to Tech 1 by dispatch. */
+async function assignReadyToTech1(playwright: PlaywrightWorkerArgs["playwright"], baseURL: string): Promise<J> {
+  const job = (await makeReadyJob(playwright, baseURL)) as unknown as J;
+  const dispatch = await office(playwright, baseURL, "dispatch@ofs.com");
   const r = await dispatch.post(`/api/jobs/${job.id}/commands`, {
     data: { command: "assign_tech", expected_event_id: job.last_event_id, payload: { tech: "Tech 1" }, override_reason: "e2e" },
   });
@@ -29,10 +24,8 @@ test("a job dispatch assigns lands on the phone, and the tech works it through t
   await signIn(page, "tech@ofs.com");
   await expect(page).toHaveURL(/\/ops\/tech$/);
   await expect(page.locator(".live")).toHaveText("Live");
-  const dispatch = await office(playwright, baseURL ?? "", "dispatch@ofs.com");
-
   // T1: assigned elsewhere, on the schedule within a second.
-  const job = await assignReadyToTech1(dispatch);
+  const job = await assignReadyToTech1(playwright, baseURL ?? "");
   const card = page.locator(".job-card", { hasText: `job ${job.number}` });
   await expect(card).toBeVisible({ timeout: 1000 });
   await expect(card.locator(".state-pill")).toHaveText("Assigned");
@@ -59,15 +52,11 @@ test("a job dispatch assigns lands on the phone, and the tech works it through t
   expect(after.state).toBe("billing_review"); // closed, and the invoice drafted at close
   expect(after.sign_off?.by).toBe("Store manager");
   expect(after.part_numbers).toEqual(["PN-48213"]);
-  await coord.dispose();
-  await dispatch.dispose();
   expect(errors, errors.join("\n")).toEqual([]);
 });
 
 test("needs review from the field shows in dispatch at once", async ({ page, playwright, baseURL, browser }) => {
-  const dispatch = await office(playwright, baseURL ?? "", "dispatch@ofs.com");
-  const job = await assignReadyToTech1(dispatch);
-  await dispatch.dispose();
+  const job = await assignReadyToTech1(playwright, baseURL ?? "");
 
   // Dispatch, on a desk, watching Needs review.
   const desk = await deskPage(browser, baseURL ?? "");

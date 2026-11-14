@@ -208,3 +208,50 @@ async def test_one_address_cant_sweep_many_accounts(logins: AsyncSession, client
         for i in range(61)
     ]
     assert codes[:60] == [401] * 60 and codes[60] == 429
+
+
+async def test_the_controller_sees_the_drafted_invoice_and_its_check(
+    logins: AsyncSession, client: httpx.AsyncClient
+) -> None:
+    from ofs.models import Job
+
+    await sign_in(client, "controller@ofs.com")
+    job = (await logins.execute(select(Job).where(Job.state == "billing_review").limit(1))).scalar_one()
+    inv = (await client.get(f"/api/jobs/{job.id}/invoice")).json()
+    assert inv["state"] == "draft" and inv["total_cents"] == sum(line["cents"] for line in inv["lines"])
+    assert isinstance(inv["check_passed"], bool) and (inv["check_passed"] or inv["check_note"])
+    draft = (await logins.execute(select(Job).where(Job.state == "intake_draft").limit(1))).scalar_one()
+    assert (await client.get(f"/api/jobs/{draft.id}/invoice")).status_code == 404
+    await sign_in(client, "dispatch@ofs.com")
+    assert (await client.get(f"/api/jobs/{job.id}/invoice")).status_code == 403
+
+
+async def test_aging_buckets_every_open_invoice_and_approval_moves_it(
+    logins: AsyncSession, client: httpx.AsyncClient
+) -> None:
+    """B2 and B3: approving a checked invoice posts it to QuickBooks (simulated), and it shows as Current."""
+    from ofs.models import Invoice, Job, QbLedger
+
+    await sign_in(client, "controller@ofs.com")
+    before = (await client.get("/api/qb/aging")).json()
+    assert [b["label"] for b in before["buckets"]] == ["Current", "1 to 30", "31 to 60", "61 to 90", "Over 90"]
+    assert all(b["count"] > 0 for b in before["buckets"])  # the seed fills every bucket
+    assert sum(b["count"] for b in before["buckets"]) == before["open_count"]
+    assert before["open_count"] == await logins.scalar(
+        select(func.count()).select_from(QbLedger).where(QbLedger.paid_at.is_(None))
+    )
+    job = (
+        await logins.execute(
+            select(Job)
+            .join(Invoice, Invoice.job_id == Job.id)
+            .where(Job.state == "billing_review", Invoice.check_passed.is_(True))
+            .limit(1)
+        )
+    ).scalar_one()
+    r = await run(client, job.id, "approve_invoice")
+    assert r.status_code == 200, r.text
+    after = (await client.get("/api/qb/aging")).json()
+    assert after["buckets"][0]["count"] == before["buckets"][0]["count"] + 1
+    assert after["open_cents"] - before["open_cents"] == r.json()["job"]["final_cents"]
+    await sign_in(client, "coord@ofs.com")
+    assert (await client.get("/api/qb/aging")).status_code == 403

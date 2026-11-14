@@ -21,6 +21,7 @@ app.include_router(api.router)
 app.include_router(api.overview_router)
 app.include_router(api.intake_router)
 app.include_router(api.techs_router)
+app.include_router(api.qb_router)
 app.include_router(ws.router)
 
 
