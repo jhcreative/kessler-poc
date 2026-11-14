@@ -25,6 +25,7 @@ test("a change made by dispatch reaches the open overview within a second", asyn
   await signIn(page, "exec@ofs.com");
   await expect(page.locator(".live")).toHaveText("Live");
   const assignedTile = page.locator(".tile", { hasText: /^\d+Assigned/ }).locator(".count");
+  await expect(assignedTile).toHaveText(/^\d+$/);
   const before = Number(await assignedTile.textContent());
 
   const dispatch = await playwright.request.newContext({ baseURL: baseURL ?? "", extraHTTPHeaders: { Origin: baseURL ?? "" } });

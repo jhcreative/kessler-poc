@@ -18,7 +18,8 @@ test("an approved job arrives in dispatch with its recommended tech, and one cli
   await expect(page).toHaveURL(/\/ops\/dispatch$/);
   await expect(page.locator(".live")).toHaveText("Live");
   const readyTab = page.getByRole("tab", { name: /^Ready/ });
-  const before = Number((await readyTab.locator(".tab-count").textContent()) ?? "0");
+  await expect(readyTab.locator(".tab-count")).toHaveText(/^\d+$/); // the list has loaded: read the real count
+  const before = Number(await readyTab.locator(".tab-count").textContent());
 
   // D1: the coordinator approves a draft elsewhere; it lands in Ready.
   const coord = await playwright.request.newContext({ baseURL: baseURL ?? "", extraHTTPHeaders: { Origin: baseURL ?? "" } });
