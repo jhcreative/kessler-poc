@@ -9,7 +9,7 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 2 | POC-01 | Approve the plan; walkthrough Q1–Q11 | T3 | John | Done (11-14) |
 | 3 | POC-02 | The app skeleton on Tailor's parts (ADR `2026-11-14-tailor-parts-not-a-tailor-site.md`) | Boots locally; health reads the database | Cesar | Done (11-14), rebuilt lean |
 | 4 | POC-03 | Tables, migrations, states, and the synthetic seed (§5, §7) | 45 jobs over every state; history in `job_events` | Pete, Jen | Done (11-14) |
-| 5 | POC-04 | Commands, the state machine and the rails, with tests | Every transition and rail tested | Pete, Jen | Ready |
+| 5 | POC-04 | Commands, the state machine and the rails, with tests; the five role logins | Every transition and rail tested | Pete, Jen, Orly | Done (11-14) |
 | 6 | POC-05 | WebSocket hub, topics, and replay on reconnect | G1; the replay test passes | Pete | Ready |
 | 7 | POC-06 | Overview: every job by queue and state, live; the frontend shell, with TS types generated from the API's OpenAPI | G3; the gate fails if the TS drifts from the backend | Nathan | Ready |
 | 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Ready |
@@ -65,3 +65,18 @@ instance-module seam. Its instance (`~/jhc/sites/jahnel-poc`) is stopped, and no
   FacilIT is a channel, not a client.
 - **Typed end to end** (John): the enums, the API contract, every JSON column (rules, approval, sign-off, invoice lines)
   and one payload model per command, all checked on write. The TypeScript side comes with POC-06.
+
+**POC-04, 2026-11-14, `app/` at `0cbe04e`.** `app/scripts/gate.sh`: **58 passed in 23.6 s** on Postgres; ruff, format,
+`mypy --strict` and `alembic check` clean (`gate: green at 0cbe04e 2026-11-14T16:45:05Z`).
+- **Every transition:** each person-issued command is refused from every wrong state, with nothing written. Roles are
+  refused by name, a tech acts only on their own job, and a stale view gets a 409.
+- **The rails:** the three hard rails are refused even with an override reason. The soft rail (assigning outside a
+  tech's skill or license) passes with a reason, and the reason is on the event.
+- **The happy path over HTTP** (N1 to N3), with real logins: intake draft, qualify, approve for dispatch, assign, arrive,
+  update fields, close, the invoice drafted at close, approve, and a QuickBooks (simulated) row. The test checks the
+  nine-event history and who did each step.
+- **Auth:** HttpOnly and SameSite=Lax cookie, Secure by default; failures read the same for a wrong password and an
+  unknown email; rate limit 429; a disabled login stops at once; exec is read-only; a cross-site POST is refused.
+- **On the running stack:** `coord@ofs.com` signs in, `/api/auth/me` answers, and `/api/jobs?mine=true` returns 18 jobs.
+- **A seed defect found and fixed:** 33 of 45 jobs were over their client's cap, against plan §7's "a few". It's now
+  pinned by a test (3 to 12, and the drafts include one with no rule).
