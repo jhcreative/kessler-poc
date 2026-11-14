@@ -46,3 +46,8 @@ Plan: `2026-11-13-poc-plan.md`. Deck: `opportunities/onefamilyservices-flows-and
 | Q6 | John's choice: deploy the app, share the repo, email a summary with the deck attached. Stretch: the Playwright narratives in an in-app help panel, hosted on John's YouTube |
 | Q8 | jhcreative (agreed) |
 | Q10 | A login per role: coord@ofs.com, dispatch@ofs.com, and so on |
+| S1 | Private, with invites |
+| S2 | Unlisted |
+| Q9 | Yes, turnaround per step in the overview |
+| Q11 | Sunday 8 pm |
+| T3 | **Approved** |
