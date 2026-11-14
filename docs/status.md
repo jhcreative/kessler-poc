@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-14 (Anne, POC-10 done; every view built)
+Updated: 2026-11-14 (Anne, POC-11's local half done)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it on jhcreative)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
@@ -25,8 +25,10 @@ behind it, labelled; the client-approval rule (C3) is in it too. **POC-08 is don
 the recommended tech and the reasons, one-click assign, and a recorded reason for an unqualified pick. **POC-09 is
 done:** the tech's phone (`tech@ofs.com`), from assignment through sign-off and close, with needs review from the
 field. **POC-10 is done** (`controller@ofs.com`): the billing queue, QuickBooks (simulated) and the aging (POC-14).
-**Every view is built, and N1 to N3 run end to end.** Next: POC-11, the gate, a cold review (DOD-3) and the deploy dry
-run, which waits on the box. Below the line: POC-15, the simulator.
+**Every view is built, and N1 to N3 run end to end.** **POC-11's local half is done:** the gate and e2e green, the
+cold review (20 findings: 17 fixed, 3 accepted; `docs/backlog/2026-11-14-cold-review.md`), Orly's checks clean, and
+the ship script and live check ready, with the dry run green. **The deploy waits on the box** (the table below).
+Next, while it waits: POC-15, the simulator.
 - **Demo logins (John, 2026-11-14):** the passwords are in `~/jhc/secrets/jahnel-poc/local-demo-logins.env`.
 - **Intake key (John, 2026-11-14):** the demo uses the existing key in `~/jhc/secrets/anthropic.env`. It's read at
   runtime and never copied into the repo or an image.

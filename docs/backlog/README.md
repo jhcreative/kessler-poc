@@ -16,7 +16,7 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Done (11-14) |
 | 10 | POC-09 | Tech phone view: my queue, the schedule, complete, needs review | T1–T3 | Nathan | Done (11-14) |
 | 11 | POC-10 | Controller queue: billing queue, approve and submit to QuickBooks (simulated) | B1, B2 | Nathan, Pete | Done (11-14) |
-| 12 | POC-11 | Gate, cold review, deploy dry run to OVH (edge mode, IMAGES=local) | DOD-1, DOD-3; R1 verified | Cesar, Orly, Rob | Ready |
+| 12 | POC-11 | Gate, cold review, deploy dry run to OVH (edge mode, IMAGES=local) | DOD-1, DOD-3; R1 verified | Cesar, Orly, Rob | Local half done (11-14); the box half waits on John |
 | 13 | POC-12 | Needs-review decisions: reassign or ask to wait | T4 | Pete, Nathan | Done (11-14), in POC-07, POC-08 and POC-09 |
 | 14 | POC-13 | Client approval when a rule fires | C3 | Pete, Nathan | Done (11-14), inside POC-07 |
 | 15 | POC-14 | QuickBooks aging summary in the controller view | B3 | Jen, Nathan | Done (11-14), with POC-10 |
@@ -200,3 +200,29 @@ row.
   - per-job sign-ins tripped the login limit, so each worker keeps one session per account;
   - Jony: the Open tile's amount spilled its box.
 - Screenshot: `docs/evidence/2026-11-14-poc-10-controller.png`.
+
+**POC-11, the local half, 2026-11-14, `app/` at `aa8594a`.** The same `app/` tree as `c41d5c5`, where the gate and
+the e2e last ran (the amend changed only the review record).
+- **DOD-1:** `gate: green at c41d5c5 2026-11-14T20:26:14Z` (backend 114, vitest 7, types, budget);
+  `e2e: green at c41d5c5 2026-11-14T20:27:20Z` (12).
+- **DOD-3, the cold review:** 20 findings. 17 are fixed (13 with a test); 3 are accepted, with the reason. The record
+  is `2026-11-14-cold-review.md`.
+- **Orly's checks:**
+  - No key or secret in any image layer or file: three images scanned, and `ship.sh` scans again per build.
+  - `.env` is outside both build contexts, and now excluded in both.
+  - Headers: the strict CSP, `X-Robots-Tag: noindex`, nosniff, same-origin referrer, a permissions policy, and no
+    `Server` header.
+  - noindex three ways (the header, `robots.txt`, the meta tag).
+  - No mail code anywhere, so nothing can reach ofs.com.
+  - `npm audit` and `pip-audit`: 0 known vulnerabilities.
+- **The box path (Rob, Cesar):**
+  - `docker-compose.edge.yml` follows Tailor's edge pattern: no host ports, the domain's alias on `tailor-edge`,
+    NET_RAW dropped.
+  - The site Caddy trusts only the edge's fixed address, and sends one `X-Forwarded-For`, so per-address limits see
+    the visitor.
+  - `ship.sh --dry-run` is green at `c41d5c5`: the gate, linux/amd64 images with no secret in a layer, and the edge
+    compose check.
+  - `check-live.py`, R1's proof: 7 of 7 locally, a new request reaching an open socket in 1.7 s, drafting included.
+- **Left for the box (John's go, OPS-5):** the box order, the OVH token, DNS, the edge on the box, `/srv/ofs/.env`
+  and the secrets files (Rob). Then `ship.sh --first` with a snapshot, and `check-live.py` against the real URL. That
+  run is R1.
