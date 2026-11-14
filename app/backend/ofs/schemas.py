@@ -311,3 +311,36 @@ class ContractOut(BaseModel):
     issue_types: list[str]
     rules: list[Rule]
     net_days: int
+
+
+class CandidateOut(BaseModel):
+    tech_id: uuid.UUID
+    label: str
+    truck: str
+    eligible: bool
+    distance_km: float
+    load: int
+    score: float | None
+    reasons: list[str]
+    gaps: list[str]
+
+
+class Recommendation(BaseModel):
+    """D2: every tech, the eligible ones first by score. `top` is the recommendation, or null if nobody qualifies."""
+
+    job_id: uuid.UUID
+    top: CandidateOut | None
+    candidates: list[CandidateOut]
+
+
+class TechOut(BaseModel):
+    id: uuid.UUID
+    label: str
+    skills: list[str]
+    licenses: list[str]
+    home_city: str
+    truck: str
+    truck_status: Literal["parked", "driving", "onsite"]
+    lat: float
+    lng: float
+    load: int  # jobs on their board: assigned, onsite or needs review

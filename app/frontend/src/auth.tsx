@@ -51,6 +51,7 @@ export function useAuth(): Auth {
 // A role's home is the first view listed for it.
 export const VIEWS: { path: string; label: string; roles: Role[] }[] = [
   { path: "/ops/coordinator", label: "Coordinator", roles: ["coordinator"] },
+  { path: "/ops/dispatch", label: "Dispatch", roles: ["dispatcher"] },
   { path: "/ops", label: "Overview", roles: ["exec", "coordinator", "dispatcher", "controller"] },
 ];
 

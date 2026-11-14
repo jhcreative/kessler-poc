@@ -10,6 +10,7 @@ import "./styles/app.css";
 
 // The grid (AG Grid) loads only with the views that use it, so signing in stays light.
 const Overview = lazy(() => import("./routes/Overview").then((m) => ({ default: m.Overview })));
+const Dispatch = lazy(() => import("./routes/Dispatch").then((m) => ({ default: m.Dispatch })));
 const Coordinator = lazy(() => import("./routes/Coordinator").then((m) => ({ default: m.Coordinator })));
 
 function Root() {
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
         children: [
           { path: "/ops", element: <Suspense fallback={null}><Overview /></Suspense> },
           { path: "/ops/coordinator", element: <Suspense fallback={null}><Coordinator /></Suspense> },
+          { path: "/ops/dispatch", element: <Suspense fallback={null}><Dispatch /></Suspense> },
           { path: "/ops/tech", element: <TechHome /> },
         ],
       },

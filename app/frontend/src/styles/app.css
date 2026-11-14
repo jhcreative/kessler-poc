@@ -144,3 +144,15 @@ main { padding: 16px 24px 40px; }
 .toast { pointer-events: auto; display: flex; gap: 16px; align-items: center; padding: 6px 8px 6px 16px; background: var(--primary); color: var(--on-primary); border-radius: var(--radius); box-shadow: 0 4px 16px rgb(0 0 0 / 0.2); }
 .toast .link-button { color: #cfe2ff; min-height: 36px; }
 .toast[data-error] { background: var(--error); }
+
+/* Dispatch: the recommendation and the other techs. */
+.recommended { padding: 10px 12px; border: 1px solid var(--primary); border-radius: var(--radius); }
+.recommended-name { margin: 0 0 6px; }
+.recommended ul { margin: 0; padding-left: 18px; }
+.candidates { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; }
+.candidate { display: flex; gap: 12px; align-items: center; min-height: 44px; border-bottom: 1px solid var(--border); }
+.candidate-name { font-weight: 500; min-width: 64px; }
+.candidate:not([data-eligible]) .candidate-name { color: var(--muted); }
+.override { display: flex; gap: 8px; align-items: center; }
+.override input { block-size: 32px; padding: 0 8px; font: inherit; border: 1px solid var(--border-strong); border-radius: var(--radius); }
+.secondary.small { block-size: 32px; padding: 0 10px; }

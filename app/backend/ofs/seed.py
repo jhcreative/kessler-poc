@@ -152,6 +152,30 @@ STEP_HOURS: dict[str, tuple[float, float]] = {
     "record_payment": (24 * 20, 24 * 50),
 }
 
+# Where the ten techs are based: where the sites cluster, so a recommendation is a drive, not a road trip.
+HOMES: tuple[tuple[str, str], ...] = (
+    ("PA", "Allentown"),
+    ("PA", "Pittsburgh"),
+    ("PA", "Harrisburg"),
+    ("OH", "Columbus"),
+    ("OH", "Cleveland"),
+    ("NY", "Rochester"),
+    ("NY", "Binghamton"),
+    ("NJ", "Newark"),
+    ("MD", "Baltimore"),
+    ("WV", "Morgantown"),
+)
+# Licensed in the home state and its neighbours among the seven (a regional firm's techs cross state lines).
+NEIGHBOURS: dict[str, list[str]] = {
+    "PA": ["OH", "NY", "NJ", "DE", "MD", "WV"],
+    "OH": ["PA", "WV"],
+    "NY": ["PA", "NJ"],
+    "NJ": ["NY", "PA", "DE"],
+    "DE": ["PA", "NJ", "MD"],
+    "WV": ["OH", "PA", "MD"],
+    "MD": ["PA", "DE", "WV"],
+}
+
 DEMO_LOGINS = {
     "Coordinator 1": "coord@ofs.com",
     "Dispatcher": "dispatch@ofs.com",
@@ -308,16 +332,15 @@ async def seed(session: AsyncSession, seed: int = DEFAULT_SEED, now: datetime | 
     await session.flush()
 
     techs: list[Tech] = []
-    states = list(CITIES)
     for i, tp in enumerate(tech_people):
-        home_state = states[i % len(states)]
-        city, lat, lng = CITIES[home_state][i % len(CITIES[home_state])]
-        neighbours = w.rng.sample([s for s in states if s != home_state], 2)
+        home_state, city = HOMES[i]
+        _, lat, lng = next(c for c in CITIES[home_state] if c[0] == city)
+        neighbours = NEIGHBOURS[home_state]
         skills = sorted(
             {
                 ISSUE_TYPES[i % len(ISSUE_TYPES)],
                 ISSUE_TYPES[(i + 3) % len(ISSUE_TYPES)],
-                *w.rng.sample(ISSUE_TYPES, 2),
+                *w.rng.sample(ISSUE_TYPES, 3),
             }
         )
         techs.append(

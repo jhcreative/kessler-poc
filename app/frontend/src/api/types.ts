@@ -16,3 +16,6 @@ export type Refusal = S["Refusal"];
 export type Role = S["Role"];
 export type ContractOut = S["ContractOut"];
 export type FieldsIn = S["FieldsIn"];
+export type Recommendation = S["Recommendation"];
+export type CandidateOut = S["CandidateOut"];
+export type TechOut = S["TechOut"];

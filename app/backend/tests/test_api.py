@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 import pytest
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ofs.models import QbLedger, User
@@ -37,9 +37,9 @@ async def test_failures_read_the_same_and_are_rate_limited(logins: AsyncSession,
     assert wrong.status_code == unknown.status_code == 401 and wrong.json() == unknown.json()
     codes = [
         (await client.post("/api/auth/login", json={"email": "x@ofs.com", "password": "x"})).status_code
-        for _ in range(10)
+        for _ in range(11)
     ]
-    assert codes[-1] == 429
+    assert codes[:10] == [401] * 10 and codes[10] == 429  # ten tries at one account, then wait
 
 
 async def test_a_disabled_login_stops_at_once(logins: AsyncSession, client: httpx.AsyncClient) -> None:
@@ -164,3 +164,46 @@ async def test_the_overview_counts_every_job_and_times_every_step(
 async def test_no_schema_is_served(client: httpx.AsyncClient) -> None:
     assert (await client.get("/openapi.json")).status_code == 404
     assert (await client.get("/docs")).status_code == 404
+
+
+async def test_every_ready_job_has_a_recommendation_that_fits(logins: AsyncSession, client: httpx.AsyncClient) -> None:
+    """D2 over HTTP: the top tech has the skill and the license for the site's state, and says so."""
+    from ofs.models import Job, Site
+
+    await sign_in(client, "dispatch@ofs.com")
+    roster = {t["id"]: t for t in (await client.get("/api/techs")).json()}
+    ready = (
+        await logins.execute(
+            select(Job, Site).join(Site, Site.id == Job.site_id).where(Job.state == "ready_for_dispatch")
+        )
+    ).all()
+    assert ready
+    for job, site in ready:
+        rec = (await client.get(f"/api/jobs/{job.id}/recommendation")).json()
+        top = rec["top"]
+        assert top and top["eligible"] and len(rec["candidates"]) == len(roster)
+        tech = roster[top["tech_id"]]
+        assert job.issue_type in tech["skills"] and site.state in tech["licenses"]
+        assert f"Licensed in {site.state}" in top["reasons"]
+
+
+async def test_the_roster_counts_each_techs_board(logins: AsyncSession, client: httpx.AsyncClient) -> None:
+    from ofs.models import Job
+
+    await sign_in(client, "dispatch@ofs.com")
+    roster = (await client.get("/api/techs")).json()
+    on_board = await logins.scalar(
+        select(func.count()).select_from(Job).where(Job.state.in_(("assigned", "onsite", "needs_review")))
+    )
+    assert len(roster) == 10 and sum(t["load"] for t in roster) == on_board
+    assert [t["label"] for t in roster][:3] == ["Tech 1", "Tech 2", "Tech 3"]
+    await sign_in(client, "tech@ofs.com")
+    assert (await client.get("/api/techs")).status_code == 403
+
+
+async def test_one_address_cant_sweep_many_accounts(logins: AsyncSession, client: httpx.AsyncClient) -> None:
+    codes = [
+        (await client.post("/api/auth/login", json={"email": f"u{i}@ofs.com", "password": "x"})).status_code
+        for i in range(61)
+    ]
+    assert codes[:60] == [401] * 60 and codes[60] == 429

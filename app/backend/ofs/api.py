@@ -8,15 +8,15 @@ from datetime import UTC, datetime
 from typing import Any
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, Request
-from sqlalchemy import Select, select, text
+from sqlalchemy import Select, func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from . import intake, schemas, sources
+from . import intake, recommend, schemas, sources
 from .auth import CURRENT, Caller, check_origin
 from .commands import Actor, envelope, execute, job_out
 from .db import SESSION
 from .hub import Message, hub
-from .models import Client, Contract, Job, JobEvent, Site, Tech
+from .models import Client, Contract, FleetPosition, Job, JobEvent, Person, Site, Tech
 from .states import QUEUE, ActorKind, Role, State
 
 router = APIRouter(prefix="/api/jobs", tags=["jobs"])
@@ -217,3 +217,95 @@ async def job_contract(
             "net_days": contract.net_days,
         }
     )
+
+
+ON_BOARD = ("assigned", "onsite", "needs_review")
+OFFICE = (Role.COORDINATOR, Role.DISPATCHER, Role.CONTROLLER, Role.EXEC)
+
+
+async def _roster(session: AsyncSession) -> list[schemas.TechOut]:
+    loads = dict(
+        (
+            await session.execute(
+                select(Job.tech_id, func.count())
+                .where(Job.state.in_(ON_BOARD), Job.tech_id.is_not(None))
+                .group_by(Job.tech_id)
+            )
+        ).all()
+    )
+    rows = (
+        await session.execute(
+            select(Tech, Person, FleetPosition)
+            .join(Person, Person.id == Tech.person_id)
+            .join(FleetPosition, FleetPosition.truck == Tech.truck)
+        )
+    ).all()
+    out = [
+        schemas.TechOut.model_validate(
+            {
+                "id": t.id,
+                "label": p.label,
+                "skills": t.skills,
+                "licenses": t.licenses,
+                "home_city": t.home_city,
+                "truck": t.truck,
+                "truck_status": f.status,
+                "lat": f.lat,
+                "lng": f.lng,
+                "load": int(loads.get(t.id, 0)),
+            }
+        )
+        for t, p, f in rows
+    ]
+    return sorted(out, key=lambda t: int(t.label.split()[-1]) if t.label.split()[-1].isdigit() else 0)
+
+
+@router.get("/{job_id}/recommendation", response_model=schemas.Recommendation)
+async def job_recommendation(
+    job_id: uuid.UUID, caller: Caller = CURRENT, session: AsyncSession = SESSION
+) -> schemas.Recommendation:
+    """D2: the recommended tech for this job, with the reasons (ofs/recommend.py)."""
+    if caller.role not in OFFICE:
+        raise HTTPException(403, "Recommendations are for dispatch")
+    job = await _one(session, caller, job_id)
+    site = (await session.execute(select(Site).where(Site.id == job.site_id))).scalar_one()
+    roster = await _roster(session)
+    techs = [
+        recommend.TechIn(str(t.id), t.label, frozenset(t.skills), frozenset(t.licenses), t.truck, t.lat, t.lng, t.load)
+        for t in roster
+    ]
+    ranked = recommend.recommend(
+        job.issue_type,
+        recommend.Place(site.lat, site.lng, site.state),
+        techs,
+        issue_label=ISSUE_LABEL.get(job.issue_type, job.issue_type),
+    )
+    out = [
+        schemas.CandidateOut(
+            tech_id=uuid.UUID(c.tech.id),
+            label=c.tech.label,
+            truck=c.tech.truck,
+            eligible=c.eligible,
+            distance_km=c.distance_km,
+            load=c.tech.load,
+            score=c.score,
+            reasons=c.reasons,
+            gaps=c.gaps,
+        )
+        for c in ranked
+    ]
+    return schemas.Recommendation(job_id=job.id, top=out[0] if out and out[0].eligible else None, candidates=out)
+
+
+techs_router = APIRouter(prefix="/api/techs", tags=["techs"])
+
+
+@techs_router.get("", response_model=list[schemas.TechOut])
+async def techs(caller: Caller = CURRENT, session: AsyncSession = SESSION) -> list[schemas.TechOut]:
+    """The roster for dispatch: skills, licenses, the truck's last position, and the load."""
+    if caller.role not in OFFICE:
+        raise HTTPException(403, "The roster is for the office")
+    return await _roster(session)
+
+
+ISSUE_LABEL = {"hvac": "HVAC", "doors_locks": "doors and locks", "general": "general repair"}

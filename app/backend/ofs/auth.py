@@ -1,7 +1,8 @@
 """Logins for the five demo roles (plan §6, Q10): bcrypt and a signed session cookie.
 
 What this defends against, and how:
-- A stolen or guessed password: bcrypt (a deliberately slow hash) and a login rate limit per client address.
+- A stolen or guessed password: bcrypt (a deliberately slow hash), and a login rate limit per account and address,
+  with a looser one per address so one address can't sweep many accounts.
 - Telling which emails exist: an unknown email still runs one bcrypt check, and both failures read the same.
 - Script reading the cookie: HttpOnly. A cookie sent over plain HTTP: Secure, unless COOKIE_SECURE=0 (local only).
 - A request forged from another site: SameSite=Lax, plus an Origin check on every request that changes state.
@@ -33,7 +34,8 @@ from .states import Role
 
 COOKIE = "ofs_session"
 TTL_SECONDS = 12 * 3600
-LOGIN_LIMIT = (10, 60.0)  # attempts per window, seconds
+LOGIN_LIMIT = (10, 60.0)  # attempts per account and address, per window (seconds): guessing at one account
+LOGIN_LIMIT_ADDRESS = (60, 60.0)  # attempts per address: one address sweeping many accounts
 _DUMMY_HASH = bcrypt.hashpw(b"not-a-password", bcrypt.gensalt())
 
 
@@ -77,8 +79,8 @@ class Me(BaseModel):
 _attempts: dict[str, deque[float]] = defaultdict(deque)
 
 
-def _rate_limited(key: str) -> bool:
-    limit, window = LOGIN_LIMIT
+def _rate_limited(key: str, rule: tuple[int, float] = LOGIN_LIMIT) -> bool:
+    limit, window = rule
     now = time.monotonic()
     q = _attempts[key]
     while q and now - q[0] > window:
@@ -129,9 +131,10 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 @router.post("/login", response_model=Me)
 async def login(body: LoginIn, request: Request, response: Response, session: AsyncSession = SESSION) -> Me:
     check_origin(request)
-    if _rate_limited(request.client.host if request.client else "unknown"):
-        raise HTTPException(429, "Too many attempts; wait a minute")
     email = body.email.strip().lower()
+    address = request.client.host if request.client else "unknown"
+    if _rate_limited(f"{address} {email}") or _rate_limited(address, LOGIN_LIMIT_ADDRESS):
+        raise HTTPException(429, "Too many attempts; wait a minute")
     user = await session.scalar(select(User).where(User.email == email, User.disabled.is_(False)))
     ok = bcrypt.checkpw(body.password.encode(), (user.password_hash.encode() if user else _DUMMY_HASH))
     person = await _person_for(session, email) if user and ok else None

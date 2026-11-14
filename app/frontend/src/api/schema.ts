@@ -182,6 +182,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/jobs/{job_id}/recommendation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Job Recommendation
+         * @description D2: the recommended tech for this job, with the reasons (ofs/recommend.py).
+         */
+        get: operations["job_recommendation_api_jobs__job_id__recommendation_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/overview": {
         parameters: {
             query?: never;
@@ -194,6 +214,26 @@ export interface paths {
          * @description G3 and Q9: every job by state and queue, and how long each step takes. Office roles and exec only.
          */
         get: operations["overview_api_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/techs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Techs
+         * @description The roster for dispatch: skills, licenses, the truck's last position, and the load.
+         */
+        get: operations["techs_api_techs_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -243,6 +283,30 @@ export interface components {
              * @default null
              */
             window_start?: string | null;
+        };
+        /** CandidateOut */
+        CandidateOut: {
+            /** Distance Km */
+            distance_km: number;
+            /** Eligible */
+            eligible: boolean;
+            /** Gaps */
+            gaps: string[];
+            /** Label */
+            label: string;
+            /** Load */
+            load: number;
+            /** Reasons */
+            reasons: string[];
+            /** Score */
+            score: number | null;
+            /**
+             * Tech Id
+             * Format: uuid
+             */
+            tech_id: string;
+            /** Truck */
+            truck: string;
         };
         /** CapRule */
         CapRule: {
@@ -627,6 +691,20 @@ export interface components {
             reason: string;
         };
         /**
+         * Recommendation
+         * @description D2: every tech, the eligible ones first by score. `top` is the recommendation, or null if nobody qualifies.
+         */
+        Recommendation: {
+            /** Candidates */
+            candidates: components["schemas"]["CandidateOut"][];
+            /**
+             * Job Id
+             * Format: uuid
+             */
+            job_id: string;
+            top: components["schemas"]["CandidateOut"] | null;
+        };
+        /**
          * Refusal
          * @description A refused command: the 409 or 422 body. `reason` is a sentence a person can act on.
          */
@@ -688,6 +766,35 @@ export interface components {
             /** Queue */
             queue: string;
             state: components["schemas"]["State"];
+        };
+        /** TechOut */
+        TechOut: {
+            /** Home City */
+            home_city: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Label */
+            label: string;
+            /** Lat */
+            lat: number;
+            /** Licenses */
+            licenses: string[];
+            /** Lng */
+            lng: number;
+            /** Load */
+            load: number;
+            /** Skills */
+            skills: string[];
+            /** Truck */
+            truck: string;
+            /**
+             * Truck Status
+             * @enum {string}
+             */
+            truck_status: "parked" | "driving" | "onsite";
         };
         /** ValidationError */
         ValidationError: {
@@ -1047,6 +1154,37 @@ export interface operations {
             };
         };
     };
+    job_recommendation_api_jobs__job_id__recommendation_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                job_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Recommendation"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     overview_api_overview_get: {
         parameters: {
             query?: never;
@@ -1063,6 +1201,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Overview"];
+                };
+            };
+        };
+    };
+    techs_api_techs_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TechOut"][];
                 };
             };
         };
