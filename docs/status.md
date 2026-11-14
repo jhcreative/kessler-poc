@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-14 (Anne, POC-11's local half done)
+Updated: 2026-11-14 (Anne, POC-11's local half done; the window journalled)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it on jhcreative)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
@@ -29,6 +29,8 @@ field. **POC-10 is done** (`controller@ofs.com`): the billing queue, QuickBooks 
 cold review (20 findings: 17 fixed, 3 accepted; `docs/backlog/2026-11-14-cold-review.md`), Orly's checks clean, and
 the ship script and live check ready, with the dry run green. **The deploy waits on the box** (the table below).
 Next, while it waits: POC-15, the simulator.
+- **The build journal:** `docs/journal/2026-11-14-build/` covers this window story by story. Start at its
+  `mining-guide.md` when writing the README, the recap email or the narratives.
 - **Demo logins (John, 2026-11-14):** the passwords are in `~/jhc/secrets/jahnel-poc/local-demo-logins.env`.
 - **Intake key (John, 2026-11-14):** the demo uses the existing key in `~/jhc/secrets/anthropic.env`. It's read at
   runtime and never copied into the repo or an image.

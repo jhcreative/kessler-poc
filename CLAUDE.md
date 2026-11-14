@@ -56,10 +56,12 @@ own repo, PP-16). They are referenced here, not copied.
 ```
 docs/status.md       # The present tense: live, rollback, next, waiting on John
 docs/carry-forward/  # Anne's session notes (PP-2)
+docs/journal/        # Build journals, one folder per window: the detailed record to mine for client-facing docs
 docs/plans/          # Approved plans, one file each
 docs/backlog/        # Backlog
 docs/adr/            # Decision records (PP-5)
 docs/releases/       # What shipped, per version
+docs/evidence/       # Screenshots and other evidence, dated, synthetic data only
 docs/meetings/       # Evidence as received (the round-4 account)
 opportunities/       # Opportunities doc HTML + dated PDFs
 proposals/           # jhc-proposal-jahnel-poc-<date>.pdf
