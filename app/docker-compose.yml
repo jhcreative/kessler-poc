@@ -1,4 +1,4 @@
-# Local and box. Ports bind to loopback only; on the box, the edge Caddy fronts it (POC-11).
+# Local and box. Only Caddy (web) publishes a port, on loopback; on the box, the edge Caddy fronts it (POC-11).
 name: ofs
 services:
   postgres:
@@ -26,8 +26,16 @@ services:
   backend:
     build: ./backend
     environment: *env
-    ports: ["127.0.0.1:${LOCAL_WEB_PORT:-9219}:8000"]
     depends_on:
       migrate: {condition: service_completed_successfully}
+  web:
+    build: ./frontend
+    ports: ["127.0.0.1:${LOCAL_WEB_PORT:-9219}:80"]
+    depends_on:
+      backend: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/robots.txt"]
+      interval: 5s
+      retries: 10
 volumes:
   pg-data:

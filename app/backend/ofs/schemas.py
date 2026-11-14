@@ -226,7 +226,9 @@ class JobOut(BaseModel):
     state: State
     queue: str
     owner_id: uuid.UUID | None
+    owner_label: str | None
     tech_id: uuid.UUID | None
+    tech_label: str | None
     window_start: datetime | None
     window_end: datetime | None
     sign_off: SignOff | None
@@ -248,3 +250,46 @@ class CommandResult(BaseModel):
 
     job: JobOut
     events: list[EventEnvelope]
+
+
+class StepTurnaround(BaseModel):
+    """Time spent in one state (Q9): how long jobs waited there, from `job_events`. The waits are the Cost of Delay."""
+
+    state: State
+    queue: str
+    open: int  # jobs in this state now
+    open_hours_avg: float | None  # how long they've been waiting
+    done: int  # times a job has left this state
+    done_hours_median: float | None  # how long it usually takes to leave
+
+
+class Overview(BaseModel):
+    total: int
+    steps: list[StepTurnaround]  # in state-machine order
+    as_of: datetime
+
+
+# --- The WebSocket's frames (ws.py). Not in FastAPI's OpenAPI, so tools/export_openapi.py adds them. ---
+
+
+class LiveHello(BaseModel):
+    type: Literal["hello"] = "hello"
+    last_event_id: int
+
+
+class LiveEvent(BaseModel):
+    type: Literal["event"] = "event"
+    event: EventEnvelope
+    job: JobOut
+
+
+class LivePing(BaseModel):
+    type: Literal["ping"] = "ping"
+
+
+class LiveResync(BaseModel):
+    type: Literal["resync"] = "resync"
+
+
+LiveMessage = Annotated[LiveHello | LiveEvent | LivePing | LiveResync, Field(discriminator="type")]
+LIVE_MESSAGE: TypeAdapter[LiveHello | LiveEvent | LivePing | LiveResync] = TypeAdapter(LiveMessage)

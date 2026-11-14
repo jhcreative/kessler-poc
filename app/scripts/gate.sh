@@ -13,4 +13,18 @@ cd backend
 DATABASE_URL="$PG/ofs" .venv/bin/alembic upgrade head
 DATABASE_URL="$PG/ofs" .venv/bin/alembic check
 DATABASE_URL="$PG/ofs" TEST_DATABASE_URL="$PG/ofs_test" .venv/bin/pytest -q -p no:cacheprovider "$@"
-echo "gate: green at $(git rev-parse --short HEAD) $(date -u +%FT%TZ)"
+cd ..
+scripts/types.sh --check
+cd frontend
+[ -d node_modules ] || npm ci --no-audit --no-fund
+npm run --silent typecheck
+npx --no-install vitest run --reporter=dot
+npx --no-install vite build --logLevel=error
+# The budget (gzipped): the sign-in entry stays light; the grid chunk is AG Grid Community (ADR-0014).
+for f in dist/assets/*.js; do
+  size=$(gzip -c "$f" | wc -c | tr -d ' ')
+  case "$(basename "$f")" in index-*) max=100000 ;; *) max=250000 ;; esac
+  [ "$size" -le "$max" ] || { echo "STOP: $(basename "$f") is $size bytes gzipped, over $max"; exit 1; }
+  echo "budget: $(basename "$f") $size of $max bytes gzipped"
+done
+echo "gate: green at $(git rev-parse --short HEAD) $(date -u +%FT%TZ)  (the browser e2e is scripts/e2e.sh)"

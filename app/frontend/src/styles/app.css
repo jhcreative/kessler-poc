@@ -1,0 +1,98 @@
+/* House tokens, from Tailor v1.1.5 (app/styles/tokens/_colors.scss, the workbench faces). */
+:root {
+  --ink: #333333;
+  --text: #333333;
+  --muted: #555555;
+  --subtle: #646464;
+  --heading: #1e2a38;
+  --primary: #1e2a38;
+  --on-primary: #ffffff;
+  --link: #0066cc;
+  --focus: #0066cc;
+  --page: #f7f7f8;
+  --surface: #ffffff;
+  --recess: #eef0f2;
+  --border: #dddddd;
+  --border-strong: #8c9097; /* 3:1 on white: a control's only edge (WCAG 1.4.11) */
+  --positive: #16641b;
+  --stale: #8a6d00;
+  --error: #b72d2d;
+  --radius: 4px; /* one tight control radius (PQ-17) */
+  --font: "IBM Plex Sans", Arial, sans-serif;
+  --util: "Roboto Condensed", "Arial Narrow", sans-serif;
+}
+
+@font-face { font-family: "IBM Plex Sans"; font-weight: 400; font-display: swap; src: url(/fonts/ibm-plex-sans-400-latin.woff2) format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 500; font-display: swap; src: url(/fonts/ibm-plex-sans-500-latin.woff2) format("woff2"); }
+@font-face { font-family: "IBM Plex Sans"; font-weight: 600; font-display: swap; src: url(/fonts/ibm-plex-sans-600-latin.woff2) format("woff2"); }
+@font-face { font-family: "Roboto Condensed"; font-weight: 300; font-display: swap; src: url(/fonts/roboto-condensed-300-latin.woff2) format("woff2"); }
+@font-face { font-family: "Roboto Condensed"; font-weight: 500; font-display: swap; src: url(/fonts/roboto-condensed-500-latin.woff2) format("woff2"); }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--page); color: var(--text); font: 400 0.9375rem/1.45 var(--font); }
+a { color: var(--link); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; } /* a real outline (PQ-11) */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* The pinned top: the view's title, its live state, its nav and actions together (PQ-9, PQ-28). */
+.top {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  padding: 10px 24px; background: var(--surface); border-bottom: 1px solid var(--border);
+}
+.top h1 { margin: 0; font: 600 1.25rem/1.2 var(--font); color: var(--heading); }
+.top nav { display: flex; gap: 16px; }
+.top nav a { font: 500 0.9375rem var(--util); text-decoration: none; }
+.top nav a[aria-current="page"] { color: var(--heading); text-decoration: underline; text-underline-offset: 6px; }
+.who { font: 300 0.9375rem var(--util); color: var(--muted); display: flex; gap: 12px; align-items: center; }
+.link-button { background: none; border: 0; padding: 0; min-height: 44px; font: 500 0.9375rem var(--util); color: var(--link); cursor: pointer; }
+
+.live { font: 300 0.9375rem var(--util); color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--subtle); }
+.live[data-status="live"]::before { background: var(--positive); }
+.live[data-status="reconnecting"]::before { background: var(--stale); }
+
+main { padding: 16px 24px 40px; }
+
+/* Steps: one tile per state, grouped by queue, left to right as page 2 runs. */
+.queues { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.queue { display: flex; flex-direction: column; gap: 6px; }
+.queue h2 { margin: 0; font: 500 0.8125rem var(--util); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.queue .tiles { display: flex; gap: 8px; }
+.tile {
+  width: 148px; min-height: 104px; padding: 10px 12px; text-align: left; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text);
+  display: flex; flex-direction: column; gap: 2px; font: inherit;
+}
+.tile:hover { border-color: var(--border-strong); }
+.tile[aria-pressed="true"] { border-color: var(--primary); outline: 2px solid var(--primary); outline-offset: -2px; }
+.tile .count { font: 600 1.75rem/1.1 var(--font); color: var(--heading); font-variant-numeric: tabular-nums; }
+.tile .name { font: 500 0.875rem var(--util); }
+.tile .wait { font: 300 0.8125rem var(--util); color: var(--muted); }
+.filters { display: flex; gap: 16px; align-items: center; min-height: 40px; margin-bottom: 8px; }
+.filters .showing { font: 300 0.9375rem var(--util); color: var(--muted); }
+
+.grid { height: calc(100vh - 290px); min-height: 360px; }
+.unit { font-size: 0.5em; vertical-align: 0.6em; margin-right: 1px; } /* $ and % at half size */
+.status-line { font: 300 0.9375rem var(--util); color: var(--muted); }
+.error-line { color: var(--error); font-weight: 500; }
+
+/* Skeletons (PQ-33): the content's own shape, under a slow CSS ripple; still under reduced motion. */
+.skeleton { background: linear-gradient(90deg, var(--recess) 0%, #f6f7f8 40%, var(--recess) 80%); background-size: 300% 100%; animation: ripple 1.8s ease-in-out infinite; border-radius: var(--radius); }
+@keyframes ripple { from { background-position: 100% 0; } to { background-position: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+.skeleton-row { height: 40px; margin-bottom: 1px; }
+
+/* Login: one form, the message out of flow so nothing moves (PQ-12). */
+.login { max-width: 360px; margin: 12vh auto 0; padding: 0 24px; }
+.login h1 { font: 600 1.5rem var(--font); color: var(--heading); margin: 0 0 24px; }
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 28px; position: relative; }
+.field label { font: 500 0.875rem var(--util); }
+.field input { block-size: 40px; padding: 0 10px; font: inherit; border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--surface); }
+.field input[aria-invalid="true"] { border-color: var(--error); }
+.primary { block-size: 40px; padding: 0 18px; font: 500 0.9375rem var(--font); color: var(--on-primary); background: var(--primary); border: 1px solid var(--primary); border-radius: var(--radius); cursor: pointer; }
+.primary:disabled { background: #767676; border-color: #767676; cursor: not-allowed; }
+.form-message { position: absolute; left: 0; right: 0; margin-top: 8px; font-size: 0.875rem; }
+
+@media (forced-colors: active) { .tile[aria-pressed="true"] { outline: 2px solid CanvasText; } }

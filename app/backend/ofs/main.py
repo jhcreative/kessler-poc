@@ -14,9 +14,11 @@ from .db import SESSION
 from .models import Job, JobEvent
 from .schemas import Refusal
 
-app = FastAPI(title="OneFamilyServices ops", docs_url=None, redoc_url=None)
+# No docs and no served schema: the OpenAPI is exported offline for the TypeScript types (scripts/types.sh).
+app = FastAPI(title="OneFamilyServices ops", docs_url=None, redoc_url=None, openapi_url=None)
 app.include_router(auth.router)
 app.include_router(api.router)
+app.include_router(api.overview_router)
 app.include_router(ws.router)
 
 

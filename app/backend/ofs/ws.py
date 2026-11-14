@@ -33,6 +33,7 @@ from .commands import envelope, job_out
 from .db import open_session
 from .hub import hub
 from .models import Job, JobEvent, Tech
+from .schemas import JobOut, LiveEvent, LiveHello, LivePing, LiveResync
 from .states import Role
 
 router = APIRouter()
@@ -55,14 +56,12 @@ async def _replay(caller: Caller, tech_id: Any, after: int) -> list[dict[str, An
         rows = (await session.execute(q.order_by(JobEvent.id).limit(REPLAY_LIMIT + 1))).all()
         if len(rows) > REPLAY_LIMIT:
             return None
-        jobs: dict[Any, dict[str, Any]] = {}
+        jobs: dict[Any, JobOut] = {}
         out = []
         for event, job in rows:
             if job.id not in jobs:
-                jobs[job.id] = (await job_out(session, job)).model_dump(mode="json")
-            out.append(
-                {"type": "event", "event": envelope(event, job.number).model_dump(mode="json"), "job": jobs[job.id]}
-            )
+                jobs[job.id] = await job_out(session, job)
+            out.append(LiveEvent(event=envelope(event, job.number), job=jobs[job.id]).model_dump(mode="json"))
         return out
 
 
@@ -97,13 +96,13 @@ async def socket(ws: WebSocket, after: int | None = None) -> None:
         if after is not None:
             replay = await _replay(caller, tech_id, after)
             if replay is None:
-                await ws.send_json({"type": "resync"})
+                await ws.send_json(LiveResync().model_dump())
                 await ws.close(code=4409, reason="Too far behind; reload")
                 return
             for msg in replay:
                 await ws.send_json(msg)
                 sent = max(sent, msg["event"]["id"])
-        await ws.send_json({"type": "hello", "last_event_id": sent})
+        await ws.send_json(LiveHello(last_event_id=sent).model_dump())
         gone = asyncio.create_task(_until_gone(ws))  # notice a closed view at once, not at the next ping
         while True:
             get = asyncio.create_task(sub.queue.get())
@@ -117,11 +116,11 @@ async def socket(ws: WebSocket, after: int | None = None) -> None:
                     if await caller_for(session, ws.cookies.get(COOKIE)) is None:
                         await ws.close(code=4401, reason="Your session has ended")
                         return
-                await ws.send_json({"type": "ping"})
+                await ws.send_json(LivePing().model_dump())
                 continue
             msg = get.result()
             if sub.overflowed:
-                await ws.send_json({"type": "resync"})
+                await ws.send_json(LiveResync().model_dump())
                 await ws.close(code=4409, reason="Too far behind; reload")
                 return
             if msg["event"]["id"] <= sent:

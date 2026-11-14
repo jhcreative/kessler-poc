@@ -407,6 +407,12 @@ async def _update_fields(
 async def job_out(session: AsyncSession, job: Job) -> schemas.JobOut:
     client = (await session.execute(select(Client).where(Client.id == job.client_id))).scalar_one()
     site = (await session.execute(select(Site).where(Site.id == job.site_id))).scalar_one()
+    owner = await session.get(Person, job.owner_id) if job.owner_id else None
+    tech_label = (
+        await session.scalar(select(Person.label).join(Tech, Tech.person_id == Person.id).where(Tech.id == job.tech_id))
+        if job.tech_id
+        else None
+    )
     return schemas.JobOut(
         id=job.id,
         number=job.number,
@@ -433,7 +439,9 @@ async def job_out(session: AsyncSession, job: Job) -> schemas.JobOut:
         state=State(job.state),
         queue=QUEUE[State(job.state)],
         owner_id=job.owner_id,
+        owner_label=owner.label if owner else None,
         tech_id=job.tech_id,
+        tech_label=tech_label,
         window_start=job.window_start,
         window_end=job.window_end,
         sign_off=schemas.SignOff.model_validate(job.sign_off) if job.sign_off else None,

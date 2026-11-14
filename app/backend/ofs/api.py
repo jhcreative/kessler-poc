@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import uuid
+from datetime import UTC, datetime
+from typing import Any
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, Request
-from sqlalchemy import Select, select
+from sqlalchemy import Select, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from . import schemas
@@ -67,7 +69,18 @@ async def job_events(
     return [envelope(e, job.number) for e in events]
 
 
-@router.post("/{job_id}/commands", response_model=schemas.CommandResult)
+_REFUSALS: dict[int | str, dict[str, Any]] = {
+    code: {"model": schemas.Refusal, "description": why}
+    for code, why in (
+        (403, "Your role can't do this"),
+        (404, "Not a job you can see"),
+        (409, "Stale, or the wrong state"),
+        (422, "The payload or a rail"),
+    )
+}
+
+
+@router.post("/{job_id}/commands", response_model=schemas.CommandResult, responses=_REFUSALS)
 async def run_command(
     job_id: uuid.UUID,
     cmd: schemas.CommandIn,
@@ -89,5 +102,52 @@ async def run_command(
 
 def messages(result: schemas.CommandResult, tech_before: uuid.UUID | None) -> list[Message]:
     techs = frozenset(t for t in (tech_before, result.job.tech_id) if t)
-    job = result.job.model_dump(mode="json")
-    return [Message({"type": "event", "event": e.model_dump(mode="json"), "job": job}, techs) for e in result.events]
+    return [Message(schemas.LiveEvent(event=e, job=result.job).model_dump(mode="json"), techs) for e in result.events]
+
+
+overview_router = APIRouter(prefix="/api/overview", tags=["overview"])
+
+# Time in each state: from a state-changing event to the next one on the same job (field edits don't count).
+_TURNAROUND = text("""
+    WITH moves AS (
+        SELECT job_id, to_state, at,
+               lead(at) OVER (PARTITION BY job_id ORDER BY id) AS left_at
+        FROM job_events
+        WHERE from_state IS DISTINCT FROM to_state
+    )
+    SELECT to_state,
+           count(*) FILTER (WHERE left_at IS NULL) AS open,
+           avg(extract(epoch FROM (:now - at)) / 3600) FILTER (WHERE left_at IS NULL) AS open_hours_avg,
+           count(*) FILTER (WHERE left_at IS NOT NULL) AS done,
+           percentile_cont(0.5) WITHIN GROUP (ORDER BY extract(epoch FROM (left_at - at)) / 3600)
+               FILTER (WHERE left_at IS NOT NULL) AS done_hours_median
+    FROM moves
+    GROUP BY to_state
+""")
+
+
+@overview_router.get("", response_model=schemas.Overview)
+async def overview(caller: Caller = CURRENT, session: AsyncSession = SESSION) -> schemas.Overview:
+    """G3 and Q9: every job by state and queue, and how long each step takes. Office roles and exec only."""
+    if caller.role is Role.TECH:
+        raise HTTPException(403, "The overview is for the office")
+    now = datetime.now(UTC)
+    rows = {r.to_state: r for r in (await session.execute(_TURNAROUND, {"now": now})).all()}
+
+    def hours(v: object) -> float | None:
+        return None if v is None else round(float(v), 1)  # type: ignore[arg-type]
+
+    steps = []
+    for state in State:
+        r = rows.get(state.value)
+        steps.append(
+            schemas.StepTurnaround(
+                state=state,
+                queue=QUEUE[state],
+                open=int(r.open) if r else 0,
+                open_hours_avg=hours(r.open_hours_avg) if r else None,
+                done=int(r.done) if r else 0,
+                done_hours_median=hours(r.done_hours_median) if r else None,
+            )
+        )
+    return schemas.Overview(total=sum(s.open for s in steps), steps=steps, as_of=now)

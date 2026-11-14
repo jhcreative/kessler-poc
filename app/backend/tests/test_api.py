@@ -139,3 +139,28 @@ async def test_the_happy_path_end_to_end(logins: AsyncSession, client: httpx.Asy
         "Controller",
     ]
     assert [e["id"] for e in history] == sorted(e["id"] for e in history)
+
+
+async def test_the_overview_counts_every_job_and_times_every_step(
+    logins: AsyncSession, client: httpx.AsyncClient
+) -> None:
+    """G3 and Q9: the counts match the jobs; the waits come from the history, and a tech can't see it."""
+    from collections import Counter
+
+    from ofs.models import Job
+
+    await sign_in(client, "exec@ofs.com")
+    body = (await client.get("/api/overview")).json()
+    states = Counter((await logins.execute(select(Job.state))).scalars())
+    assert body["total"] == 45
+    assert {s["state"]: s["open"] for s in body["steps"] if s["open"]} == dict(states)
+    assert [s["state"] for s in body["steps"]][:2] == ["intake_draft", "qualified"]
+    qualify = next(s for s in body["steps"] if s["state"] == "intake_draft")
+    assert qualify["done"] > 0 and qualify["done_hours_median"] > 0
+    await sign_in(client, "tech@ofs.com")
+    assert (await client.get("/api/overview")).status_code == 403
+
+
+async def test_no_schema_is_served(client: httpx.AsyncClient) -> None:
+    assert (await client.get("/openapi.json")).status_code == 404
+    assert (await client.get("/docs")).status_code == 404
