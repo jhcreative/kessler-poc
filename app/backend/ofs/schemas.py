@@ -82,10 +82,12 @@ class DraftIntakePayload(_Strict):
 
 
 class AssignPayload(_Strict):
-    tech: str
+    tech: str  # the tech's label, "Tech 4"
+    window_start: datetime | None = None  # default: an hour from now, two hours long
 
 
 class ClientApprovalPayload(_Strict):
+    by: str  # by role: "Client facilities manager"
     client_ref: str
 
 
@@ -94,8 +96,28 @@ class ReasonPayload(_Strict):
 
 
 class ClosePayload(_Strict):
+    """Plan §4: no close without a sign-off or a reason."""
+
     actual_hours: float
-    sign_off_by: str
+    sign_off_by: str | None = None
+    no_sign_off_reason: str | None = None
+
+
+class FieldsIn(_Strict):
+    """Part B, the working fields: two-way, office and field. Part A (identity) is never editable."""
+
+    issue_type: str | None = None
+    parts: Parts | None = None
+    part_numbers: list[str] | None = None
+    est_hours: float | None = None
+    actual_hours: float | None = None
+    extenuating: list[Extenuating] | None = None
+    extenuating_note: str | None = None
+    estimate_cents: int | None = Field(default=None, ge=0)  # the coordinator's, not the tech's
+
+
+class FieldsChanged(_Strict):
+    changes: FieldsIn
 
 
 class QbPayload(_Strict):
@@ -119,6 +141,14 @@ PAYLOADS: dict[str, type[BaseModel]] = {
     "approve_invoice": QbPayload,
     "send_back_invoice": ReasonPayload,
     "record_payment": QbPayload,
+    "update_fields": FieldsChanged,
+}
+
+# What a person sends, where it differs from what the event records.
+REQUESTS: dict[str, type[BaseModel]] = {
+    **PAYLOADS,
+    "approve_invoice": NoPayload,  # QuickBooks (simulated) assigns the doc number
+    "update_fields": FieldsIn,
 }
 
 
@@ -211,3 +241,10 @@ class Refusal(BaseModel):
 
     code: Literal["not_allowed", "stale", "role", "rail"]
     reason: str
+
+
+class CommandResult(BaseModel):
+    """What a command returns: the job as it now is, and the events it wrote (two at close: the invoice is drafted)."""
+
+    job: JobOut
+    events: list[EventEnvelope]

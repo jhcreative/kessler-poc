@@ -49,3 +49,11 @@ async def client(session: AsyncSession) -> AsyncIterator[httpx.AsyncClient]:
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as c:
         yield c
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+async def seeded(session: AsyncSession) -> AsyncSession:
+    from ofs.seed import seed
+
+    await seed(session, now=NOW)
+    return session

@@ -96,7 +96,7 @@ class Site(Base):
 
 
 class Person(Base):
-    """Role names only (plan §7). The five demo logins carry an email; auth lands in POC-04."""
+    """Role names only (plan §7). The five demo logins carry an email."""
 
     __tablename__ = "people"
     __table_args__ = (_in("role", [r.value for r in Role], "ck_people_role"),)
@@ -104,8 +104,20 @@ class Person(Base):
     id: Mapped[uuid.UUID] = _pk()
     label: Mapped[str] = mapped_column(String(60), unique=True)
     role: Mapped[str] = mapped_column(String(16))
-    email: Mapped[str | None] = mapped_column(String(120), unique=True)
-    password_hash: Mapped[str | None] = mapped_column(String(80))
+    email: Mapped[str | None] = mapped_column(String(120), unique=True)  # links a login (users.email)
+
+
+class User(Base):
+    """A login: admin data, not demo data, so the demo reset never clears it. Its role comes from the person
+    with the same email; a login without a person can't do anything."""
+
+    __tablename__ = "users"
+
+    id: Mapped[uuid.UUID] = _pk()
+    email: Mapped[str] = mapped_column(String(120), unique=True)
+    password_hash: Mapped[str] = mapped_column(String(80))
+    disabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime] = _now()
 
 
 class Tech(Base):
@@ -218,7 +230,7 @@ class JobEvent(Base):
         model = schemas.PAYLOADS.get(kw.get("command", ""))
         if model is None:
             raise ValueError(f"unknown command {kw.get('command')!r}")
-        kw["payload"] = model.model_validate(kw.get("payload") or {}).model_dump(mode="json")
+        kw["payload"] = model.model_validate(kw.get("payload") or {}).model_dump(mode="json", exclude_unset=True)
         super().__init__(**kw)
 
 

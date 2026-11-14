@@ -10,11 +10,11 @@ from pydantic import ValidationError
 
 from ofs.models import Contract, Invoice, Job, JobEvent
 from ofs.schemas import PAYLOADS
-from ofs.states import TRANSITIONS
+from ofs.states import TRANSITIONS, UPDATE_FIELDS
 
 
 def test_every_command_has_a_payload_model() -> None:
-    assert set(PAYLOADS) == set(TRANSITIONS)
+    assert set(PAYLOADS) == set(TRANSITIONS) | {UPDATE_FIELDS}
 
 
 def test_event_payload_must_match_its_command() -> None:

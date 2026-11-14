@@ -133,3 +133,14 @@ async def test_health_counts_the_seed(session: AsyncSession, client: httpx.Async
     r = await client.get("/api/health")
     assert r.status_code == 200
     assert r.json() == {"jobs": 45, "events": counts["job_events"]}
+
+
+async def test_a_few_jobs_need_approval_not_most(session: AsyncSession) -> None:
+    """Plan §7: "a few sit over the cap". The happy path must be the common case."""
+    await seed(session, now=NOW)
+    flags = (await session.execute(select(Job.requires_approval))).scalars().all()
+    assert 3 <= sum(flags) <= 12, sum(flags)
+    drafts = (await session.execute(select(Job).where(Job.state == "intake_draft"))).scalars().all()
+    assert any(not j.requires_approval for j in drafts)  # N1 starts from one of these
+    cents = (await session.execute(select(Job.estimate_cents))).scalars().all()
+    assert min(cents) >= 200_000 and max(cents) <= 5_000_000

@@ -81,7 +81,7 @@ TRANSITIONS: dict[str, Transition] = {
         ),
         _t("ask_to_wait", {S.NEEDS_REVIEW}, S.ONSITE, R.DISPATCHER, R.COORDINATOR),
         _t("close_job", {S.ONSITE}, S.CLOSED, R.TECH),
-        _t("draft_invoice", {S.CLOSED}, S.BILLING_REVIEW),
+        _t("draft_invoice", {S.CLOSED}, S.BILLING_REVIEW, R.COORDINATOR),  # the system at close; a person redrafts
         _t("approve_invoice", {S.BILLING_REVIEW}, S.INVOICED, R.CONTROLLER),
         _t("send_back_invoice", {S.BILLING_REVIEW}, S.CLOSED, R.CONTROLLER),
         _t("record_payment", {S.INVOICED}, S.PAID),
@@ -115,6 +115,12 @@ QUEUE: dict[State, str] = {
     S.INVOICED: "collections",
     S.PAID: "done",
 }
+
+
+# Edits part B without moving the job. Not a transition; checked separately in commands.py.
+UPDATE_FIELDS = "update_fields"
+FIELD_EDITORS = frozenset({Role.COORDINATOR, Role.TECH})
+FINAL = frozenset({State.INVOICED, State.PAID})
 
 
 def allowed(command: str, source: State | None) -> bool:

@@ -1,16 +1,29 @@
-"""The app. POC-03 serves the health check; commands, queues and the WebSocket follow (POC-04, POC-05)."""
+"""The app: auth, the job API and its commands, the health check. The WebSocket follows (POC-05)."""
 
 from __future__ import annotations
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from . import api, auth
+from .commands import Refused
 from .db import SESSION
 from .models import Job, JobEvent
+from .schemas import Refusal
 
 app = FastAPI(title="OneFamilyServices ops", docs_url=None, redoc_url=None)
+app.include_router(auth.router)
+app.include_router(api.router)
+
+
+@app.exception_handler(Refused)
+async def refused(_request: Request, exc: Refused) -> JSONResponse:
+    """A refused command: nothing was written (the session rolled back), and the reason says what to do."""
+    body = Refusal(code=exc.code, reason=exc.reason)  # type: ignore[arg-type]
+    return JSONResponse(status_code=exc.status, content=body.model_dump())
 
 
 class Health(BaseModel):

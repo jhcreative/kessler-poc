@@ -16,13 +16,16 @@ services:
   migrate:
     build: ./backend
     command: ["alembic", "upgrade", "head"]
-    environment: &db
+    environment: &env
       DATABASE_URL: postgresql+asyncpg://ofs:${POSTGRES_PASSWORD}@postgres:5432/ofs
+      SESSION_SECRET: ${SESSION_SECRET:?set in app/.env}
+      COOKIE_SECURE: ${COOKIE_SECURE:-1}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:9219}
     depends_on:
       postgres: {condition: service_healthy}
   backend:
     build: ./backend
-    environment: *db
+    environment: *env
     ports: ["127.0.0.1:${LOCAL_WEB_PORT:-9219}:8000"]
     depends_on:
       migrate: {condition: service_completed_successfully}

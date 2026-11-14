@@ -348,9 +348,12 @@ async def seed(session: AsyncSession, seed: int = DEFAULT_SEED, now: datetime | 
             spec, client, contract = w.rng.choices(clients, weights=[c[0].sites for c in clients])[0]
             site = w.rng.choice(sites[client.id])
             issue = w.rng.choice(ISSUE_TYPES)
-            estimate = w.cents(200_000, 5_000_000)
-            if target is State.NEEDS_CLIENT_APPROVAL and spec.name == "Bullseye":
-                estimate = w.cents(spec.cap_cents + 100_000, 5_000_000)
+            # A few run over the client's cap (plan §7); most sit under it. Values stay in $2K to $50K.
+            over = target is State.NEEDS_CLIENT_APPROVAL or w.rng.random() < 0.1
+            if over:
+                estimate = w.cents(min(spec.cap_cents + 100_000, 4_900_000), 5_000_000)
+            else:
+                estimate = w.cents(200_000, max(200_000, spec.cap_cents - 50_000))
             requires, rule = evaluate(contract.rules, issue, estimate)
             if target is State.NEEDS_CLIENT_APPROVAL and not requires:
                 continue
@@ -427,7 +430,7 @@ async def seed(session: AsyncSession, seed: int = DEFAULT_SEED, now: datetime | 
                     "at": t.isoformat(),
                     "client_ref": ref,
                 }
-                payload = {"client_ref": ref}
+                payload = {"by": "Client facilities manager", "client_ref": ref}
             elif command == "assign_tech":
                 start = (
                     (w.now + timedelta(hours=w.rng.uniform(0.5, 7)))
