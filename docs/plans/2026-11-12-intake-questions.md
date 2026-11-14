@@ -116,3 +116,7 @@ and the system gates any estimate over a cap; each estimate is scored against th
 | FR.2 | FI.1–FI.7 in the email now, or a later round? | Wait. |
 | FR.3 | One field app for every job (ours), or FacilIT's app for FacilIT jobs? | One app. |
 | N.1 | Next: the POC plan, flow 1's graphic, or flow 2 as data? | Draw the flows, in a readable PDF, with the ADR basics first. |
+
+**FacilIT, John 2026-11-14:** real, and kept real going forward as a unique wildcard ("Client portal manager"). We may
+want to use more of its capabilities, or we may find some people already do and leadership isn't in the loop on those
+details. FI.1–FI.7 should ask who uses it and how, not only what the edition includes.

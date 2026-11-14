@@ -34,4 +34,10 @@ Plan: `2026-11-13-poc-plan.md`. Deck: `opportunities/onefamilyservices-flows-and
 | W1 | No over-cap case in the first example. Happy path first, made canon: simple, self-explaining, less narration |
 | W2 | Right. The expectation is a Playwright narrative per view: coordinator, then dispatch and onsite, then controller, then the overview for executives and oversight. Breadth over depth: baseline usefulness for each user, onsite updates the source in real time, no service-type options, option trees or time-tracking sub-views |
 | W3 | Approved |
-| Q1 | Open: a `demo.johnhiemstra.com` style setup, reused for future work the way the curationapp box was; whether it needs a new box; johnhiemstra.com is still on Hetzner and can move to OVH; curationapp.com needs an OVH home (its box is shut down) |
+| Q1a | Yes: a new OVH box as JHC's apps home (VPS-2), reused for future work the way the curationapp box was; curationapp.com goes on it after Monday (its old box is shut down); johnhiemstra.com can move from Hetzner later |
+| Q1b | `apps.johnhiemstra.com`, then `ofs.apps.johnhiemstra.com` |
+| Q3 | Yes, Claude drafts intake |
+| Q4 | Fictional but recognizable: the mock Target reasonably clear |
+| Q5 | Role names only |
+| AG Grid | Use AG Grid for grid interfaces, not hand-rolled: the real-world model for commercial clients with large data sets after this project (ADR 2026-11-14) |
+| FacilIT | Real, and kept real as a unique wildcard; its line on the flows reads "Client portal manager"; leadership may not know how much of it some people already use |

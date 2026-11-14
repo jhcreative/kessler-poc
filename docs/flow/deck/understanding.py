@@ -114,7 +114,7 @@ def svg_recommended(overlay=None, under=None, kinds=None, top=None):
     p = [ARROW]
     if under:
         under(p)  # final coordinates, drawn first so the flow sits on top
-    ways_in(p, 170, [190, 220, 250, 237], ["Their format, their rules.", "Starbucks stores, other clients.", "Smaller clients."])
+    ways_in(p, 170, [190, 220, 250, 237], ["Their format, their rules.", "Starbucks stores, other clients.", "Client portal manager."])
     mid = len(p)  # everything after the ways in shifts left 20 to make room on the right
     p.append(cylinder(259.5, 141, 231, 158, "Job records", ["One record per request.", "Contract guardrails added.",
                       "Structured data for analysis.", "Maintains record state", "and makes visible for humans."], 360, dy=11, ty=188))
@@ -172,7 +172,7 @@ def svg_current():
     """Today, from round 4: coordinators re-key and update by hand; the tech texts Tony; Tony updates the record;
     Marcee reconciles finished work with contracts and PO numbers before invoicing. No contract reaches the record."""
     p = [ARROW]
-    ways_in(p, 150, [140, 222, 304, 170], ["Their format, their rules.", "Stores, other clients.", "Smaller clients."])
+    ways_in(p, 150, [140, 222, 304, 170], ["Their format, their rules.", "Stores, other clients.", "Client portal manager."])
     p.append(manual(172, 102, 146, 238, "Coordinators", ["Re-key every", "request.", "", "Update the", "record.", "", "Chase approvals."]))
     p.append(line("M318,222 H336"))
     # job records 10% smaller than page 2's: today's record is the smaller idea (John, 2026-11-13)
