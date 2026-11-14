@@ -26,3 +26,12 @@ Plan: `2026-11-13-poc-plan.md`. Deck: `opportunities/onefamilyservices-flows-and
 | Q9 | CD.1–CD.3: show the clock (turnaround per step from the event log) in the overview? | Yes: one turnaround column. That's the Cost of Delay story | |
 | Q10 | Demo login: one login with a role switcher, or a login per role? | One login plus the switcher; four windows, one presenter | |
 | Q11 | The deploy on Monday morning is on your go (OPS-5). What time do you want the dry-run report? | Sunday 8 pm | |
+
+## Answers so far (2026-11-14)
+
+| # | Answer |
+|---|---|
+| W1 | No over-cap case in the first example. Happy path first, made canon: simple, self-explaining, less narration |
+| W2 | Right. The expectation is a Playwright narrative per view: coordinator, then dispatch and onsite, then controller, then the overview for executives and oversight. Breadth over depth: baseline usefulness for each user, onsite updates the source in real time, no service-type options, option trees or time-tracking sub-views |
+| W3 | Approved |
+| Q1 | Open: a `demo.johnhiemstra.com` style setup, reused for future work the way the curationapp box was; whether it needs a new box; johnhiemstra.com is still on Hetzner and can move to OVH; curationapp.com needs an OVH home (its box is shut down) |
