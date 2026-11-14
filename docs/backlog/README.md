@@ -14,10 +14,10 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 7 | POC-06 | Overview: every job by queue and state, live; the frontend shell, with TS types generated from the API's OpenAPI | G3; the gate fails if the TS drifts from the backend | Nathan | Done (11-14) |
 | 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Done (11-14) |
 | 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Done (11-14) |
-| 10 | POC-09 | Tech phone view: my queue, the schedule, complete, needs review | T1–T3 | Nathan | Ready |
+| 10 | POC-09 | Tech phone view: my queue, the schedule, complete, needs review | T1–T3 | Nathan | Done (11-14) |
 | 11 | POC-10 | Controller queue: billing queue, approve and submit to QuickBooks (simulated) | B1, B2 | Nathan, Pete | Ready |
 | 12 | POC-11 | Gate, cold review, deploy dry run to OVH (edge mode, IMAGES=local) | DOD-1, DOD-3; R1 verified | Cesar, Orly, Rob | Ready |
-| 13 | POC-12 | Needs-review decisions: reassign or ask to wait | T4 | Pete, Nathan | Done (11-14), in POC-07 and POC-08; the tech's flag is POC-09 |
+| 13 | POC-12 | Needs-review decisions: reassign or ask to wait | T4 | Pete, Nathan | Done (11-14), in POC-07, POC-08 and POC-09 |
 | 14 | POC-13 | Client approval when a rule fires | C3 | Pete, Nathan | Done (11-14), inside POC-07 |
 | 15 | POC-14 | QuickBooks aging summary in the controller view | B3 | Jen, Nathan | Planned; cut first if we slip |
 | 16 | POC-15 | Simulator: live arrivals and truck movement; pause, resume, reset | §7 | Jen | Planned; cut first if we slip |
@@ -166,3 +166,19 @@ WebSocket clients and cookies.
   - a race in the tests (a count read before the list loaded);
   - the limiter carrying over between back-to-back runs: `e2e.sh` now restarts the backend first.
 - Screenshot: `docs/evidence/2026-11-14-poc-08-dispatch.png`.
+
+**POC-09, 2026-11-14, `app/` at `d354719`.** `gate: green at d354719 2026-11-14T19:14:48Z` (backend 100 passed);
+`e2e: green at d354719 2026-11-14T19:15:38Z` (10 passed, both new tests on their first run).
+- **The phone, 390 by 844 with touch, in a real browser:**
+  - T1: a job dispatch assigns elsewhere is on the tech's schedule within a second.
+  - T2: arrive, record a special-order part, close with the site's sign-off. The tech lands back on the schedule,
+    and the office's API reads billing review, the sign-off and the part number: one record.
+  - T3: needs review from the field (a reason and one line) raises dispatch's Needs review count in an open desk
+    browser within a second.
+- **Scope:** the phone keeps to the tech's own id (now on `/api/auth/me`), so a job reassigned away leaves the
+  schedule. The server already filters it.
+- **Jony, from the screenshots:**
+  - the contract cap now speaks to the tech ("If the work will run over $25,000, send it for review");
+  - the waiting line no longer stacks colons.
+- Screenshots: `docs/evidence/2026-11-14-poc-09-tech-schedule.png`, `docs/evidence/2026-11-14-poc-09-tech-job.png`.
+  The job screen is the coordinator e2e's job, with the approval it recorded (APR-7731).
