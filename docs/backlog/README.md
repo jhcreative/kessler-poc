@@ -12,13 +12,13 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 5 | POC-04 | Commands, the state machine and the rails, with tests; the five role logins | Every transition and rail tested | Pete, Jen, Orly | Done (11-14) |
 | 6 | POC-05 | WebSocket hub, topics, and replay on reconnect | G1; the replay test passes | Pete | Done (11-14) |
 | 7 | POC-06 | Overview: every job by queue and state, live; the frontend shell, with TS types generated from the API's OpenAPI | G3; the gate fails if the TS drifts from the backend | Nathan | Done (11-14) |
-| 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Ready |
+| 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Done (11-14) |
 | 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Ready |
 | 10 | POC-09 | Tech phone view: my queue, the schedule, complete, needs review | T1–T3 | Nathan | Ready |
 | 11 | POC-10 | Controller queue: billing queue, approve and submit to QuickBooks (simulated) | B1, B2 | Nathan, Pete | Ready |
 | 12 | POC-11 | Gate, cold review, deploy dry run to OVH (edge mode, IMAGES=local) | DOD-1, DOD-3; R1 verified | Cesar, Orly, Rob | Ready |
 | 13 | POC-12 | Needs-review decisions: reassign or ask to wait | T4 | Pete, Nathan | Planned; cut first if we slip |
-| 14 | POC-13 | Client approval when a rule fires | C3 | Pete, Nathan | Planned; cut first if we slip |
+| 14 | POC-13 | Client approval when a rule fires | C3 | Pete, Nathan | Done (11-14), inside POC-07 |
 | 15 | POC-14 | QuickBooks aging summary in the controller view | B3 | Jen, Nathan | Planned; cut first if we slip |
 | 16 | POC-15 | Simulator: live arrivals and truck movement; pause, resume, reset | §7 | Jen | Planned; cut first if we slip |
 | 17 | POC-17 | Playwright narratives N1–N4, recorded, captioned and uploaded unlisted to John's YouTube | Plan §11 | Jen, Henry, John | Monday |
@@ -117,3 +117,28 @@ WebSocket clients and cookies.
   - AG Grid error #200 (a missing cell-style module), caught by the e2e's console check;
   - the Paid tile claimed jobs were "waiting" (Jony, from the screenshot).
 - Screenshot: `docs/evidence/2026-11-14-poc-06-overview.png`.
+
+**POC-07 (and C3 of POC-13), 2026-11-14, `app/` at `07c9baa`.** `gate: green at 07c9baa 2026-11-14T18:16:51Z`
+(backend 77 passed); `e2e: green at 07c9baa 2026-11-14T18:17:24Z` (5 passed).
+- **The drafting (C2):** Claude drafts, and the rules stand behind it, labelled (ADR
+  `2026-11-14-claude-drafts-intake.md`).
+  - Two live calls were exact: about 1,000 tokens in and 80 out, 2 to 3.5 s each.
+  - The rules read 60 synthetic requests, over every client and all three shapes, with every field exact.
+  - The fallback reasons are tested: no key, the daily cap, a failed call, and a client we don't have. An unreadable
+    request drafts nothing.
+- **The coordinator workspace in a real browser, N1 and N1b (C1 to C3, G1):**
+  - New request (drafted live by Claude in the run), the request as it arrived, and Qualify.
+  - The estimate is raised over the cap, the rule line appears, and Approve for dispatch is disabled.
+  - Request client approval, record it (APR-7731), then Approve for dispatch.
+  - The dispatcher assigns from another context, and the coordinator's open record shows Assigned within a second,
+    with the history line.
+  - No console errors.
+- **T4 from the coordinator's side** (ask to wait, return to dispatch) is in the record panel; dispatch's side comes
+  with POC-08.
+- **Found and fixed:**
+  - The backend image lacked the SDK: its lockfile is now generated from a clean venv.
+  - openapi-typescript made every field with a default required, so it now runs with `--default-non-nullable=false`.
+  - Two test faults (a label pattern; a hard-coded 45).
+  - Jony, from the screenshot: the queue grid hid its overflow (PQ-15), the issue type showed its code, and a
+    superscript `$` sat in a label.
+- Screenshot: `docs/evidence/2026-11-14-poc-07-coordinator.png`.
