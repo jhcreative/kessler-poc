@@ -1,0 +1,21 @@
+# The box: behind the shared edge Caddy (Tailor HOST-02, templates/edge/site-override.yml). Named in the box's .env:
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.edge.yml
+# - No host ports: the edge owns 80 and 443; Postgres is reached only inside the stack.
+# - The web Caddy joins tailor-edge under the alias keyed by the DOMAIN (edge.sh alias ofs.apps.johnhiemstra.com).
+# - NET_RAW dropped: the edge network is flat, and a compromised Caddy must not forge ARP for the edge.
+services:
+  postgres:
+    ports: !reset []
+  web:
+    ports: !reset []
+    cap_drop:
+      - NET_RAW
+    networks:
+      default: {}
+      tailor-edge:
+        aliases:
+          - edge-ofs-apps-johnhiemstra-com
+
+networks:
+  tailor-edge:
+    external: true

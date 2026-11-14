@@ -14,6 +14,7 @@ services:
       interval: 3s
       retries: 20
   migrate:
+    image: ofs-backend:${OFS_TAG:-dev}
     build: ./backend
     command: ["alembic", "upgrade", "head"]
     environment: &env
@@ -24,6 +25,7 @@ services:
     depends_on:
       postgres: {condition: service_healthy}
   backend:
+    image: ofs-backend:${OFS_TAG:-dev}
     build: ./backend
     environment:
       <<: *env
@@ -36,7 +38,10 @@ services:
     depends_on:
       migrate: {condition: service_completed_successfully}
   web:
+    image: ofs-web:${OFS_TAG:-dev}
     build: ./frontend
+    environment:
+      TRUSTED_PROXY: ${TRUSTED_PROXY:-127.0.0.1/32}
     ports: ["127.0.0.1:${LOCAL_WEB_PORT:-9219}:80"]
     depends_on:
       backend: {condition: service_healthy}

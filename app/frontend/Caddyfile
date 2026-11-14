@@ -1,6 +1,14 @@
 # Local and box alike. On the box, the shared edge Caddy terminates TLS and proxies here (POC-11, risk R1).
 {
 	admin off
+	# Behind the box's shared edge (Tailor HOST-02), only the edge, at its fixed address, may name the visitor; any
+	# other peer is the client itself. Locally nothing extra is trusted. Without this, every visitor would look like the
+	# edge, and the per-address login limit would become one bucket for everyone (Tailor behind-edge.py, H-1).
+	servers {
+		trusted_proxies static {$TRUSTED_PROXY:127.0.0.1/32}
+		trusted_proxies_strict
+		client_ip_headers X-Forwarded-For
+	}
 }
 
 :80 {
@@ -17,7 +25,10 @@
 	}
 
 	handle /api/* {
-		reverse_proxy backend:8000
+		reverse_proxy backend:8000 {
+			# One entry, the visitor: from a trusted edge Caddy would otherwise append the edge.
+			header_up X-Forwarded-For {client_ip}
+		}
 	}
 
 	handle {
