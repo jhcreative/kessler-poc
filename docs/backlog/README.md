@@ -15,11 +15,11 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Done (11-14) |
 | 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Done (11-14) |
 | 10 | POC-09 | Tech phone view: my queue, the schedule, complete, needs review | T1–T3 | Nathan | Done (11-14) |
-| 11 | POC-10 | Controller queue: billing queue, approve and submit to QuickBooks (simulated) | B1, B2 | Nathan, Pete | Ready |
+| 11 | POC-10 | Controller queue: billing queue, approve and submit to QuickBooks (simulated) | B1, B2 | Nathan, Pete | Done (11-14) |
 | 12 | POC-11 | Gate, cold review, deploy dry run to OVH (edge mode, IMAGES=local) | DOD-1, DOD-3; R1 verified | Cesar, Orly, Rob | Ready |
 | 13 | POC-12 | Needs-review decisions: reassign or ask to wait | T4 | Pete, Nathan | Done (11-14), in POC-07, POC-08 and POC-09 |
 | 14 | POC-13 | Client approval when a rule fires | C3 | Pete, Nathan | Done (11-14), inside POC-07 |
-| 15 | POC-14 | QuickBooks aging summary in the controller view | B3 | Jen, Nathan | Planned; cut first if we slip |
+| 15 | POC-14 | QuickBooks aging summary in the controller view | B3 | Jen, Nathan | Done (11-14), with POC-10 |
 | 16 | POC-15 | Simulator: live arrivals and truck movement; pause, resume, reset | §7 | Jen | Planned; cut first if we slip |
 | 17 | POC-17 | Playwright narratives N1–N4, recorded, captioned and uploaded unlisted to John's YouTube | Plan §11 | Jen, Henry, John | Monday |
 | 18 | POC-18 | Stretch: in-app help panel playing each view's narrative | Plan §11a | Nathan | Stretch |
@@ -182,3 +182,21 @@ WebSocket clients and cookies.
   - the waiting line no longer stacks colons.
 - Screenshots: `docs/evidence/2026-11-14-poc-09-tech-schedule.png`, `docs/evidence/2026-11-14-poc-09-tech-job.png`.
   The job screen is the coordinator e2e's job, with the approval it recorded (APR-7731).
+
+**POC-10 and POC-14, 2026-11-14, `app/` at `432ed61`.** Gate: backend 102 passed. e2e: 12 passed, twice in a
+row.
+- **The controller in a real browser, N3:**
+  - B1: a tech closes a job elsewhere, and Billing review counts it within a second.
+  - B2: the invoice shows two lines in the client's format and passes its check. Approve and submit gives
+    "Submitted to QuickBooks (simulated) as QB-…", and the job is Invoiced.
+  - B3: the Current aging counts one more invoice.
+- **The failed-check branch:** a close with no sign-off fails the check, so approval is disabled with the reason
+  (and refused by the backend anyway). It's sent back with a reason, and the coordinator's redraft returns it to
+  billing review.
+- **Over HTTP:** every open invoice falls in exactly one bucket; all five buckets are full from the seed; approving
+  adds the final to the open total.
+- **Found on the way:**
+  - the suite now uses up the seed's ready jobs, so tests make their own through the API;
+  - per-job sign-ins tripped the login limit, so each worker keeps one session per account;
+  - Jony: the Open tile's amount spilled its box.
+- Screenshot: `docs/evidence/2026-11-14-poc-10-controller.png`.
