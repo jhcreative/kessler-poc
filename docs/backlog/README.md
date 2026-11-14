@@ -7,11 +7,11 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 |---|---|---|---|---|---|
 | 1 | POC-00 | Intake: the round-4 account, the step-5 brief, the due date | Discovery, flows, deck | Angela | Done (11-13) |
 | 2 | POC-01 | Approve the plan; walkthrough Q1–Q11 | T3 | John | Done (11-14) |
-| 3 | POC-02 | Scaffold the Tailor instance and the `fieldops` module seam (Q7) | Instance boots locally; module mounted | Cesar | Done (11-14) |
-| 4 | POC-03 | Tables, migrations, states, and the synthetic seed (§5, §7) | 45 jobs over every state; history in `job_events` | Pete, Jen | Ready |
+| 3 | POC-02 | The app skeleton on Tailor's parts (ADR `2026-11-14-tailor-parts-not-a-tailor-site.md`) | Boots locally; health reads the database | Cesar | Done (11-14), rebuilt lean |
+| 4 | POC-03 | Tables, migrations, states, and the synthetic seed (§5, §7) | 45 jobs over every state; history in `job_events` | Pete, Jen | Done (11-14) |
 | 5 | POC-04 | Commands, the state machine and the rails, with tests | Every transition and rail tested | Pete, Jen | Ready |
 | 6 | POC-05 | WebSocket hub, topics, and replay on reconnect | G1; the replay test passes | Pete | Ready |
-| 7 | POC-06 | Overview: every job by queue and state, live | G3 | Nathan | Ready |
+| 7 | POC-06 | Overview: every job by queue and state, live; the frontend shell, with TS types generated from the API's OpenAPI | G3; the gate fails if the TS drifts from the backend | Nathan | Ready |
 | 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Ready |
 | 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Ready |
 | 10 | POC-09 | Tech phone view: my queue, the schedule, complete, needs review | T1–T3 | Nathan | Ready |
@@ -50,3 +50,18 @@ refused; `portability.py` now exports, clears and imports every fieldops table.
 
 **A candidate for Tailor after Monday (Cesar):** a `--local-module <dir>` on the scaffold, so this overlay becomes a
 flag. That's a Tailor story, not POC work.
+
+**POC-02 rebuilt, and POC-03, 2026-11-14, `app/` at `dba8b99`.** John's call: Tailor's parts, not a Tailor site (ADR
+`2026-11-14-tailor-parts-not-a-tailor-site.md`; agency ADR-0014). The first POC-02 above stays as the record of the
+instance-module seam. Its instance (`~/jhc/sites/jahnel-poc`) is stopped, and nothing in `app/` depends on it.
+- `app/scripts/gate.sh`: ruff, format, `mypy --strict`, `alembic check` (the migration matches the models), and pytest
+  on Postgres: **20 passed in 2.9 s**, `gate: green at dba8b99 2026-11-14T16:29:22Z`.
+- The running stack (`docker compose up -d --wait --build`, then `python -m ofs.seed`): `clients=8 contracts=8
+  sites=60 people=16 techs=10 fleet_positions=10 jobs=45 job_events=260 invoices=15 qb_ledger=158`;
+  `GET http://localhost:9219/api/health` 200, `{"jobs":45,"events":260}`.
+- The acceptance, as tests: all 11 states on the board, in the planned counts. Every history is legal under the
+  state table, in time order, ends at the job's state and before now. The three hard rails already hold in the seed.
+  Every ready job has a tech to recommend. Every aging bucket is non-empty. The same seed gives the same world, and
+  FacilIT is a channel, not a client.
+- **Typed end to end** (John): the enums, the API contract, every JSON column (rules, approval, sign-off, invoice lines)
+  and one payload model per command, all checked on write. The TypeScript side comes with POC-06.

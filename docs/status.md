@@ -1,9 +1,9 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-14 (Anne, sprint start passed; POC-02 done)
+Updated: 2026-11-14 (Anne, POC-03 done; the app on Tailor's parts)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it on jhcreative)
-App instance: `~/jhc/sites/jahnel-poc` (Tailor v1.1.5), local at http://localhost:9219 · Remote: none yet
+App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 
 ## Live
 
@@ -15,10 +15,11 @@ None.
 
 ## Next
 
-**Due Monday 2026-11-16.** The plan was approved 2026-11-14 (`docs/plans/2026-11-13-poc-plan.md`). The sprint start
-passed RTS-1..6 (`docs/backlog/2026-11-14-sprint-start.md`). **POC-02 is done:** the instance runs locally, and the
-`fieldops` module is mounted through Tailor's own installer, with no POC code in Tailor core (Q7 answered, R3 retired).
-Next: POC-03, the tables and the seed (Pete, Jen), with Pete's command and event schemas first (RTS-2).
+**Due Monday 2026-11-16.** The plan was approved 2026-11-14, and the sprint start passed RTS-1..6. **John's call: the
+app is built from Tailor's parts, not as a Tailor site** (ADR `2026-11-14-tailor-parts-not-a-tailor-site.md`; saved for
+future apps as agency ADR-0014). **POC-02 (lean) and POC-03 are done:** ten typed tables, the state table, and a
+deterministic seed with 45 jobs over every state. The gate is green on Postgres. Next: POC-04, the commands, the rails and
+the role logins (Orly's design check first).
 - **Intake key (John, 2026-11-14):** the demo uses the existing key in `~/jhc/secrets/anthropic.env`. It's read at
   runtime and never copied into the repo or an image.
 - **Deploy:** to `ofs.apps.johnhiemstra.com` on a new JHC apps box (OVH VPS-2, edge mode), on John's go Monday.

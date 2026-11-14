@@ -6,7 +6,7 @@ The committed stories are POC-02 to POC-11 (ranks 3–12, protected). Each gate 
 | Gate | Result | Evidence |
 |---|---|---|
 | RTS-1 Requirements are testable | **Pass** | Plan §2: every criterion is demonstrable live. POC-02's acceptance, made exact: `GET /api/modules/fieldops/health` answers 200 from its own table, `fieldops` is in the generated module registry, its Alembic branch is at head, and its tests run in the instance suite |
-| RTS-2 The contract is defined | **Pass for POC-02; owed before POC-03 and POC-04** | POC-02's contract is `module.json` and the `Health` schema in `router.py`. Pete writes the Pydantic schemas for the commands and the event envelope (§4, §5) first, before the POC-03 and POC-04 code |
+| RTS-2 The contract is defined | **Pass** (POC-03 and POC-04's schemas written first, 11-14: `app/backend/ofs/schemas.py`, `states.py`) | POC-02's contract is `module.json` and the `Health` schema in `router.py`. Pete writes the Pydantic schemas for the commands and the event envelope (§4, §5) first, before the POC-03 and POC-04 code |
 | RTS-3 Dependencies are identified | **Pass** | Tailor v1.1.5 (`3d53021e`), scaffold deps installed, Docker 29.4.1 up, ports 9219/6219 claimed. The box, the OVH token, DNS, the repo and the invites wait on John and block only POC-11 and POC-16. QuickBooks and the fleet are simulated |
 | RTS-4 Test strategy exists | **Pass** | `docs/plans/2026-11-14-test-strategy.md` (Jen), with what we deliberately don't test |
 | RTS-5 The branch is clean | **Pass** | New instance repo on `main` from the scaffold's own commit (`21def9f`). Starting-state gate: backend pytest green before any POC-03 code. One builder in this window, so no lanes; a second window takes its own worktree (PP-13) |
