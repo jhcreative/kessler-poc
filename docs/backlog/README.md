@@ -11,7 +11,7 @@ and B). Ranks 1–12 are protected. Ranks 13–16 are planned, and are the first
 | 4 | POC-03 | Tables, migrations, states, and the synthetic seed (§5, §7) | 45 jobs over every state; history in `job_events` | Pete, Jen | Done (11-14) |
 | 5 | POC-04 | Commands, the state machine and the rails, with tests; the five role logins | Every transition and rail tested | Pete, Jen, Orly | Done (11-14) |
 | 6 | POC-05 | WebSocket hub, topics, and replay on reconnect | G1; the replay test passes | Pete | Done (11-14) |
-| 7 | POC-06 | Overview: every job by queue and state, live; the frontend shell, with TS types generated from the API's OpenAPI | G3; the gate fails if the TS drifts from the backend | Nathan | Ready |
+| 7 | POC-06 | Overview: every job by queue and state, live; the frontend shell, with TS types generated from the API's OpenAPI | G3; the gate fails if the TS drifts from the backend | Nathan | Done (11-14) |
 | 8 | POC-07 | Coordinator workspace: all, mine, single job, drafts, approve for dispatch | C1, C2 | Nathan, Pete | Ready |
 | 9 | POC-08 | Dispatch: arrivals, the recommended tech with reasons, assign | D1–D3 | Nathan, Jen | Ready |
 | 10 | POC-09 | Tech phone view: my queue, the schedule, complete, needs review | T1–T3 | Nathan | Ready |
@@ -95,3 +95,25 @@ WebSocket clients and cookies.
 - **Found by the gate's run time:** the suite took 326 s because a socket missed its client's close until the next
   ping. Fixed, and pinned by a test.
 - **Still open (R1):** the first WebSocket through edge-mode Caddy on the box. That's the POC-11 dry run.
+
+**POC-06, 2026-11-14, `app/` at `87060be`.**
+- `app/scripts/gate.sh`, `gate: green at 87060be 2026-11-14T17:22:04Z`:
+  - backend: 69 passed;
+  - `types.sh --check`: the TS is in step with the backend;
+  - typecheck (app and e2e) and vitest: 6 passed;
+  - build, and the budget: sign-in entry 90,966 of 100,000 bytes gzipped; the grid chunk 234,597 of 250,000.
+- `app/scripts/e2e.sh` (PP-14), Playwright in real Chromium against the real stack (Caddy, backend, Postgres):
+  **4 passed**, `e2e: green at 87060be 2026-11-14T17:22:33Z`.
+  - The exec signs in to all 45 jobs and 11 state tiles, filters and clears, with no console error and no CSP
+    violation.
+  - A dispatcher's assignment changes the open overview's row and the Assigned count in under a second, with no
+    reload (G1, G3).
+  - A tech is sent to their own view; signing out ends the session.
+- **Typed end to end:** the TS comes from the backend's OpenAPI, the WebSocket frames included. The schema isn't
+  served (`/openapi.json` is a 404); it's exported offline.
+- **Found on the way:**
+  - registering every AG Grid module made 411 KB gzipped, so only five modules are registered now, and the grid
+    loads on demand;
+  - AG Grid error #200 (a missing cell-style module), caught by the e2e's console check;
+  - the Paid tile claimed jobs were "waiting" (Jony, from the screenshot).
+- Screenshot: `docs/evidence/2026-11-14-poc-06-overview.png`.

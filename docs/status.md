@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-14 (Anne, POC-05 done)
+Updated: 2026-11-14 (Anne, POC-06 done)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it on jhcreative)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
@@ -18,8 +18,9 @@ None.
 **Due Monday 2026-11-16.** The plan was approved 2026-11-14, and the sprint start passed RTS-1..6. **John's call: the
 app is built from Tailor's parts, not as a Tailor site** (ADR `2026-11-14-tailor-parts-not-a-tailor-site.md`; saved for
 future apps as agency ADR-0014). **POC-02 (lean), POC-03 and POC-04 are done:** typed tables, a deterministic seed,
-the commands with their rails, the five role logins, and live updates over a WebSocket with replay (G1: 21 ms on the
-stack). The gate is green: 67 tests. Next: POC-06, the frontend shell and the overview.
+the commands with their rails, the five role logins, and live updates over a WebSocket with replay. **POC-06 is done:**
+the live overview at http://localhost:9219 (sign in as `exec@ofs.com`), typed end to end, with a browser e2e. Next:
+POC-07, the coordinator workspace with Claude drafting intake.
 - **Demo logins (John, 2026-11-14):** the passwords are in `~/jhc/secrets/jahnel-poc/local-demo-logins.env`.
 - **Intake key (John, 2026-11-14):** the demo uses the existing key in `~/jhc/secrets/anthropic.env`. It's read at
   runtime and never copied into the repo or an image.
