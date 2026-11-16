@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-16 (Rob, the apps box hardened; /srv/ofs and the snapshot next)
+Updated: 2026-11-16 (Rob, the box is ready; the first deploy waits on John's go)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it on jhcreative)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
@@ -35,7 +35,7 @@ Next, while it waits: POC-15, the simulator.
 - **Intake key (John, 2026-11-14):** the demo uses the existing key in `~/jhc/secrets/anthropic.env`. It's read at
   runtime and never copied into the repo or an image.
 - **The box (ordered 2026-11-16):** `vps-3e8f42b5.vps.ovh.us` (label `jhc-vps-3e8f42b5`; the API takes the ID), 15.204.245.239 and 2604:2dc0:121::1327, VPS-1, Vint Hill US-EAST-VA-2, $5.75/mo with the snapshot option, Ubuntu 24.04 (checked by `ovh-vps.py info`), John's OVH account.
-- **Box prep (2026-11-16, Rob):** rebuilt with John's key (the order didn't install it), `harden-ovh-box.sh` HARDENED, the OVH edge firewall (22/80/443), rDNS to ofs.apps, and the gates: deploy@ ssh and sudo, apt, outbound https, 5432 refused. DNS: `apps` and `ofs.apps` A records, grey cloud. Token: `~/jhc/secrets/ovhcloud/jhc-apps-api.env`, 30 days (to 2026-12-16). Still to do: `/srv/ofs` and its secrets, the edge Caddy, the snapshot.
+- **Box prep (2026-11-16, Rob):** rebuilt with John's key (the order didn't install it), `harden-ovh-box.sh` HARDENED, the OVH edge firewall (22/80/443), rDNS to ofs.apps, and the gates: deploy@ ssh and sudo, apt, outbound https, 5432 refused. DNS: `apps` and `ofs.apps` A records, grey cloud. Token: `~/jhc/secrets/ovhcloud/jhc-apps-api.env`, 30 days (to 2026-12-16). Then (John's "go on secrets"): new box demo logins in `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env`; `/srv/ofs/.env` (secrets generated on the box), `anthropic.env` and `demo-logins.env`, all 0600; the edge from Tailor v1.1.5 `templates/edge/`, healthy on `tailor-edge` 10.240.0.0/24 (80/443 open once a site is routed); snapshot `3ec70dc9` (2026-11-16 21:47 UTC). **Ready for `SNAPSHOT_TAKEN=yes app/scripts/ship.sh --box deploy@15.204.245.239 --first` on John's go.**
 - **Deploy:** to `ofs.apps.johnhiemstra.com` on a new JHC apps box (OVH VPS-1, edge mode; VPS-2 out of stock 11-16, US boxes resize up in place), on John's go Monday.
 - **Dry-run report:** Sunday 8 pm.
 - **Delivery:** the app, the private repo with invites, the email with the deck attached. Stretch: the narratives in
