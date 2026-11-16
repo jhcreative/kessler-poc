@@ -27,6 +27,7 @@ own words, and the source is named. Nothing is rounded up. Where something isn't
 | `09-poc-09-the-techs-phone.md` | The field app (T1 to T3) |
 | `10-poc-10-and-14-the-controller.md` | Billing, QuickBooks (simulated) and aging (B1 to B3) |
 | `11-poc-11-hardening-and-the-box-path.md` | The gate, the cold review, Orly's checks, the ship script, R1's check |
+| `12-the-box-and-the-first-deploy.md` | 2026-11-16: the apps box, the secrets, the first deploy and its one stop, 7 of 7 live |
 | `decisions.md` | Every decision John made in the window, in his words, and where it's recorded |
 | `defects.md` | Every defect found, what found it, and the fix |
 | `numbers.md` | The measurements: tests, timings, sizes, cost |

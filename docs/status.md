@@ -29,6 +29,7 @@ field. **POC-10 is done** (`controller@ofs.com`): the billing queue, QuickBooks 
 cold review (20 findings: 17 fixed, 3 accepted; `docs/backlog/2026-11-14-cold-review.md`), Orly's checks clean, and
 the ship script and live check ready, with the dry run green. **The deploy waits on the box** (the table below).
 Next, while it waits: POC-15, the simulator.
+- **Start here next window:** `docs/carry-forward/2026-11-16-1720-live-on-the-apps-box.md` (the box, the keys by name, the permissions, the lessons). Release notes: `docs/releases/v0.1.0.md`.
 - **The build journal:** `docs/journal/2026-11-14-build/` covers this window story by story. Start at its
   `mining-guide.md` when writing the README, the recap email or the narratives.
 - **Demo logins (John, 2026-11-14):** the passwords are in `~/jhc/secrets/jahnel-poc/local-demo-logins.env`.
@@ -46,3 +47,5 @@ Next, while it waits: POC-15, the simulator.
 | Since | Item | Owner | Answer |
 |---|---|---|---|
 | 2026-11-14 | Neale's and Ann-Marie's GitHub usernames, for the repo invites | Anne | |
+| 2026-11-16 | Tag v0.1.0 at `110bf61` (`git tag v0.1.0 110bf61 && git push origin v0.1.0`), or leave it untagged for a POC | Cesar | |
+| 2026-11-16 | Your click-through of the five views on the live site; say if you want the demo data reseeded (request 1046 is the live check's) | Angela | |
