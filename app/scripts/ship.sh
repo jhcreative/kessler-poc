@@ -16,7 +16,8 @@
 #   /srv/ofs/.env (0600): COMPOSE_FILE=docker-compose.yml:docker-compose.edge.yml, POSTGRES_PASSWORD, SESSION_SECRET
 #     (48+ chars, new for the box), COOKIE_SECURE=1, ALLOWED_ORIGINS=https://ofs.apps.johnhiemstra.com,
 #     TRUSTED_PROXY=10.240.0.2/32, ANTHROPIC_ENV_FILE=/srv/ofs/anthropic.env, OFS_TAG=
-#   /srv/ofs/anthropic.env (0600), /srv/ofs/demo-logins.env (0600: five new email=password lines)
+#   /srv/ofs/anthropic.env (0600), /srv/ofs/demo-logins.env (0600, owned 10001:10001, the container's `app` user, which
+#     reads it through a bind mount: five new email=password lines)
 #   the edge itself: /srv/_edge/edge.sh ensure --email <acme email> (Tailor's provision-site.sh --edge installs it)
 #
 # Every step ends on a gate; the first failure stops the run and says what to do.
@@ -72,7 +73,13 @@ on_box "test -x /srv/_edge/edge.sh" || fail "no edge on $BOX: run Tailor's provi
 on_box "test -f $REMOTE/.env && test -f $REMOTE/anthropic.env" || fail "$REMOTE/.env or anthropic.env missing: Rob prepares them (header)"
 on_box "grep -q '^COOKIE_SECURE=1' $REMOTE/.env && grep -q '^TRUSTED_PROXY=10.240.0.2/32' $REMOTE/.env" \
   || fail "$REMOTE/.env must set COOKIE_SECURE=1 and TRUSTED_PROXY=10.240.0.2/32"
-if [ "$FIRST" = 1 ]; then on_box "/srv/_edge/edge.sh free $DOMAIN" || fail "$DOMAIN is already routed: this isn't a first deploy"; fi
+if [ "$FIRST" = 1 ]; then
+  on_box "/srv/_edge/edge.sh free $DOMAIN" || fail "$DOMAIN is already routed: this isn't a first deploy"
+  # The logins step bind-mounts this file into a container that runs as uid 10001; a deploy-owned 0600 file is
+  # unreadable there, and the run stopped at step 6 with the route and seed done (2026-11-16, first box run).
+  [ "$(on_box "stat -c %u:%a $REMOTE/demo-logins.env 2>/dev/null")" = "10001:600" ] \
+    || fail "$REMOTE/demo-logins.env must exist, owned by 10001 (the container's app user), mode 600"
+fi
 
 # 5. Ship the images and the compose files; start the new tag.
 echo "== 5. load and start $TAG"
