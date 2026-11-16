@@ -2,7 +2,7 @@
 
 Updated: 2026-11-16 (Rob, the box is ready; the first deploy waits on John's go)
 Kind: prospect
-Repo: `~/jhc/prospects/jahnel-poc` · Remote: none yet (John creates it on jhcreative)
+Repo: `~/jhc/prospects/jahnel-poc` · Remote: `jhcreative/jahnel-poc` (private, main; created 2026-11-16)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 
 ## Live
@@ -45,5 +45,4 @@ Next, while it waits: POC-15, the simulator.
 
 | Since | Item | Owner | Answer |
 |---|---|---|---|
-| 2026-11-14 | Create the repo: `! gh repo create jhcreative/jahnel-poc --private --source ~/jhc/prospects/jahnel-poc --remote origin --push`; the app instance repo follows the same pattern | Cesar | |
 | 2026-11-14 | Neale's and Ann-Marie's GitHub usernames, for the repo invites | Anne | |
