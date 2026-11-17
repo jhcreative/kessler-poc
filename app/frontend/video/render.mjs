@@ -261,7 +261,7 @@ f.push(`[6:v]format=yuv420p,setsar=1[co]`, `[7:v]format=yuv420p,setsar=1[cc]`);
 f.push(`[co][main][cc]concat=n=3:v=1:a=0[out]`);
 if (audioFilter) f.push(audioFilter);
 writeFileSync(join(FRAMES, "filter.txt"), f.join(";\n"));
-const mp4 = join(OUT, "jahnel-poc-one-request-five-views.mp4");
+const mp4 = join(OUT, "kfs-poc-demo.mp4");
 args.push("-filter_complex_script", join(FRAMES, "filter.txt"), "-map", "[out]", "-map", audioIn,
   "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-r", String(FPS),
   "-bsf:v", "h264_metadata=colour_primaries=1:transfer_characteristics=1:matrix_coefficients=1", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
