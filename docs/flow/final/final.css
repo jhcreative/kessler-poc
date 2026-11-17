@@ -72,3 +72,6 @@ table.opps.nine + .note{margin-top:4px;}
 .twocol .sections{grid-template-columns:1fr;row-gap:0.2in;margin-top:0;}
 .twocol .sec h2{font-size:13.5pt;margin-top:2px;}
 .twocol .sec p{font-size:10.6pt;line-height:1.42;margin-top:4px;}
+
+/* The company's name in the meta line, bold and black (John, 2026-11-17) */
+.meta b{font-weight:700;color:#1c1b19;}

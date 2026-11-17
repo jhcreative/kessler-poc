@@ -347,7 +347,7 @@ def gear(cx, cy, r=7.5):
 
 
 # ---- the pages ----
-META = ('Proof of Concept<span class="dot">&bull;</span>OneFamilyServices'
+META = ('Proof of Concept<span class="dot">&bull;</span><b>Kessler Facility Services</b>'
         '<span class="dot">&bull;</span>November 16, 2026')
 LOGO = MASTHEAD[MASTHEAD.index('xlink:href="data:'):].split('"')[1]
 HEAD = MASTHEAD.replace(LOGO, "jhc-logo.png")
@@ -372,7 +372,7 @@ PAGES = {
 def main():
     for i, (title, dek, fig) in PAGES.items():
         (HERE / f"page-{i}.html").write_text(f"""<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>OneFamilyServices: {title}</title>
+<html lang="en"><head><meta charset="utf-8"><title>Kessler Facility Services: {title}</title>
 <link rel="stylesheet" href="../deck/common.css"><link rel="stylesheet" href="../deck/components.css">
 <link rel="stylesheet" href="final.css">{STYLE}</head>
 <body><div class="sheet{" pinned" if dek is None else ""}">

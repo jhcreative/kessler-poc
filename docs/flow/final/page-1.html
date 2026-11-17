@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>OneFamilyServices: What We Did</title>
+    <title>Kessler Facility Services: Lifecycle of a Service Request</title>
     <link rel="stylesheet" href="../deck/common.css" />
     <link rel="stylesheet" href="../deck/components.css" />
     <link rel="stylesheet" href="final.css" />
@@ -28,47 +28,62 @@
           John&nbsp;Hiemstra&nbsp;Creative<span class="sub">Product Engineering &bull; Digital Solutions Partner</span>
         </div>
       </div>
-      <h1 class="title">What We Did</h1>
+      <h1 class="title">Lifecycle of a Service Request</h1>
       <div class="meta">
-        Proof of Concept<span class="dot">&bull;</span>OneFamilyServices<span class="dot">&bull;</span>November 16, 2026
+        Proof of Concept<span class="dot">&bull;</span><b>Kessler Facility Services</b
+        ><span class="dot">&bull;</span>November 16, 2026
       </div>
       <div class="twocol">
         <p class="dek">
-          We mapped how one request moves through OneFamilyServices, from the client's first message to payment. Then we
-          found where each step can improve, and built a working proof of concept around one shared record.
+          Working from discovery notes, we started by mapping the lifecycle of a service request
+          through the 9 stages of the current Kessler Facility Services (KFS) systems, from
+          original intake to payment collection.</p>
+        <p class="dek">Guided by the observation that different parts of the system "don't really
+          talk to each other", our starting goal was to find these hand-off points and look into
+          how we can improve performance of each one to reduce waste and speed the work.
         </p>
+        <p class="dek">In addition, we evaluated each part and the whole together for
+          future sustainability and ability to support planned KFS expansion and
+          subsequent increased volume of requests and services provided.
         <div class="sections">
           <div class="sec">
-            <p class="k"><b>1</b>THE MAP</p>
+            <p class="k"><b>1</b>SYSTEM MAP</p>
             <h2>Nine steps, one request at a time.</h2>
             <p>
-              Intake, coordination, estimation, dispatch, onsite, close, billing, invoicing and collections. Page 2
-              draws each step as the COO described it.
+              Page 2 documents intake, coordination, estimation, dispatch, onsite, close, billing,
+              invoicing and collections to the best of our current understanding. Further deep
+              dives required before moving beyond this POC.
             </p>
           </div>
           <div class="sec">
-            <p class="k"><b>2</b>WHERE IT LEAKS</p>
-            <h2>People carry the system by hand.</h2>
+            <p class="k"><b>2</b>OPPORTUNITES</p>
+            <h2>People carry the current system by hand.</h2>
             <p>
-              Three people re-key 20,000 requests a quarter. Dispatch runs through one person on a personal phone,
-              billing through another. Contract limits don't reach the tech, so <span class="cur">$</span>80,000 to
-              <span class="cur">$</span>200,000 a year in disputed work is written off.
+              Page 6 captures 9 system hand-offs that are currently manual events,
+              where given request data is re-keyed multiple times across its own
+              lifecycle. These hand-off points are our main opportunities for system performance
+              improvement and both time & money savings in immediate, short and long terms.
             </p>
           </div>
+<!--          <div class="sec">-->
+<!--            <p class="k"><b>3</b>WHERE IT CAN IMPROVE</p>-->
+<!--            <h2>Nine efficiencies that add up.</h2>-->
+<!--            <p>-->
+<!--              Each one removes a wait or a hand-off. Five can start on their own; four arrive with the shared record.-->
+<!--              Page 6 numbers them, ranks them and estimates what each saves, in hours and in Cost of Delay.-->
+<!--            </p>-->
+<!--          </div>-->
           <div class="sec">
-            <p class="k"><b>3</b>WHERE IT CAN IMPROVE</p>
-            <h2>Nine efficiencies that add up.</h2>
-            <p>
-              Each one removes a wait or a hand-off. Five can start on their own; four arrive with the shared record.
-              Page 6 numbers them, ranks them and estimates what each saves, in hours and in Cost of Delay.
+            <p class="k"><b>3</b>SOLUTION</p>
+            <h2>Single source of truth for everyone.</h2>
+            <p>Page 3 introduces our thesis that unifying all system inputs into
+              a single source of truth, visible & interactive in real-time to Coordinator,
+              Dispatch, Tech, Controller and Executive alike, is the best solution for the future
+              KFS has planned.
             </p>
-          </div>
-          <div class="sec">
-            <p class="k"><b>4</b>WHAT WE BUILT</p>
-            <h2>One record, five views, live.</h2>
-            <p>
-              Coordinator, dispatch, tech, controller and an executive overview, each updating the same job record in
-              real time. It runs on synthetic data at ofs.apps.johnhiemstra.com.
+            <p>Pages 7-9 detail the POC application design we built to demonstrate that thesis,
+              using synthetic data to demonstrate potential KFS request lifecycle across roles,
+              assuming no dependency or integration with current SaaS investments.
             </p>
           </div>
         </div>

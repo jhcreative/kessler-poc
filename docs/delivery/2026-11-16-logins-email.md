@@ -7,11 +7,11 @@ To: Neale, Ann-Marie
 
 ---
 
-Subject: OneFamilyServices proof of concept: the logins
+Subject: Kessler Facility Services proof of concept: the logins
 
 Ann-Marie, Neale,
 
-Here are the passwords for the five demo logins at https://ofs.apps.johnhiemstra.com.
+Here are the passwords for the five demo logins at https://kfs.apps.johnhiemstra.com.
 
 Coordinator, coord@ofs.com: [from the logins file]
 Dispatch, dispatch@ofs.com: [from the logins file]
