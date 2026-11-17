@@ -8,7 +8,7 @@ test("a request goes from draft to dispatch, through the approval rule, and move
   test.setTimeout(60_000);
   await page.setViewportSize({ width: 1600, height: 1400 });
   const errors = watchConsole(page);
-  await signIn(page, "coord@ofs.com");
+  await signIn(page, "coord@kfs.com");
   await expect(page).toHaveURL(/\/ops\/coordinator$/);
   await expect(page.locator(".live")).toHaveText("Live");
 
@@ -53,7 +53,7 @@ test("a request goes from draft to dispatch, through the approval rule, and move
 
   // N1: dispatch acts elsewhere; the coordinator's open record moves on by itself.
   const dispatch = await playwright.request.newContext({ baseURL: baseURL ?? "", extraHTTPHeaders: { Origin: baseURL ?? "" } });
-  await apiAs(dispatch, "dispatch@ofs.com");
+  await apiAs(dispatch, "dispatch@kfs.com");
   const jobs = (await (await dispatch.get("/api/jobs?state=ready_for_dispatch")).json()) as { id: string; number: number; last_event_id: number }[];
   const job = jobs.find((j) => String(j.number) === number);
   if (!job) throw new Error(`job ${number} isn't ready for dispatch`);

@@ -130,17 +130,17 @@ async def test_a_tech_on_site_has_the_truck_at_the_site(seeded: AsyncSession) ->
 
 
 async def test_a_long_password_is_a_401_not_a_500(logins: AsyncSession, client: httpx.AsyncClient) -> None:
-    r = await client.post("/api/auth/login", json={"email": "coord@ofs.com", "password": PASSWORD + "x" * 80})
+    r = await client.post("/api/auth/login", json={"email": "coord@kfs.com", "password": PASSWORD + "x" * 80})
     assert r.status_code == 401
 
 
 async def test_a_tech_login_without_a_tech_record_sees_nothing(logins: AsyncSession, client: httpx.AsyncClient) -> None:
     from ofs.auth import hash_password
 
-    logins.add(Person(label="Tech 99", role="tech", email="tech99@ofs.com"))
-    logins.add(User(email="tech99@ofs.com", password_hash=hash_password(PASSWORD)))
+    logins.add(Person(label="Tech 99", role="tech", email="tech99@kfs.com"))
+    logins.add(User(email="tech99@kfs.com", password_hash=hash_password(PASSWORD)))
     await logins.flush()
-    await sign_in(client, "tech99@ofs.com")
+    await sign_in(client, "tech99@kfs.com")
     assert (await client.get("/api/jobs")).json() == []  # not every unassigned job (IS NULL)
 
 
@@ -148,7 +148,7 @@ async def test_new_requests_are_throttled_per_person(logins: AsyncSession, clien
     from ofs import api
 
     api._last_request.clear()
-    await sign_in(client, "coord@ofs.com")
+    await sign_in(client, "coord@kfs.com")
     assert (await client.post("/api/intake/simulate")).status_code == 200
     assert (await client.post("/api/intake/simulate")).status_code == 429
 
@@ -173,12 +173,12 @@ async def test_the_cookie_is_secure_unless_told_otherwise(
     logins: AsyncSession, client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.delenv("COOKIE_SECURE", raising=False)  # the box's default, not a value the test chose
-    r = await client.post("/api/auth/login", json={"email": "coord@ofs.com", "password": PASSWORD})
+    r = await client.post("/api/auth/login", json={"email": "coord@kfs.com", "password": PASSWORD})
     assert "secure" in r.headers["set-cookie"].lower()
 
 
 async def test_logout_tells_the_browser_to_drop_the_cookie(logins: AsyncSession, client: httpx.AsyncClient) -> None:
-    await sign_in(client, "coord@ofs.com")
+    await sign_in(client, "coord@kfs.com")
     r = await client.post("/api/auth/logout")
     assert r.status_code == 204
     dropped = r.headers["set-cookie"].lower()
@@ -197,7 +197,7 @@ async def test_a_failed_commit_publishes_nothing(
 
     heard: list[object] = []
     monkeypatch.setattr(hub, "publish", lambda messages: heard.extend(messages))
-    await sign_in(client, "coord@ofs.com")
+    await sign_in(client, "coord@kfs.com")
     job = await job_in(logins, "intake_draft")
 
     async def broken_commit() -> None:

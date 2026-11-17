@@ -5,7 +5,7 @@ import { apiAs, signIn, watchConsole } from "./helpers";
 
 test("the exec signs in to a full, live overview", async ({ page }) => {
   const errors = watchConsole(page);
-  await signIn(page, "exec@ofs.com");
+  await signIn(page, "exec@kfs.com");
   await expect(page).toHaveURL(/\/ops$/);
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   await expect(page.locator(".live")).toHaveText("Live");
@@ -22,14 +22,14 @@ test("the exec signs in to a full, live overview", async ({ page }) => {
 
 test("a change made by dispatch reaches the open overview within a second", async ({ page, playwright, baseURL }) => {
   await page.setViewportSize({ width: 1440, height: 2200 }); // the grid draws only rows in view: show all 45
-  await signIn(page, "exec@ofs.com");
+  await signIn(page, "exec@kfs.com");
   await expect(page.locator(".live")).toHaveText("Live");
   const assignedTile = page.locator(".tile", { hasText: /^\d+Assigned/ }).locator(".count");
   await expect(assignedTile).toHaveText(/^\d+$/);
   const before = Number(await assignedTile.textContent());
 
   const dispatch = await playwright.request.newContext({ baseURL: baseURL ?? "", extraHTTPHeaders: { Origin: baseURL ?? "" } });
-  await apiAs(dispatch, "dispatch@ofs.com");
+  await apiAs(dispatch, "dispatch@kfs.com");
   const ready = (await (await dispatch.get("/api/jobs?state=ready_for_dispatch")).json()) as { id: string; number: number; last_event_id: number }[];
   const job = ready[0];
   if (!job) throw new Error("the seed has no ready job");
@@ -48,14 +48,14 @@ test("a change made by dispatch reaches the open overview within a second", asyn
 });
 
 test("a tech is kept to their own view", async ({ page }) => {
-  await signIn(page, "tech@ofs.com");
+  await signIn(page, "tech@kfs.com");
   await expect(page).toHaveURL(/\/ops\/tech$/);
   await page.goto("/ops");
   await expect(page).toHaveURL(/\/ops\/tech$/);
 });
 
 test("signing out ends the session", async ({ page }) => {
-  await signIn(page, "exec@ofs.com");
+  await signIn(page, "exec@kfs.com");
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   await page.getByRole("button", { name: "Sign Out" }).click();
   await expect(page).toHaveURL(/\/login$/);

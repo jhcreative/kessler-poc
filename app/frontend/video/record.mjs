@@ -72,11 +72,11 @@ const rawDir = join(TAKE, "raw");
 mkdirSync(rawDir, { recursive: true });
 
 const VIEWS = {
-  coord: { email: "coord@ofs.com", path: "/ops/coordinator", phone: false },
-  dispatch: { email: "dispatch@ofs.com", path: "/ops/dispatch", phone: false },
-  controller: { email: "controller@ofs.com", path: "/ops/controller", phone: false },
-  overview: { email: "exec@ofs.com", path: "/ops", phone: false },
-  tech: { email: "tech@ofs.com", path: "/ops/tech", phone: true },
+  coord: { email: "coord@kfs.com", path: "/ops/coordinator", phone: false },
+  dispatch: { email: "dispatch@kfs.com", path: "/ops/dispatch", phone: false },
+  controller: { email: "controller@kfs.com", path: "/ops/controller", phone: false },
+  overview: { email: "exec@kfs.com", path: "/ops", phone: false },
+  tech: { email: "tech@kfs.com", path: "/ops/tech", phone: true },
 };
 const pages = {};
 const contexts = {};

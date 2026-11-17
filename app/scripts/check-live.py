@@ -75,7 +75,7 @@ async def main() -> int:
     check(b"Disallow: /" in robots, "robots.txt disallows everything")
 
     execu = Session(base)
-    status, headers, _ = execu.call("POST", "/api/auth/login", {"email": "exec@ofs.com", "password": logins["exec@ofs.com"]})
+    status, headers, _ = execu.call("POST", "/api/auth/login", {"email": "exec@kfs.com", "password": logins["exec@kfs.com"]})
     cookie = {k.lower(): v for k, v in headers.items()}.get("set-cookie", "").lower()
     check(status == 200 and "httponly" in cookie and (not secure or "secure" in cookie),
           f"exec signs in; the cookie is HttpOnly{' and Secure' if secure else ''}")
@@ -86,7 +86,7 @@ async def main() -> int:
             hello = json.loads(await asyncio.wait_for(ws.recv(), 10))
             check(hello.get("type") == "hello", f"R1: the WebSocket opens through {urlparse(base).netloc} and says hello")
             coord = Session(base)
-            coord.call("POST", "/api/auth/login", {"email": "coord@ofs.com", "password": logins["coord@ofs.com"]})
+            coord.call("POST", "/api/auth/login", {"email": "coord@kfs.com", "password": logins["coord@kfs.com"]})
             started = time.monotonic()
             status, _, body = coord.call("POST", "/api/intake/simulate")
             number = json.loads(body)["job"]["number"] if status == 200 else None

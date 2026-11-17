@@ -127,7 +127,7 @@ async def test_an_unreadable_request_drafts_nothing(seeded: AsyncSession) -> Non
 async def test_the_coordinator_sends_in_a_request_and_it_lands_in_drafts(
     logins: AsyncSession, client: httpx.AsyncClient
 ) -> None:
-    await sign_in(client, "coord@ofs.com")
+    await sign_in(client, "coord@kfs.com")
     r = await client.post("/api/intake/simulate")
     assert r.status_code == 200, r.text
     body = r.json()
@@ -135,6 +135,6 @@ async def test_the_coordinator_sends_in_a_request_and_it_lands_in_drafts(
     assert body["events"][0]["actor"]["label"] == "Simulator"
     contract = (await client.get(f"/api/jobs/{body['job']['id']}/contract")).json()
     assert contract["client_name"] == body["job"]["client_name"] and contract["rules"][0]["kind"] == "cap"
-    await sign_in(client, "dispatch@ofs.com")
+    await sign_in(client, "dispatch@kfs.com")
     assert (await client.post("/api/intake/simulate")).status_code == 403
     assert await logins.scalar(select(func.count()).select_from(JobEvent).where(JobEvent.command == "draft_intake"))

@@ -10,7 +10,8 @@ What this defends against, and how:
 - A forged cookie: HS256 with SESSION_SECRET, which lives only in the environment.
 
 Accepted for the demo (Orly): no server-side session list, so logout clears the cookie rather than revoking it; the
-cookie lasts 12 hours. Outbound email is off: there's no password reset, because ofs.com is a real domain.
+cookie lasts 12 hours. Outbound email is off: there's no password reset, because the demo logins use a domain
+we don't own (kfs.com).
 """
 
 from __future__ import annotations

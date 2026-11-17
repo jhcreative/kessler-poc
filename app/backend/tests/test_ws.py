@@ -66,11 +66,11 @@ async def test_a_change_in_one_view_reaches_another_within_a_second(
     server: str, logins: AsyncSession, client: httpx.AsyncClient
 ) -> None:
     """G1, shown: the coordinator watches; the dispatcher assigns; the coordinator's view hears it."""
-    cookie = await sign_in(client, "coord@ofs.com")
+    cookie = await sign_in(client, "coord@kfs.com")
     async with opener(server, cookie) as coord:
         assert (await recv(coord))["type"] == "hello"
         job = await job_in(logins, "ready_for_dispatch")
-        await sign_in(client, "dispatch@ofs.com")
+        await sign_in(client, "dispatch@kfs.com")
         started = time.monotonic()
         r = await run(client, job.id, "assign_tech", {"tech": "Tech 1"}, override_reason="Demo route")
         assert r.status_code == 200, r.text
@@ -84,7 +84,7 @@ async def test_a_change_in_one_view_reaches_another_within_a_second(
 async def test_reconnect_replays_what_was_missed_with_no_gap_and_no_duplicate(
     server: str, logins: AsyncSession, client: httpx.AsyncClient
 ) -> None:
-    cookie = await sign_in(client, "coord@ofs.com")
+    cookie = await sign_in(client, "coord@kfs.com")
     async with opener(server, cookie) as first:
         last = (await recv(first))["last_event_id"]
     a, b = await job_in(logins, "intake_draft"), await job_in(logins, "qualified")
@@ -103,14 +103,14 @@ async def test_reconnect_replays_what_was_missed_with_no_gap_and_no_duplicate(
 
 
 async def test_a_tech_hears_only_their_own_jobs(server: str, logins: AsyncSession, client: httpx.AsyncClient) -> None:
-    cookie = await sign_in(client, "tech@ofs.com")
+    cookie = await sign_in(client, "tech@kfs.com")
     async with opener(server, cookie) as tech:
         await recv(tech)
-        await sign_in(client, "coord@ofs.com")
+        await sign_in(client, "coord@kfs.com")
         draft = await job_in(logins, "intake_draft")
         assert (await run(client, draft.id, "qualify")).status_code == 200
         assert await silent(tech)  # not theirs
-        await sign_in(client, "dispatch@ofs.com")
+        await sign_in(client, "dispatch@kfs.com")
         ready = await job_in(logins, "ready_for_dispatch")
         await run(client, ready.id, "assign_tech", {"tech": "Tech 1"}, override_reason="Demo route")
         msg = await recv(tech)  # T1: a new job arrives on their schedule
@@ -125,7 +125,7 @@ async def test_a_techs_replay_is_their_own_jobs_only(
     ).scalar_one()
     theirs = {str(j) for j in (await logins.execute(select(Job.id).where(Job.tech_id == tech1.id))).scalars()}
     assert theirs  # otherwise the check below passes with nothing to check
-    cookie = await sign_in(client, "tech@ofs.com")
+    cookie = await sign_in(client, "tech@kfs.com")
     async with opener(f"{server}?after=0", cookie) as tech:
         seen = set()
         while (msg := await recv(tech))["type"] == "event":
@@ -136,7 +136,7 @@ async def test_a_techs_replay_is_their_own_jobs_only(
 async def test_a_refused_command_publishes_nothing(
     server: str, logins: AsyncSession, client: httpx.AsyncClient
 ) -> None:
-    cookie = await sign_in(client, "coord@ofs.com")
+    cookie = await sign_in(client, "coord@kfs.com")
     async with opener(server, cookie) as coord:
         await recv(coord)
         job = await job_in(logins, "intake_draft")
@@ -150,7 +150,7 @@ async def test_no_cookie_and_another_sites_origin_are_refused(server: str, clien
         with pytest.raises(ConnectionClosed) as exc:
             await anon.recv()
         assert exc.value.rcvd is not None and exc.value.rcvd.code == 4401
-    cookie = await sign_in(client, "coord@ofs.com")
+    cookie = await sign_in(client, "coord@kfs.com")
     async with opener(server, cookie, origin="https://evil.example") as hijack:
         with pytest.raises(ConnectionClosed) as exc:
             await hijack.recv()
@@ -161,7 +161,7 @@ async def test_too_far_behind_is_told_to_reload(
     server: str, client: httpx.AsyncClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(ws_module, "REPLAY_LIMIT", 5)
-    cookie = await sign_in(client, "coord@ofs.com")
+    cookie = await sign_in(client, "coord@kfs.com")
     async with opener(f"{server}?after=0", cookie) as late:
         assert (await recv(late)) == {"type": "resync"}
         with pytest.raises(ConnectionClosed) as exc:
@@ -175,11 +175,11 @@ async def test_an_idle_socket_is_pinged_and_rechecked(
     from ofs.models import User
 
     monkeypatch.setattr(ws_module, "PING_SECONDS", 0.2)
-    cookie = await sign_in(client, "coord@ofs.com")
+    cookie = await sign_in(client, "coord@kfs.com")
     async with opener(server, cookie) as coord:
         await recv(coord)
         assert await recv(coord) == {"type": "ping"}
-        user = (await logins.execute(select(User).where(User.email == "coord@ofs.com"))).scalar_one()
+        user = (await logins.execute(select(User).where(User.email == "coord@kfs.com"))).scalar_one()
         user.disabled = True
         await logins.flush()
         with pytest.raises(ConnectionClosed) as exc:
@@ -191,7 +191,7 @@ async def test_an_idle_socket_is_pinged_and_rechecked(
 async def test_a_closed_view_leaves_the_hub_at_once(server: str, client: httpx.AsyncClient) -> None:
     from ofs.hub import hub
 
-    cookie = await sign_in(client, "coord@ofs.com")
+    cookie = await sign_in(client, "coord@kfs.com")
     async with opener(server, cookie) as coord:
         await recv(coord)
         assert hub.size == 1

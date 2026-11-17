@@ -17,9 +17,9 @@ async function step(ctx: APIRequestContext, id: string, command: string, payload
 /** Dispatch assigns a ready job to Tech 1, who arrives and closes it. */
 async function workAJob(playwright: PlaywrightWorkerArgs["playwright"], baseURL: string, close: object): Promise<J> {
   const job = (await makeReadyJob(playwright, baseURL)) as unknown as J;
-  const dispatch = await office(playwright, baseURL, "dispatch@ofs.com");
+  const dispatch = await office(playwright, baseURL, "dispatch@kfs.com");
   await step(dispatch, job.id, "assign_tech", { tech: "Tech 1" }, "e2e");
-  const tech = await office(playwright, baseURL, "tech@ofs.com");
+  const tech = await office(playwright, baseURL, "tech@kfs.com");
   await step(tech, job.id, "arrive");
   await step(tech, job.id, "close_job", close);
   return job;
@@ -32,7 +32,7 @@ async function openJob(page: Page, number: number) {
 test("a closed job arrives with its invoice; approval posts it to QuickBooks and the aging moves", async ({ page, playwright, baseURL }) => {
   await page.setViewportSize({ width: 1600, height: 1200 });
   const errors = watchConsole(page);
-  await signIn(page, "controller@ofs.com");
+  await signIn(page, "controller@kfs.com");
   await expect(page).toHaveURL(/\/ops\/controller$/);
   await expect(page.locator(".live")).toHaveText("Live");
   const reviewTab = page.getByRole("tab", { name: /^Billing review/ });
@@ -63,7 +63,7 @@ test("a closed job arrives with its invoice; approval posts it to QuickBooks and
 
 test("an invoice that failed its check can't be approved: it goes back, and the coordinator redrafts it", async ({ page, playwright, baseURL }) => {
   await page.setViewportSize({ width: 1600, height: 1200 });
-  await signIn(page, "controller@ofs.com");
+  await signIn(page, "controller@kfs.com");
   await expect(page.locator(".live")).toHaveText("Live");
   const job = await workAJob(playwright, baseURL ?? "", { actual_hours: 2, no_sign_off_reason: "Store manager not on site" });
   await openJob(page, job.number);
@@ -75,7 +75,7 @@ test("an invoice that failed its check can't be approved: it goes back, and the 
   await record.locator("form").getByRole("button", { name: "Send back" }).click();
   await expect(record.locator(".state-pill")).toHaveText("Closed");
 
-  const coord = await office(playwright, baseURL ?? "", "coord@ofs.com");
+  const coord = await office(playwright, baseURL ?? "", "coord@kfs.com");
   await step(coord, job.id, "draft_invoice");
   await expect(record.locator(".state-pill")).toHaveText("Billing review", { timeout: 1000 });
 });

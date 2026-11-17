@@ -11,7 +11,7 @@ type J = { id: string; number: number; last_event_id: number; state: string; sig
 /** A fresh ready job (the coordinator's), assigned to Tech 1 by dispatch. */
 async function assignReadyToTech1(playwright: PlaywrightWorkerArgs["playwright"], baseURL: string): Promise<J> {
   const job = (await makeReadyJob(playwright, baseURL)) as unknown as J;
-  const dispatch = await office(playwright, baseURL, "dispatch@ofs.com");
+  const dispatch = await office(playwright, baseURL, "dispatch@kfs.com");
   const r = await dispatch.post(`/api/jobs/${job.id}/commands`, {
     data: { command: "assign_tech", expected_event_id: job.last_event_id, payload: { tech: "Tech 1" }, override_reason: "e2e" },
   });
@@ -21,7 +21,7 @@ async function assignReadyToTech1(playwright: PlaywrightWorkerArgs["playwright"]
 
 test("a job dispatch assigns lands on the phone, and the tech works it through to billing", async ({ page, playwright, baseURL }) => {
   const errors = watchConsole(page);
-  await signIn(page, "tech@ofs.com");
+  await signIn(page, "tech@kfs.com");
   await expect(page).toHaveURL(/\/ops\/tech$/);
   await expect(page.locator(".live")).toHaveText("Live");
   // T1: assigned elsewhere, on the schedule within a second.
@@ -47,7 +47,7 @@ test("a job dispatch assigns lands on the phone, and the tech works it through t
   await expect(page.locator(".job-card", { hasText: `job ${job.number}` })).toHaveCount(0);
 
   // The one record: the office sees what the field wrote.
-  const coord = await office(playwright, baseURL ?? "", "coord@ofs.com");
+  const coord = await office(playwright, baseURL ?? "", "coord@kfs.com");
   const after = (await (await coord.get(`/api/jobs/${job.id}`)).json()) as J;
   expect(after.state).toBe("billing_review"); // closed, and the invoice drafted at close
   expect(after.sign_off?.by).toBe("Store manager");
@@ -64,7 +64,7 @@ test("needs review from the field shows in dispatch at once", async ({ page, pla
   await expect(reviewTab.locator(".tab-count")).toHaveText(/^\d+$/);
   const before = Number(await reviewTab.locator(".tab-count").textContent());
 
-  await signIn(page, "tech@ofs.com");
+  await signIn(page, "tech@kfs.com");
   await page.locator(".job-card", { hasText: `job ${job.number}` }).click();
   await page.getByRole("button", { name: "Arrive" }).click();
   await expect(page.locator(".job-head .state-pill")).toHaveText("Onsite");
@@ -81,7 +81,7 @@ test("needs review from the field shows in dispatch at once", async ({ page, pla
 test("once the client's approval is on record, the phone stops telling the tech to send it for review", async ({ page, playwright, baseURL }) => {
   // A seeded job over its client's cap: the client approves it, and dispatch sends it to Tech 1.
   const base = baseURL ?? "";
-  const coord = await office(playwright, base, "coord@ofs.com");
+  const coord = await office(playwright, base, "coord@kfs.com");
   const [waiting] = (await (await coord.get("/api/jobs?state=needs_client_approval")).json()) as J[];
   if (!waiting) throw new Error("the seed holds no job waiting on the client");
   const step = async (who: string, command: string, payload: object = {}) => {
@@ -92,12 +92,12 @@ test("once the client's approval is on record, the phone stops telling the tech 
     });
     expect(r.ok(), await r.text()).toBeTruthy();
   };
-  await step("coord@ofs.com", "record_client_approval", { by: "Client facilities manager", client_ref: "APR-7731" });
-  await step("coord@ofs.com", "approve_for_dispatch");
-  await step("dispatch@ofs.com", "assign_tech", { tech: "Tech 1" });
+  await step("coord@kfs.com", "record_client_approval", { by: "Client facilities manager", client_ref: "APR-7731" });
+  await step("coord@kfs.com", "approve_for_dispatch");
+  await step("dispatch@kfs.com", "assign_tech", { tech: "Tech 1" });
 
   // And one of Tech 1's jobs under a cap, with no approval: the cap's hint still stands there.
-  const tech = await office(playwright, base, "tech@ofs.com");
+  const tech = await office(playwright, base, "tech@kfs.com");
   type Mine = J & { approval: { client_ref: string } | null };
   const mine = ((await (await tech.get("/api/jobs?state=assigned")).json()) as Mine[]).filter((j) => !j.approval);
   let capped: Mine | undefined;
@@ -107,7 +107,7 @@ test("once the client's approval is on record, the phone stops telling the tech 
   }
   expect(capped, "Tech 1 holds a job under a cap").toBeTruthy();
 
-  await signIn(page, "tech@ofs.com");
+  await signIn(page, "tech@kfs.com");
   const rails = page.locator(".rails");
   // The rules arrive with the contract, after the panel: wait for it, or "not shown" passes before they could show.
   const contractLoaded = () => page.waitForResponse((r) => r.url().endsWith("/contract") && r.ok());
@@ -126,7 +126,7 @@ test("once the client's approval is on record, the phone stops telling the tech 
 async function deskPage(browser: Browser, baseURL: string) {
   const context = await browser.newContext({ baseURL, viewport: { width: 1440, height: 900 } });
   const desk = await context.newPage();
-  await signIn(desk, "dispatch@ofs.com");
+  await signIn(desk, "dispatch@kfs.com");
   await expect(desk.locator(".live")).toHaveText("Live");
   return desk;
 }

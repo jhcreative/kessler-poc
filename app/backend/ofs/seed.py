@@ -178,11 +178,11 @@ NEIGHBOURS: dict[str, list[str]] = {
 }
 
 DEMO_LOGINS = {
-    "Coordinator 1": "coord@ofs.com",
-    "Dispatcher": "dispatch@ofs.com",
-    "Tech 1": "tech@ofs.com",
-    "Controller": "controller@ofs.com",
-    "Executive": "exec@ofs.com",
+    "Coordinator 1": "coord@kfs.com",
+    "Dispatcher": "dispatch@kfs.com",
+    "Tech 1": "tech@kfs.com",
+    "Controller": "controller@kfs.com",
+    "Executive": "exec@kfs.com",
 }
 
 AGING_BUCKETS = (

@@ -13,11 +13,11 @@ Ann-Marie, Neale,
 
 Here are the passwords for the five demo logins at https://kfs.apps.johnhiemstra.com.
 
-Coordinator, coord@ofs.com: [from the logins file]
-Dispatch, dispatch@ofs.com: [from the logins file]
-Tech, tech@ofs.com: [from the logins file]
-Controller, controller@ofs.com: [from the logins file]
-Overview, exec@ofs.com: [from the logins file]
+Coordinator, coord@kfs.com: [from the logins file]
+Dispatch, dispatch@kfs.com: [from the logins file]
+Tech, tech@kfs.com: [from the logins file]
+Controller, controller@kfs.com: [from the logins file]
+Overview, exec@kfs.com: [from the logins file]
 
 They're demo accounts on synthetic data. The tech view is built for a phone, so try it on yours.
 

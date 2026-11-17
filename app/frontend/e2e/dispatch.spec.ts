@@ -14,7 +14,7 @@ async function command(ctx: APIRequestContext, job: J, command: string, payload 
 test("an approved job arrives in dispatch with its recommended tech, and one click assigns it", async ({ page, playwright, baseURL }) => {
   await page.setViewportSize({ width: 1600, height: 1400 });
   const errors = watchConsole(page);
-  await signIn(page, "dispatch@ofs.com");
+  await signIn(page, "dispatch@kfs.com");
   await expect(page).toHaveURL(/\/ops\/dispatch$/);
   await expect(page.locator(".live")).toHaveText("Live");
   const readyTab = page.getByRole("tab", { name: /^Ready/ });
@@ -22,7 +22,7 @@ test("an approved job arrives in dispatch with its recommended tech, and one cli
   const before = Number(await readyTab.locator(".tab-count").textContent());
 
   // D1: the coordinator approves a draft elsewhere; it lands in Ready.
-  const coord = await office(playwright, baseURL ?? "", "coord@ofs.com");
+  const coord = await office(playwright, baseURL ?? "", "coord@kfs.com");
   const drafts = (await (await coord.get("/api/jobs?state=intake_draft")).json()) as J[];
   const job = drafts.find((j) => !j.requires_approval);
   if (!job) throw new Error("no draft without a rule");
@@ -48,7 +48,7 @@ test("an approved job arrives in dispatch with its recommended tech, and one cli
 
 test("a tech who doesn't qualify takes a reason, and the reason goes on record", async ({ page, request }) => {
   await page.setViewportSize({ width: 1600, height: 1400 });
-  await signIn(page, "dispatch@ofs.com");
+  await signIn(page, "dispatch@kfs.com");
   await page.locator(".queue-grid .ag-row").first().click();
   const record = page.locator(".record");
   const misfit = record.locator(".candidate:not([data-eligible])").first();
@@ -58,7 +58,7 @@ test("a tech who doesn't qualify takes a reason, and the reason goes on record",
   await misfit.getByRole("button", { name: "Assign anyway" }).click();
   await expect(record.locator(".state-pill")).toHaveText("Assigned");
   const number = (await record.locator("h2").textContent())?.match(/Job (\d+)/)?.[1];
-  await apiAs(request, "dispatch@ofs.com");
+  await apiAs(request, "dispatch@kfs.com");
   const jobs = (await (await request.get("/api/jobs?state=assigned")).json()) as J[];
   const job = jobs.find((j) => String(j.number) === number);
   const events = (await (await request.get(`/api/jobs/${job?.id}/events`)).json()) as { command: string; override_reason: string | null }[];
@@ -67,7 +67,7 @@ test("a tech who doesn't qualify takes a reason, and the reason goes on record",
 
 test("needs review: dispatch asks the tech to wait, and the job goes back to work", async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 1400 });
-  await signIn(page, "dispatch@ofs.com");
+  await signIn(page, "dispatch@kfs.com");
   await page.getByRole("tab", { name: /^Needs review/ }).click();
   await page.locator(".queue-grid .ag-row").first().click();
   const record = page.locator(".record");
