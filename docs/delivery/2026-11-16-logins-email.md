@@ -1,6 +1,6 @@
 # The logins email: draft (Angela; Lisa's RTP-3 edit in, 2026-11-16; for John)
 
-Plan D2. Sent separately from the delivery email, after it. **No password is written in this repo:** John copies
+**Not needed now (John, 2026-11-17): the passwords are on page 9 of the PDF.** Kept for the record. Plan D2. Sent separately from the delivery email, after it. **No password is written in this repo:** John copies
 each one from `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env` (the box logins, not the local ones) into the
 email as he writes it.
 To: Neale, Ann-Marie

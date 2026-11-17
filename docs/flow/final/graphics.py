@@ -170,7 +170,7 @@ def svg_recommended(overlay=None, under=None, kinds=None, top=None):
     if top:
         top(p)  # final coordinates, over everything but the key
     legend(p, kinds or ["human", "step"] + (["gear"] if overlay else []))
-    return f'<svg class="fig" viewBox="-2 -2 1092 504" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
+    return f'<svg class="fig" viewBox="-2 -2 984 504" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
 
 
 def svg_current():
@@ -232,25 +232,21 @@ def svg_current():
 
 def exports(p):
     """The end of the flow (John, 2026-11-17): invoicing drafts and exports to the clients' own systems and to
-    QuickBooks. QuickBooks comes first after invoicing, and it feeds both the final phase, collections, and the
-    company's accounting. Everything here but collections sits outside the app. Final coordinates."""
+    QuickBooks. QuickBooks comes first after invoicing, and its arrow goes right, up and back into the app, to
+    collections, the final phase (2026-11-17: the Accounting box came out as redundant). Final coordinates."""
     p.append('<text class="k" x="692" y="420" text-anchor="end">OUTGOING</text>')
     p.append(stack(700, 386, 130, 56, 6, "#fff", "#cfc9bf"))
     p.append(box(700, 386, 130, 56, "Client systems", "Their invoice formats."))
     p.append(box(850, 386, 110, 56, "QuickBooks", "Ledger, aging."))
-    p.append(box(985, 220, 100, 84, "Accounting", ["Company books."]))
     p.append(line("M818,304 V350", end=False))   # out of invoicing
     p.append(line("M818,350 H765 V384"))         # to the client systems
     p.append(line("M818,350 H880 V384"))         # to QuickBooks
-    p.append(line("M960,414 H972 V262", end=False))  # QuickBooks feeds both
-    p.append(line("M972,262 H948"))              # collections, the final phase
-    p.append(line("M972,262 H983"))              # the company's accounting
-    p.append('<circle cx="972" cy="262" r="3.2" fill="#444"/>')  # one source, two uses
+    p.append(line("M960,414 H972 V262 H948"))    # back into the app: collections, the final phase
 
 
 def badge(cx, cy, n):
     """The gear's number, matching page 5's table (John, 2026-11-16): an orange disc at the gear's upper right, or its
-    upper left where the caption sits on the right (6 and 7, by the exports)."""
+    upper left where the caption sits on the right (8 and 9, by the exports)."""
     x, y = (cx - 10 if n in LEFT_BADGES else cx + 10), cy - 10
     return (f'<circle cx="{x}" cy="{y}" r="7.2" fill="#D07200" stroke="#fff" stroke-width="1.4"/>'
             f'<text x="{x}" y="{y+3.6}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#fff">{n}</text>')
@@ -308,19 +304,19 @@ def gears_overlay(p):
 
 
 # (number, gear x, gear y, text lines, anchor, text x, text y): final coordinates on the recommended drawing.
-# Numbers match page 5's table (John, 2026-11-16; renumbered 2026-11-17); the three ways in share number 1.
+# Numbers follow the flow and match page 6's table (John, 2026-11-17): each way in has its own number.
 GEARS = [
     (1, 204, 165, [], "middle", 204, 0),   # Target portal
-    (1, 204, 221, [], "middle", 204, 0),   # Emails
-    (1, 204, 277, ["Auto draft job", "records from source."], "start", 194, 304),   # FacilIT; one caption for the column
-    (2, 355, 346, ["Auto provide contract", "guardrails before work begins."], "end", 342, 344),
-    (3, 552, 176, ["Recommended tech,", "with the reasons."], "start", 566, 194),
-    (4, 505, 88, ["One way update flow keeps", "everyone on same page."], "middle", 494, 108),
-    (5, 489, 262, ["Auto push", "to queue."], "middle", 489, 284),
-    (6, 765, 368, ["Auto draft", "client invoices."], "start", 777, 366),
-    (7, 880, 368, ["Auto export", "to QuickBooks."], "start", 892, 366),
+    (2, 204, 221, [], "middle", 204, 0),   # Emails
+    (3, 204, 277, ["Auto draft job", "records from source."], "start", 194, 304),   # FacilIT; one caption for the column
+    (4, 355, 346, ["Auto provide contract", "guardrails before work begins."], "end", 342, 344),
+    (5, 552, 176, ["Recommended tech,", "with the reasons."], "start", 566, 194),
+    (6, 505, 88, ["One way update flow keeps", "everyone on same page."], "middle", 494, 108),
+    (7, 489, 262, ["Auto push", "to queue."], "middle", 489, 284),
+    (8, 765, 368, ["Auto draft", "client invoices."], "start", 777, 366),
+    (9, 880, 368, ["Auto export", "to QuickBooks."], "start", 892, 366),
 ]
-LEFT_BADGES = {6, 7}
+LEFT_BADGES = {8, 9}
 BADGES = [(cx, cy, n) for n, cx, cy, *_ in GEARS]
 
 
@@ -347,14 +343,14 @@ PAGES = {
         "Recommended request flow automates the redundant parts of each human role, including data entry, contract "
         "checks and notifications, and streamlines communication through one shared record, so the same people make "
         "better decisions faster as the volume of business grows.", svg_recommended),
-    6: ("Flow Improvement Opportunities",
-        "Each numbered gear is an efficiency from the table on page 5. Each one works on its own; together they "
+    5: ("Flow Improvement Opportunities",
+        "Each numbered gear is an efficiency from the table on page 6. Each one works on its own; together they "
         "centralize the source of truth for every request, so people decide with every fact in view.",
         svg_opportunities),
     8: ("Application Surface",
         "Five views work from the one record: <b>1</b> coordinator, <b>2</b> dispatch, <b>3</b> the tech's phone, "
         "<b>4</b> controller, and <b>5</b> the overview around them all. Requests come in from the left; invoices go "
-        "out to client systems and QuickBooks, which feeds collections and the company books. All stay outside the app.", svg_application),
+        "out to client systems and QuickBooks, all outside the app. QuickBooks feeds back in, to collections.", svg_application),
 }
 
 

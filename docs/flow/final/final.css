@@ -41,3 +41,20 @@ table.logins{margin-top:10px;}
 table.logins td{padding:7px 10px;font-size:10pt;line-height:1.35;text-wrap:pretty;}
 table.logins td.r{font-family:'Fira Sans',sans-serif;font-weight:600;white-space:nowrap;}
 table.logins td.e{font-family:'Fira Sans',sans-serif;white-space:nowrap;}
+
+/* Page 6: the table grouped by priority (John, 2026-11-17) */
+table.opps tr.group td{background:#f4ede2;font-family:'Fira Sans',sans-serif;font-size:8.8pt;padding:3px 11px;
+  border-bottom:1px solid var(--rule);color:#3a382f;}
+table.opps tr.group td b{font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#9a5a00;margin-right:8px;}
+table.opps.nine td{padding:3px 11px;font-size:9.2pt;line-height:1.24;}
+table.opps.nine td.o span{font-size:9pt;}
+
+table.logins td.pw{font-family:"Fira Mono",ui-monospace,Menlo,monospace;font-size:9.4pt;white-space:nowrap;}
+table.opps.nine{margin-top:0.12in;}
+table.opps.nine + .note{margin-top:4px;}
+
+/* Page 9, stacked (2026-11-17): the links in one row, the sign-in table full width beneath, passwords included */
+.split.stack{grid-template-columns:1fr;row-gap:0.22in;margin-top:0.28in;}
+.split.stack .links{display:grid;grid-template-columns:repeat(3,auto);column-gap:0.45in;justify-content:start;}
+.split.stack .links li{margin:0;}
+.split.stack table.logins td{padding:5px 10px;}

@@ -7,11 +7,10 @@ them: it formats them with the pinned Prettier, which changes layout only, then 
 (2, 4, 6, 8) come from their own builder and land here as page-N.html too.
 
     python3 assemble.py
-    python3 assemble.py --with-logins   # also a TEST copy with the demo passwords as an unbranded page 10
 
-The TEST copy is for John's own click-through (2026-11-17) and comes out of the final version. The passwords are read
-from the secrets store at render time, set into the page in memory and never written to disk except inside that PDF,
-which .gitignore keeps out of the repo.
+Page 9 lists the demo passwords (John, 2026-11-17: "risk is minimal, will pull the live app down within the week").
+The page's source holds placeholders, {{password:<email>}}; they're filled in the browser, in memory, from the secrets
+store, after the preview is taken. So the passwords live only inside the PDF, and .gitignore keeps the PDF out of git.
 """
 import io
 import re
@@ -26,23 +25,17 @@ from pypdf import PdfReader, PdfWriter  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE.parent / "jahnel-poc-final.pdf"
-TEST = HERE.parent / "jahnel-poc-final-TEST-logins.pdf"
 LOGINS = Path.home() / "jhc/secrets/jahnel-poc/box-apps-demo-logins.env"   # the live box's logins
-ROLES = {"coord@ofs.com": "Coordinator", "dispatch@ofs.com": "Dispatch", "tech@ofs.com": "Tech",
-         "controller@ofs.com": "Controller", "exec@ofs.com": "Overview"}
+FILL = r"""(pw) => { const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n, left = 0;
+  while ((n = w.nextNode())) n.nodeValue = n.nodeValue.replace(/\{\{password:([^}]+)\}\}/g, (m, e) => pw[e] ?? m);
+  w.currentNode = document.body; while ((n = w.nextNode())) if (n.nodeValue.includes("{{password:")) left++;
+  return left; }"""
 
 
-def logins_page():
-    """Page 10, unbranded, for testing only. Built in memory; nothing printed."""
-    import html
-    pairs = dict(l.split("=", 1) for l in LOGINS.read_text().splitlines() if "=" in l)
-    rows = "".join(f"<tr><td>{ROLES.get(e, e)}</td><td>{html.escape(e)}</td><td><code>{html.escape(pw)}</code></td></tr>"
-                   for e, pw in pairs.items())
-    return f"""<!doctype html><html><head><meta charset="utf-8"><style>
-      body{{font:14pt -apple-system,Helvetica,Arial,sans-serif;margin:0.8in;color:#111}}
-      h1{{font-size:18pt}} td{{padding:8px 18px 8px 0}} code{{font-size:14pt}} p{{color:#a00}}</style></head><body>
-      <h1>Test logins: https://ofs.apps.johnhiemstra.com</h1>
-      <p>For testing only. Remove before the final version.</p><table>{rows}</table></body></html>"""
+def passwords():
+    """The live box's demo logins, read at render time; nothing printed."""
+    return dict(l.split("=", 1) for l in LOGINS.read_text().splitlines() if "=" in l)
+
 
 
 def pages():
@@ -63,26 +56,19 @@ def main():
         for f in files:
             pg.goto(f.as_uri())
             pg.wait_for_load_state("networkidle")
+            pg.screenshot(path=str(HERE / "preview" / f.with_suffix(".png").name))  # before the fill: no passwords
+            if "{{password:" in f.read_text():
+                if pg.evaluate(FILL, passwords()):
+                    sys.exit(f"STOP: {f.name} has a password placeholder the secrets store can't fill")
             over = pg.evaluate("""() => { const s = document.querySelector('.sheet'); const b = s.getBoundingClientRect().bottom;
                 return Math.max(0, ...[...s.querySelectorAll('*')].map(e => e.getBoundingClientRect().bottom - b)); }""")
             if over > 1:
                 print(f"  ! {f.name}: content runs {over:.0f}px past the bottom of the sheet")
-            pg.screenshot(path=str(HERE / "preview" / f.with_suffix(".png").name))
             reader = PdfReader(io.BytesIO(pg.pdf(width="11in", height="8.5in", print_background=True)))
             n = len(reader.pages)
             print(f"  {f.name}" + ("" if n == 1 else f"   <-- {n} sheets: the content overflows one page"))
             for p in reader.pages:
                 w.add_page(p)
-        if "--with-logins" in sys.argv:
-            pg.set_content(logins_page())
-            test = PdfWriter()
-            for p in w.pages:
-                test.add_page(p)
-            for p in PdfReader(io.BytesIO(pg.pdf(width="11in", height="8.5in"))).pages:
-                test.add_page(p)
-            with open(TEST, "wb") as fh:
-                test.write(fh)
-            print("wrote", TEST, len(test.pages), "pages (TEST copy, passwords on page 10, not committed)")
         b.close()
     with open(OUT, "wb") as fh:
         w.write(fh)
