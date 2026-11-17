@@ -362,8 +362,8 @@ PAGES = {
         "checks and notifications, and streamlines communication through one shared record, so the same people make "
         "better decisions faster as the volume of business grows.", svg_recommended),
     5: ("Flow Improvement Opportunities",
-        "Each numbered gear is an efficiency from the table on page 6. Each one works on its own; together they "
-        "centralize the source of truth for every request, so people decide with every fact in view.",
+        "Each numbered gear is an efficiency from the table on page 6. Five work on their own today; four arrive with "
+        "the shared record. Together they centralize the source of truth for every request.",
         svg_opportunities),
     8: ("Application Surfaces", None, svg_application),
 }

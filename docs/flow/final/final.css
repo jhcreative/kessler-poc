@@ -65,3 +65,10 @@ table.opps.nine + .note{margin-top:4px;}
 .sheet.pinned .figwrap svg.fig{margin:0;}
 .sheet.pinned svg.key{display:block;margin:6px 0 0;flex-shrink:0;height:auto;}
 .sheet.pinned .folio{margin-top:0;}
+
+/* Pages 1 and 3 (2026-11-17): two columns, the text block left, the sections stacked right */
+.twocol{display:grid;grid-template-columns:3.4in 1fr;column-gap:0.55in;margin-top:0.3in;align-items:start;}
+.twocol .dek{margin:0;font-size:15pt;line-height:1.5;color:var(--ink);max-width:none;}
+.twocol .sections{grid-template-columns:1fr;row-gap:0.2in;margin-top:0;}
+.twocol .sec h2{font-size:13.5pt;margin-top:2px;}
+.twocol .sec p{font-size:10.6pt;line-height:1.42;margin-top:4px;}

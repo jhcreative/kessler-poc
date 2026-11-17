@@ -105,3 +105,4 @@ intake people, $80K–$200K a year written off in disputes, QuickBooks and a few
 | R8 | The end of the flow (2026-11-17): invoicing drafts and exports to client systems and QuickBooks; QuickBooks comes first and feeds both collections (the final phase) and the company's accounting |
 | R9 | Page 10 (2026-11-17): the demo passwords, unbranded, in a TEST copy only (`assemble.py --with-logins`, gitignored); out of the final version |
 | R10 | Page 6 (2026-11-17): no dek; rows 4, 5, 6 and 7 are long term, since each needs the centralized record. Immediate: 2, 8, 9. Short term: 1, 3 |
+| R11 | Pages 1, 3 and 5 (2026-11-17): "five work on their own today; four arrive with the shared record"; pages 1 and 3 in two columns, the text block left, the sections right |
