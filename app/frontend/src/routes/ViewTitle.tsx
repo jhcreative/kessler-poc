@@ -9,7 +9,7 @@ export function ViewTitle({ title, status, children }: { title: string; status?:
   const [slot, setSlot] = useState<HTMLElement | null>(null);
   useEffect(() => setSlot(document.getElementById("view-title")), []);
   useEffect(() => {
-    document.title = `${title} : Kessler Facility Services ops`;
+    document.title = `${title} : Kessler Facility Services`;
   }, [title]);
   if (!slot) return null;
   return createPortal(
