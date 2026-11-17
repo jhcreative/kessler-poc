@@ -59,10 +59,10 @@ Columns: **#, Opportunity, Priority, Impact** (John, 2026-11-16). A small mark b
 |---|---|---|---|
 | 1 | Job records drafted automatically from each source (portal, email, FacilIT) | Yes | Immediate |
 | 2 | Contract guardrails checked before work is assigned | Yes | Short term |
-| 3 | Updates flow one way, so everyone sees the same record | Yes | Long term |
-| 4 | Closed work pushed to the billing queue automatically | Yes | Short term |
-| 5 | Invoices drafted automatically in each client's format (an export) | Yes | Immediate |
-| 6 | A recommended tech at dispatch, with the reasons | Yes | Short term |
+| 3 | A recommended tech at dispatch, with the reasons | Yes | Short term |
+| 4 | Updates flow one way, so everyone sees the same record | Yes | Long term |
+| 5 | Closed work pushed to the billing queue automatically | Yes | Short term |
+| 6 | Invoices drafted automatically in each client's format (an export) | Yes | Immediate |
 | 7 | Export to QuickBooks | Yes (simulated) | Immediate |
 
 Facts the estimates draw on (`docs/meetings/2026-11-12-round-4-discovery.md`): 20,000 requests a quarter, three
@@ -101,3 +101,6 @@ intake people, $80K–$200K a year written off in disputes, QuickBooks and a few
 | R4 | Priority: immediate, short term, long term; long term is the whole centralized app |
 | R5 | The table marks what the POC proves |
 | R6 | The client-format invoice is an export, outside the app surface, like QuickBooks |
+| R7 | Gears renumbered (2026-11-17): recommended tech 6 → 3, updates 3 → 4, push to billing 4 → 5, invoices 5 → 6 |
+| R8 | The end of the flow (2026-11-17): invoicing drafts and exports to client systems and QuickBooks; QuickBooks comes first and feeds both collections (the final phase) and the company's accounting |
+| R9 | Page 10 (2026-11-17): the demo passwords, unbranded, in a TEST copy only (`assemble.py --with-logins`, gitignored); out of the final version |

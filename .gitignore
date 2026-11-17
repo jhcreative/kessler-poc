@@ -12,3 +12,6 @@ node_modules/
 docs/flow/deck/common.css
 docs/flow/deck/components.css
 docs/flow/_portrait.pdf
+
+# Test copies of the deck with the demo passwords on a last page: never committed (secrets)
+docs/flow/*-TEST-logins.pdf

@@ -7,6 +7,11 @@ them: it formats them with the pinned Prettier, which changes layout only, then 
 (2, 4, 6, 8) come from their own builder and land here as page-N.html too.
 
     python3 assemble.py
+    python3 assemble.py --with-logins   # also a TEST copy with the demo passwords as an unbranded page 10
+
+The TEST copy is for John's own click-through (2026-11-17) and comes out of the final version. The passwords are read
+from the secrets store at render time, set into the page in memory and never written to disk except inside that PDF,
+which .gitignore keeps out of the repo.
 """
 import io
 import re
@@ -21,6 +26,23 @@ from pypdf import PdfReader, PdfWriter  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE.parent / "jahnel-poc-final.pdf"
+TEST = HERE.parent / "jahnel-poc-final-TEST-logins.pdf"
+LOGINS = Path.home() / "jhc/secrets/jahnel-poc/box-apps-demo-logins.env"   # the live box's logins
+ROLES = {"coord@ofs.com": "Coordinator", "dispatch@ofs.com": "Dispatch", "tech@ofs.com": "Tech",
+         "controller@ofs.com": "Controller", "exec@ofs.com": "Overview"}
+
+
+def logins_page():
+    """Page 10, unbranded, for testing only. Built in memory; nothing printed."""
+    import html
+    pairs = dict(l.split("=", 1) for l in LOGINS.read_text().splitlines() if "=" in l)
+    rows = "".join(f"<tr><td>{ROLES.get(e, e)}</td><td>{html.escape(e)}</td><td><code>{html.escape(pw)}</code></td></tr>"
+                   for e, pw in pairs.items())
+    return f"""<!doctype html><html><head><meta charset="utf-8"><style>
+      body{{font:14pt -apple-system,Helvetica,Arial,sans-serif;margin:0.8in;color:#111}}
+      h1{{font-size:18pt}} td{{padding:8px 18px 8px 0}} code{{font-size:14pt}} p{{color:#a00}}</style></head><body>
+      <h1>Test logins: https://ofs.apps.johnhiemstra.com</h1>
+      <p>For testing only. Remove before the final version.</p><table>{rows}</table></body></html>"""
 
 
 def pages():
@@ -51,6 +73,16 @@ def main():
             print(f"  {f.name}" + ("" if n == 1 else f"   <-- {n} sheets: the content overflows one page"))
             for p in reader.pages:
                 w.add_page(p)
+        if "--with-logins" in sys.argv:
+            pg.set_content(logins_page())
+            test = PdfWriter()
+            for p in w.pages:
+                test.add_page(p)
+            for p in PdfReader(io.BytesIO(pg.pdf(width="11in", height="8.5in"))).pages:
+                test.add_page(p)
+            with open(TEST, "wb") as fh:
+                test.write(fh)
+            print("wrote", TEST, len(test.pages), "pages (TEST copy, passwords on page 10, not committed)")
         b.close()
     with open(OUT, "wb") as fh:
         w.write(fh)
