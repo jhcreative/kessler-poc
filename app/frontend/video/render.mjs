@@ -6,8 +6,10 @@
 // one logged moment before the story and again after it; the frame where each recording goes dark gives that
 // recording's offset, and the second flash measures drift. Both are written into the EDL.
 import { chromium } from "@playwright/test";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -21,6 +23,18 @@ const FONTS = resolve(here, "../public/fonts");
 const script = JSON.parse(readFileSync(join(here, "beats.json"), "utf8"));
 const take = JSON.parse(readFileSync(join(TAKE, "events.json"), "utf8"));
 const FPS = 30;
+
+// Music (John, 2026-11-17: "add one of our music tracks"): only a licensed track with its record (Henry: no track
+// without a licence record), checked against the file's hash so the EDL names exactly what is in the mix.
+const music = script.music ?? null;
+let musicPath = null;
+if (music) {
+  for (const k of ["file", "sha256", "title", "artist", "isrc", "licence", "credit", "picked_by"]) if (!String(music[k] ?? "").trim()) throw new Error(`music.${k} is missing`);
+  for (const k of ["in_s", "loudness_lufs", "fade_in_s", "fade_out_s"]) if (typeof music[k] !== "number") throw new Error(`music.${k} must be a number`);
+  musicPath = music.file.replace(/^~(?=\/)/, homedir());
+  const sha = createHash("sha256").update(readFileSync(musicPath)).digest("hex");
+  if (sha !== music.sha256) throw new Error(`music: ${musicPath} is not the track on record (sha256 ${sha})`);
+}
 
 // The frame (1920 × 1080): a 2 × 2 grid of the desktop views, the phone at full size on the right, captions below.
 const W = 1920, H = 1080;
@@ -80,9 +94,9 @@ const segments = beatEvents.map((e, i) => {
 });
 const open = script.cards.open, close = script.cards.close;
 const edl = {
-  title: "OneFamilyServices ops: one request, five views",
-  output: { width: W, height: H, fps: FPS, codec: "h264 High, yuv420p, bt709, faststart", audio: "silent AAC (no music, no voice)" },
-  music: null,
+  title: script.cards.open.title,
+  output: { width: W, height: H, fps: FPS, codec: "h264 High, yuv420p, bt709, faststart", audio: music ? "AAC 192k, the music bed alone (no voice)" : "silent AAC (no music, no voice)" },
+  music,
   take: { number: take.number, base: take.base, recorded: new Date(beatEvents[0].t).toISOString() },
   sources: Object.fromEntries(Object.entries(sources).map(([v, s]) => [v, { file: s.file, in_s: +(main.in - s.zero).toFixed(3), drift_ms: s.drift_ms }])),
   layout: { tiles: TILES, phone: PHONE, focus: FOCUS, tile: { w: L.tileW, h: L.tileH }, caption_band_y: L.bandY },
@@ -110,6 +124,8 @@ html, body { width: ${W}px; height: ${H}px; background: #1a2129; font-family: Pl
 .card p { color: #d6dde5; font-size: 34px; line-height: 1.45; text-wrap: balance; max-width: 1400px; }
 .card .rule { width: 96px; height: 6px; background: #F7941E; margin-bottom: 40px; }
 .card .foot { color: #F7941E; font-size: 30px; font-weight: 500; margin-top: 56px; }
+.card .link { color: #fff; font-size: 34px; font-weight: 600; margin-top: 24px; letter-spacing: .01em; }
+.card h1 + .link { margin-top: 8px; }
 `;
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 function chromeHtml(seg) {
@@ -131,7 +147,7 @@ function chromeHtml(seg) {
   return `<!doctype html><meta charset="utf-8"><style>${css}</style><body>${parts.join("")}</body>`;
 }
 const cardHtml = (c) =>
-  `<!doctype html><meta charset="utf-8"><style>${css}</style><body><div class="card"><div class="rule"></div><h1>${esc(c.title)}</h1>${c.lines.map((l) => `<p>${esc(l)}</p>`).join("")}<div class="foot">${esc(c.foot)}</div></div></body>`;
+  `<!doctype html><meta charset="utf-8"><style>${css}</style><body><div class="card"><div class="rule"></div><h1>${esc(c.title)}</h1>${c.lines.map((l) => `<p>${esc(l)}</p>`).join("")}${c.foot ? `<div class="foot">${esc(c.foot)}</div>` : ""}${c.link ? `<div class="link">${esc(c.link)}</div>` : ""}</div></body>`;
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: W, height: H } });
@@ -147,7 +163,7 @@ async function shot(html, file) {
   const runts = await page.evaluate(() => {
     // PQ-5e: a caption or card line may not end on a runt (a last line of one or two words).
     const bad = [], checked = [];
-    for (const el of document.querySelectorAll(".caption, .card p, .card h1")) {
+    for (const el of document.querySelectorAll(".caption, .card p, .card h1, .card .foot, .card .link")) {
       const r = document.createRange();
       r.selectNodeContents(el);
       const lines = new Map();
@@ -199,7 +215,25 @@ const args = ["-hide_banner", "-y", "-f", "concat", "-safe", "0", "-i", join(FRA
 for (const v of views) args.push("-i", join(TAKE, sources[v].file));
 args.push("-loop", "1", "-framerate", String(FPS), "-t", String(open.seconds), "-i", join(FRAMES, "card-open.png"));
 args.push("-loop", "1", "-framerate", String(FPS), "-t", String(close.seconds), "-i", join(FRAMES, "card-close.png"));
-args.push("-f", "lavfi", "-t", String(dur + open.seconds + close.seconds), "-i", "anullsrc=channel_layout=stereo:sample_rate=48000");
+const total = dur + open.seconds + close.seconds;
+let audioIn, audioFilter = null;
+if (music) {
+  // Measure the integrated loudness of exactly the span that plays, then set one static gain (no pumping on a bed).
+  // ebur128 reports on stderr, which execFileSync doesn't return: spawnSync keeps it.
+  const meas = spawnSync("ffmpeg", ["-hide_banner", "-nostats", "-ss", String(music.in_s), "-t", String(total), "-i", musicPath, "-af", "ebur128", "-f", "null", "-"], { encoding: "utf8" }).stderr;
+  const lufs = Number([...String(meas).matchAll(/^\s+I:\s+(-?[\d.]+) LUFS/gm)].at(-1)?.[1]);
+  if (!Number.isFinite(lufs)) throw new Error("music: loudness not measured");
+  const gain = +(music.loudness_lufs - lufs).toFixed(2);
+  edl.music = { ...music, measured_lufs: lufs, gain_db: gain, plays_s: [music.in_s, +(music.in_s + total).toFixed(3)] };
+  writeFileSync(join(OUT, "edl.json"), JSON.stringify(edl, null, 2));
+  console.log(`music: ${music.title} (${music.artist}), ${lufs} LUFS over ${total.toFixed(1)} s, gain ${gain} dB to ${music.loudness_lufs} LUFS`);
+  args.push("-ss", String(music.in_s), "-t", String(total), "-i", musicPath);
+  audioFilter = `[8:a]aresample=48000,aformat=channel_layouts=stereo,atrim=duration=${total},asetpts=PTS-STARTPTS,volume=${gain}dB,afade=t=in:d=${music.fade_in_s},afade=t=out:st=${(total - music.fade_out_s).toFixed(3)}:d=${music.fade_out_s},alimiter=limit=0.84:level=false[aout]`;
+  audioIn = "[aout]";
+} else {
+  args.push("-f", "lavfi", "-t", String(total), "-i", "anullsrc=channel_layout=stereo:sample_rate=48000");
+  audioIn = "8:a";
+}
 const f = [];
 f.push(`[0:v]fps=${FPS},scale=${W}:${H},format=yuv420p,trim=duration=${dur},setpts=PTS-STARTPTS[bg0]`);
 const within = (v) => segments.filter((s) => s.layout === "focus" && s.view === v).map((s) => `between(t,${s.start},${s.end})`).join("+");
@@ -225,12 +259,13 @@ for (const v of Object.keys(TILES)) if (within(v)) over(`f_${v}`, FOCUS.x, FOCUS
 f.push(`[${cur}]setsar=1[main]`);
 f.push(`[6:v]format=yuv420p,setsar=1[co]`, `[7:v]format=yuv420p,setsar=1[cc]`);
 f.push(`[co][main][cc]concat=n=3:v=1:a=0[out]`);
+if (audioFilter) f.push(audioFilter);
 writeFileSync(join(FRAMES, "filter.txt"), f.join(";\n"));
 const mp4 = join(OUT, "jahnel-poc-one-request-five-views.mp4");
-args.push("-filter_complex_script", join(FRAMES, "filter.txt"), "-map", "[out]", "-map", "8:a",
+args.push("-filter_complex_script", join(FRAMES, "filter.txt"), "-map", "[out]", "-map", audioIn,
   "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-r", String(FPS),
   "-bsf:v", "h264_metadata=colour_primaries=1:transfer_characteristics=1:matrix_coefficients=1", "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
-  "-c:a", "aac", "-b:a", "128k", "-shortest", "-movflags", "+faststart", mp4);
+  "-c:a", "aac", "-b:a", music ? "192k" : "128k", "-shortest", "-movflags", "+faststart", mp4);
 execFileSync("ffmpeg", args, { stdio: ["ignore", "ignore", "inherit"] });
 
 // 5. Captions as data: the SRT, cards included, on the final timeline.
@@ -240,9 +275,9 @@ const ts = (s) => {
   return `${p(Math.floor(ms / 3600000))}:${p(Math.floor(ms / 60000) % 60)}:${p(Math.floor(ms / 1000) % 60)},${p(ms % 1000, 3)}`;
 };
 const cues = [
-  { s: 0, e: open.seconds, text: `${open.title}\n${open.foot}` },
+  { s: 0, e: open.seconds, text: [open.title, open.foot, open.link].filter(Boolean).join("\n") },
   ...segments.map((s) => ({ s: s.start + open.seconds, e: s.end + open.seconds, text: s.caption })),
-  { s: open.seconds + dur, e: open.seconds + dur + close.seconds, text: `${close.title}\n${close.lines.join(" ")}` },
+  { s: open.seconds + dur, e: open.seconds + dur + close.seconds, text: [close.title, ...close.lines, close.foot, close.link].filter(Boolean).join("\n") },
 ];
 writeFileSync(join(OUT, "jahnel-poc-one-request-five-views.srt"), cues.map((c, i) => `${i + 1}\n${ts(c.s)} --> ${ts(c.e)}\n${c.text}\n`).join("\n"));
 console.log(`render: ${mp4}, ${(dur + open.seconds + close.seconds).toFixed(1)} s`);

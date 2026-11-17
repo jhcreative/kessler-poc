@@ -3,16 +3,33 @@
   "cards": {
     "open": {
       "seconds": 8,
-      "title": "One request, five views",
-      "lines": ["OneFamilyServices ops: a proof of concept for Jahnel Group", "Watch a new request move from intake to QuickBooks while every open view updates live."],
-      "foot": "All data is synthetic. QuickBooks is simulated."
+      "title": "Single Source of Truth for Everyone",
+      "lines": ["Kessler Facility Services: a proof of concept for Jahnel Group", "Watch a new request move from intake to QuickBooks while every open view updates live."],
+      "foot": "All data is synthetic. QuickBooks is simulated.",
+      "link": "kfs.apps.johnhiemstra.com"
     },
     "close": {
       "seconds": 8,
-      "title": "One record, every view, live",
-      "lines": ["Clients, sites, people and costs are synthetic.", "QuickBooks is simulated. Claude drafted the request live."],
-      "foot": "ofs.apps.johnhiemstra.com"
+      "title": "Single Source of Truth for Everyone",
+      "lines": [],
+      "link": "kfs.apps.johnhiemstra.com"
     }
+  },
+  "music": {
+    "file": "~/Downloads/ES_Coastline - Hara Noda.mp3",
+    "sha256": "61eaa09b7f0828f4a8d3b6ef44f57e3689ae5d4f21f01542f519802df88f99bf",
+    "title": "Coastline",
+    "artist": "Hara Noda",
+    "composer": "Magnus Boqvist",
+    "isrc": "SE5Q52601419",
+    "licence": "Epidemic Sound, John's subscription (covers every channel, John 2026-10-17); YouTube needs the channel connected in Epidemic Sound",
+    "credit": "Music: \"Coastline\" by Hara Noda (Epidemic Sound)",
+    "why": "Tagged laid back, relaxing, low energy, nu jazz, 124 BPM; steady level across the body; 4:41 long, so one pass covers the video with no loop; not a series track (The Magician is JHC's films, Suspension Tailor's, Time Traveller RSB's)",
+    "picked_by": "Henry, for John (2026-11-17)",
+    "in_s": 0,
+    "loudness_lufs": -20,
+    "fade_in_s": 2,
+    "fade_out_s": 5
   },
   "beats": [
     { "id": "establish", "view": null, "layout": "grid", "min_ms": 8500, "caption": "Five views are open at once: coordinator, dispatch, controller, overview and the tech's phone." },
