@@ -204,3 +204,7 @@ main { padding: 16px 24px 40px; }
 .lines tfoot th, .lines tfoot td { font-weight: 600; border-bottom: 0; }
 .lines .num { text-align: right; font-variant-numeric: tabular-nums; }
 .aging .tile { width: auto; min-width: 148px; } /* money sizes the tile, never spills (PQ-15) */
+
+/* Show password: a checkbox under the field; the field's input sizing doesn't apply to it. */
+.field .show-password { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font: 400 0.875rem var(--util); cursor: pointer; }
+.field .show-password input { block-size: auto; inline-size: auto; padding: 0; margin: 0; }
