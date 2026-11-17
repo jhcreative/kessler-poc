@@ -5,10 +5,10 @@ the first discovery call to a live app, with every decision written down along t
 
 | ▶ Watch | ● Use | ☰ Read |
 |---|---|---|
-| [**The 3-minute demo**](https://youtu.be/_qfYcEbQ92o) | [**kfs.apps.johnhiemstra.com**](https://kfs.apps.johnhiemstra.com) | [**Where things stand today**](docs/status.md) |
+| [**The 3-minute demo**](https://youtu.be/bLh9DnSz3Zo) | [**kfs.apps.johnhiemstra.com**](https://kfs.apps.johnhiemstra.com) | [**Where things stand today**](docs/status.md) |
 | Five screens, one request, start to finish | Logins for every role are on page 9 of the PDF | Live version, rollback, what's next |
 
-[![Five views of one job record, each updating live: coordinator, dispatch, the tech's phone, the controller and an overview](docs/delivery/video/stills/still-0135-assign-grid.png)](https://youtu.be/_qfYcEbQ92o)
+[![Five views of one job record, each updating live: coordinator, dispatch, the tech's phone, the controller and an overview](docs/delivery/video/stills/still-0135-assign-grid.png)](https://youtu.be/bLh9DnSz3Zo)
 
 <sub>A still from the demo: dispatch assigns Tech 1, and the coordinator's record and the tech's phone update at
 once. Click it to watch.</sub>
@@ -32,7 +32,7 @@ once. Click it to watch.</sub>
 
 | | Stop | Time | What you get |
 |---|---|---|---|
-| **1** | [Watch the demo](https://youtu.be/_qfYcEbQ92o) | 3 min | One request from intake to paid, in all five views at once |
+| **1** | [Watch the demo](https://youtu.be/bLh9DnSz3Zo) | 3 min | One request from intake to paid, in all five views at once |
 | **2** | Read the PDF that came with our email | 5 min | Today's request flow, nine efficiencies with hours and priority, the case for one record |
 | **3** | [Sign in](https://kfs.apps.johnhiemstra.com) as two roles, side by side | 2 min | A change in one view lands in the other within a second |
 
@@ -175,9 +175,9 @@ app/scripts/coverage.sh   # the backend tests again, measured line by line
 
 ## 6. The demo video, and Henry
 
-[![The demo's opening card](docs/delivery/video/stills/still-0004-open-card.png)](https://youtu.be/_qfYcEbQ92o)
+[![The demo's opening card](docs/delivery/video/stills/still-0004-open-card.png)](https://youtu.be/bLh9DnSz3Zo)
 
-**[Watch it on YouTube](https://youtu.be/_qfYcEbQ92o)**, 3 minutes, captioned.
+**[Watch it on YouTube](https://youtu.be/bLh9DnSz3Zo)**, 3 minutes, captioned.
 
 Henry is the team's video editor, and he made this one on his own from the team's scripts. Nobody screen-recorded
 anything. He wrote [`take.sh`](app/frontend/video/take.sh), which resets the app to clean demo data and runs

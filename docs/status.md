@@ -59,5 +59,4 @@ Next, while it waits: POC-15, the simulator.
 |---|---|---|---|
 | 2026-11-14 | Neale's and Ann-Marie's GitHub usernames, for the repo invites | Anne | |
 | 2026-11-16 | Tag v0.1.0 at `110bf61` (`git tag v0.1.0 110bf61 && git push origin v0.1.0`), or leave it untagged for a POC | Cesar | |
-| 2026-11-17 | Re-upload the video with the clean open card (no "Jahnel Group"): `docs/delivery/video/kfs-poc-demo.mp4`, or keep the current upload | Henry | |
 | 2026-11-17 | The email's address: "Ann-Marie, Neale" (recommended) or "Dana" in the role play; keep or flatten its two point labels | Lisa | |
