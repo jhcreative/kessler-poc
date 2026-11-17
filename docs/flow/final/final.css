@@ -58,3 +58,10 @@ table.opps.nine + .note{margin-top:4px;}
 .split.stack .links{display:grid;grid-template-columns:repeat(3,auto);column-gap:0.45in;justify-content:start;}
 .split.stack .links li{margin:0;}
 .split.stack table.logins td{padding:5px 10px;}
+
+/* Page 8 (2026-11-17): no dek; the drawing centred in the space left, the key pinned at the bottom */
+.sheet.pinned{display:flex;flex-direction:column;}
+.sheet.pinned .figwrap{flex:1;display:flex;align-items:center;}
+.sheet.pinned .figwrap svg.fig{margin:0;}
+.sheet.pinned svg.key{display:block;margin:6px 0 0;flex-shrink:0;height:auto;}
+.sheet.pinned .folio{margin-top:0;}

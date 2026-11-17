@@ -115,7 +115,10 @@ def mid_arrows(p, segs):
         p.append(line(d))
 
 
-def svg_recommended(overlay=None, under=None, kinds=None, top=None):
+S = 0  # page 8 opens a gap between the app and what sits outside it: approvals up, contracts and exports down
+
+
+def svg_recommended(overlay=None, under=None, kinds=None, top=None, key=True):
     p = [ARROW]
     if under:
         under(p)  # final coordinates, drawn first so the flow sits on top
@@ -124,16 +127,16 @@ def svg_recommended(overlay=None, under=None, kinds=None, top=None):
     p.append(cylinder(259.5, 141, 231, 158, "Job records", ["One record per request.", "Contract guardrails added.",
                       "Structured data for analysis.", "Maintains record state", "and makes visible for humans."], 360, dy=11, ty=188))
     # additional approvals: out of the record's top, back in, then on to dispatch (dotted inside, John 2026-11-13)
-    p.append(box(270, 6, 175, 44, "Additional approvals", "Client sign-off, over a cap."))  # above the updates line
-    p.append(line("M300,133 V52"))
-    p.append(line("M410,50 V130"))
+    p.append(box(270, 6 - S, 175, 44, "Additional approvals", "Client sign-off, over a cap."))  # above the updates line
+    p.append(line(f"M300,133 V{52 - S}"))
+    p.append(line(f"M410,{50 - S} V130"))
     p.append(line("M410,132 V168 H488", dash=True))
     # inside the record: updates enter, billing exits (a gap where the approval path crosses)
     p.append(line("M458,134 V162 M458,174 V262 H488", dash=True))
     # feedback that needs approval goes straight back out to additional approvals (John, 2026-11-13)
     p.append(line("M458,202 H300 V133", dash=True, end=False))  # joins the solid arrow; one arrowhead only
-    p.append(store(295, 378, 160, 54, "Contracts", "Maintained elsewhere, for now.", False))
-    p.append(line("M375,378 V312"))
+    p.append(store(295, 378 + S, 160, 54, "Contracts", "Maintained elsewhere, for now.", False))
+    p.append(line(f"M375,{378 + S} V312"))
     p.append('<text class="e" x="390" y="340">Checked before</text><text class="e" x="390" y="354">work assigned.</text>')
     p.append(line("M490,168 H525 V140 H578"))
     p.append(box(580, 110, 160, 60, "Dispatch", "People, parts, routes."))
@@ -150,14 +153,14 @@ def svg_recommended(overlay=None, under=None, kinds=None, top=None):
     p.append(stack(700, 220, 145, 84, 6, "#fff", "#cfc9bf"))
     p.append(box(700, 220, 145, 84, "Invoicing", ["Multiple client formats,", "from the contract."]))
     # contracts also feed invoicing: each client's format, read-only
-    p.append(line("M455,405 H706 V306"))  # 2026-11-17: enters invoicing at its lower left, clear of the exports
-    p.append('<text class="e" x="490" y="398">Client specific invoice templating.</text>')
+    p.append(line(f"M455,{405 + S} H706 V306"))  # 2026-11-17: enters invoicing at its lower left, clear of the exports
+    p.append(f'<text class="e" x="490" y="{398 + S}">Client specific invoice templating.</text>')
     p.append(stack(865, 220, 100, 84, 6, "#fff", "#cfc9bf"))
     p.append(box(865, 220, 100, 84, "Collections", "Normal aging."))  # no disputes: the record prevents disputable work
     # humans in the loop on the system steps (decided earlier: the coordinator owns the request; people review and
     # override anything but the rails; billing sees only what fails the check)
     p.append(human(385, 302, "Coordinator"))  # right of the contracts arrow
-    p.append(human(318, 47, "Client"))
+    p.append(human(318, 47 - S, "Client"))
     p.append(human(650, 160, "Dispatcher"))
     p.append(human(880, 160, "Tech"))
     p.append(human(555, 296, "Controller"))
@@ -169,6 +172,8 @@ def svg_recommended(overlay=None, under=None, kinds=None, top=None):
         overlay(p)  # final coordinates: after the group's -20 shift
     if top:
         top(p)  # final coordinates, over everything but the key
+    if not key:  # page 8 pins its key to the bottom of the sheet, in its own svg
+        return f'<svg class="fig" viewBox="-2 {-8 - S} 984 {460 + 2 * S}" xmlns="http://www.w3.org/2000/svg" style="width:9.5in">{"".join(p)}</svg>'
     legend(p, kinds or ["human", "step"] + (["gear"] if overlay else []))
     return f'<svg class="fig" viewBox="-2 -2 984 504" xmlns="http://www.w3.org/2000/svg" style="width:9.5in;margin-top:8px">{"".join(p)}</svg>'
 
@@ -234,14 +239,14 @@ def exports(p):
     """The end of the flow (John, 2026-11-17): invoicing drafts and exports to the clients' own systems and to
     QuickBooks. QuickBooks comes first after invoicing, and its arrow goes right, up and back into the app, to
     collections, the final phase (2026-11-17: the Accounting box came out as redundant). Final coordinates."""
-    p.append('<text class="k" x="692" y="420" text-anchor="end">OUTGOING</text>')
-    p.append(stack(700, 386, 130, 56, 6, "#fff", "#cfc9bf"))
-    p.append(box(700, 386, 130, 56, "Client systems", "Their invoice formats."))
-    p.append(box(850, 386, 110, 56, "QuickBooks", "Ledger, aging."))
-    p.append(line("M818,304 V350", end=False))   # out of invoicing
-    p.append(line("M818,350 H765 V384"))         # to the client systems
-    p.append(line("M818,350 H880 V384"))         # to QuickBooks
-    p.append(line("M960,414 H972 V262 H948"))    # back into the app: collections, the final phase
+    p.append(f'<text class="k" x="692" y="{420 + S}" text-anchor="end">OUTGOING</text>')
+    p.append(stack(700, 386 + S, 130, 56, 6, "#fff", "#cfc9bf"))
+    p.append(box(700, 386 + S, 130, 56, "Client systems", "Their invoice formats."))
+    p.append(box(850, 386 + S, 110, 56, "QuickBooks", "Ledger, aging."))
+    p.append(line(f"M818,304 V{350 + S}", end=False))   # out of invoicing
+    p.append(line(f"M818,{350 + S} H765 V{384 + S}"))   # to the client systems
+    p.append(line(f"M818,{350 + S} H880 V{384 + S}"))   # to QuickBooks
+    p.append(line(f"M960,{414 + S} H972 V262 H948"))    # back into the app: collections, the final phase
 
 
 def badge(cx, cy, n):
@@ -258,22 +263,34 @@ def svg_opportunities():
 
 
 def svg_application():
-    """Page 8: the five views laid over the recommended flow (John, 2026-11-16: five, not three). Four views tile the
-    flow, edges touching; the overview is a frame around them, since it sees every job. The ways in, the contracts and
-    the exports stay outside, at full strength. The gear numbers sit on top so they still track to page 5."""
+    """Page 8, the application surfaces (John, 2026-11-17): the four views tile the flow in a lighter line than the
+    overview's dashed frame around them, with room between the two, and the frame's label clear of the views. Approvals
+    sit higher, and the contracts and the exports lower, so the app reads apart from what's outside it. The gear numbers
+    sit on top so they still track to page 6. The key is its own svg, pinned to the bottom of the sheet."""
+    global S
     def views(p):
         (x0, y0, x1, y1), n, name = OVERVIEW
         p.append(f'<rect x="{x0}" y="{y0}" width="{x1-x0}" height="{y1-y0}" fill="none" stroke="#1c1b19" '
                  f'stroke-width="2" stroke-dasharray="7 4"/>')
         for (a0, b0, a1, b1), fill, _, _ in SCREENS:
             p.append(f'<rect x="{a0}" y="{b0}" width="{a1-a0}" height="{b1-b0}" fill="{fill}" fill-opacity="0.88" '
-                     f'stroke="#1c1b19" stroke-width="2"/>')
-        for cx, cy, n_ in BADGES:
+                     f'stroke="#8a857c" stroke-width="1.2"/>')
+        for n_, cx, cy, *_ in GEARS:
+            cy = cy + S if n_ in LEFT_BADGES else cy
             p.append(gear(cx, cy) + badge(cx, cy, n_))
         for (cx, cy), (_, _, k, nm) in zip(LABELS, SCREENS):
             label(p, cx, cy, f"{k}  {nm}")
-        label(p, x1 - 90, y0, f"{n}  {name}")
-    return svg_recommended(None, top=views, kinds=["screen", "human", "step", "gear"])
+        label(p, x1 - 90, y0 - 2, f"{n}  {name}")   # clears the views' top edge (76) by 3
+    S = 30
+    try:
+        fig = svg_recommended(None, top=views, key=False)
+    finally:
+        S = 0
+    k = []
+    legend(k, ["screen", "human", "step", "gear"])
+    key = (f'<svg class="fig key" viewBox="-2 452 984 52" xmlns="http://www.w3.org/2000/svg" style="width:9.5in">'
+           f'{"".join(k)}</svg>')
+    return f'<div class="figwrap">{fig}</div>{key}'
 
 
 def label(p, cx, cy, text):
@@ -285,18 +302,20 @@ def label(p, cx, cy, text):
 
 # ((x0, y0, x1, y1), fill, number, name): the four tiled views, final coordinates; edges touch (2026-11-16: five views)
 SCREENS = [
-    ((188, 76, 510, 356), "#f7ecdc", "1", "Coordinator"),
+    ((194, 76, 510, 356), "#f7ecdc", "1", "Coordinator"),
     ((510, 76, 745, 196), "#eceae4", "2", "Dispatch"),
     ((745, 76, 952, 196), "#f3eee6", "3", "Tech"),
     ((510, 196, 952, 356), "#f1e6d4", "4", "Controller"),
 ]
-OVERVIEW = ((180, 68, 958, 364), "5", "Overview")
+OVERVIEW = ((180, 58, 968, 376), "5", "Overview")  # 2026-11-17: more room around the views
 # each label sits over its view's main step, so no step name shows half covered
 LABELS = [(349, 216), (627, 134), (812, 132), (731, 276)]
 
 
 def gears_overlay(p):
     for n, cx, cy, lines, anchor, tx, ty in GEARS:
+        if n in LEFT_BADGES:
+            cy, ty = cy + S, ty + S
         p.append(gear(cx, cy) + badge(cx, cy, n))
         for i, t in enumerate(lines):
             p.append(f'<text x="{tx}" y="{ty+i*10.8}" text-anchor="{anchor}" '
@@ -317,7 +336,6 @@ GEARS = [
     (9, 880, 368, ["Auto export", "to QuickBooks."], "start", 892, 366),
 ]
 LEFT_BADGES = {8, 9}
-BADGES = [(cx, cy, n) for n, cx, cy, *_ in GEARS]
 
 
 def gear(cx, cy, r=7.5):
@@ -347,10 +365,7 @@ PAGES = {
         "Each numbered gear is an efficiency from the table on page 6. Each one works on its own; together they "
         "centralize the source of truth for every request, so people decide with every fact in view.",
         svg_opportunities),
-    8: ("Application Surface",
-        "Five views work from the one record: <b>1</b> coordinator, <b>2</b> dispatch, <b>3</b> the tech's phone, "
-        "<b>4</b> controller, and <b>5</b> the overview around them all. Requests come in from the left; invoices go "
-        "out to client systems and QuickBooks, all outside the app. QuickBooks feeds back in, to collections.", svg_application),
+    8: ("Application Surfaces", None, svg_application),
 }
 
 
@@ -360,11 +375,11 @@ def main():
 <html lang="en"><head><meta charset="utf-8"><title>OneFamilyServices: {title}</title>
 <link rel="stylesheet" href="../deck/common.css"><link rel="stylesheet" href="../deck/components.css">
 <link rel="stylesheet" href="final.css">{STYLE}</head>
-<body><div class="sheet">
+<body><div class="sheet{" pinned" if dek is None else ""}">
 {HEAD}
 <h1 class="title">{title}</h1>
 <div class="meta">{META}</div>
-<p class="dek">{dek}</p>
+{f'<p class="dek">{dek}</p>' if dek else ""}
 {fig()}
 <div class="folio">{i} / 9</div>
 </div></body></html>
