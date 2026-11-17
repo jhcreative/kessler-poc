@@ -1,0 +1,4 @@
+# Video media stays out of git (D4): John uploads the MP4; the takes re-render from the EDL.
+*.mp4
+*.webm
+frames/

@@ -1,0 +1,40 @@
+{
+  "about": "The demo video's script (D4): one synthetic request through the five views. Each beat names the view where the action is, the layout (grid: every view at once; focus: one desktop view large, for reading), and its caption. record.mjs plays the beats in order and logs when each starts; render.mjs turns that log into the EDL. Captions: sentence case, plain words, no dashes (PQ-34), no hedging (PQ-5b), no sentence ends on a preposition (PQ-5c), one line each (PQ-5e).",
+  "cards": {
+    "open": {
+      "seconds": 8,
+      "title": "One request, five views",
+      "lines": ["OneFamilyServices ops: a proof of concept for Jahnel Group", "A new request moves from intake to QuickBooks, and every open view updates live."],
+      "foot": "All data is synthetic. QuickBooks is simulated."
+    },
+    "close": {
+      "seconds": 8,
+      "title": "One record, every view, live",
+      "lines": ["Clients, sites, people and costs are synthetic.", "QuickBooks is simulated. Claude drafted the request live."],
+      "foot": "ofs.apps.johnhiemstra.com"
+    }
+  },
+  "beats": [
+    { "id": "establish", "view": null, "layout": "grid", "min_ms": 8500, "caption": "Five views are open at once: coordinator, dispatch, controller, overview and the tech's phone." },
+    { "id": "new-request", "view": "coord", "layout": "grid", "min_ms": 6500, "caption": "Coordinator: a new request arrives, and Claude drafts the job from it." },
+    { "id": "draft", "view": "coord", "layout": "focus", "min_ms": 10000, "caption": "The draft is labelled as Claude's. The coordinator checks it against the request as it arrived." },
+    { "id": "draft-lands", "view": "overview", "layout": "grid", "min_ms": 7000, "caption": "The new draft is already counted in the overview, under Intake draft." },
+    { "id": "qualify", "view": "coord", "layout": "grid", "min_ms": 7500, "caption": "Coordinator: Qualify. The overview moves the job from Intake draft to Qualified." },
+    { "id": "estimate", "view": "coord", "layout": "focus", "min_ms": 7500, "caption": "The estimate rises to $49,000, over this client's cap." },
+    { "id": "rule", "view": "coord", "layout": "focus", "min_ms": 8000, "caption": "The contract rule holds dispatch until the client's approval is on record." },
+    { "id": "approval", "view": "coord", "layout": "focus", "min_ms": 8500, "caption": "Coordinator: request the client's approval, then record it with the client's reference." },
+    { "id": "to-dispatch", "view": "dispatch", "layout": "grid", "min_ms": 8000, "caption": "Approved for dispatch. The job lands in Ready on the dispatch screen, with no reload." },
+    { "id": "recommend", "view": "dispatch", "layout": "focus", "min_ms": 10000, "caption": "Dispatch: the recommended tech, with the reasons: skill, license, distance and load." },
+    { "id": "assign", "view": "dispatch", "layout": "grid", "min_ms": 8500, "caption": "One click assigns Tech 1. The coordinator's record and the tech's phone update at once." },
+    { "id": "phone-open", "view": "tech", "layout": "grid", "min_ms": 7000, "caption": "Tech's phone: the job is on the list. The tech opens it." },
+    { "id": "arrive", "view": "tech", "layout": "grid", "min_ms": 8000, "caption": "The tech taps Arrive. Coordinator, dispatch and the overview show Onsite." },
+    { "id": "close", "view": "tech", "layout": "grid", "min_ms": 8500, "caption": "The site signs off, and the tech closes the job and sends it to billing." },
+    { "id": "to-billing", "view": "controller", "layout": "grid", "min_ms": 8500, "caption": "Controller: the job lands in Billing review with its invoice drafted. Every view shows the change." },
+    { "id": "invoice", "view": "controller", "layout": "focus", "min_ms": 9500, "caption": "The drafted invoice passed its check: signed off, approved where the contract asks, within the estimate." },
+    { "id": "submit", "view": "controller", "layout": "focus", "min_ms": 8500, "caption": "Controller: Approve and submit. QuickBooks (simulated) returns an invoice number." },
+    { "id": "aging", "view": "controller", "layout": "grid", "min_ms": 8500, "caption": "The aging moves: one more invoice under Current. Coordinator, dispatch and the overview show Invoiced." },
+    { "id": "overview", "view": "overview", "layout": "focus", "min_ms": 10500, "caption": "Overview: how long each step waits, measured from every job's own history." },
+    { "id": "overview-filter", "view": "overview", "layout": "focus", "min_ms": 8500, "caption": "A filter on Invoiced finds this job among the rest." },
+    { "id": "history", "view": "coord", "layout": "focus", "min_ms": 10500, "caption": "The one record keeps its history: each step, who took it and when." }
+  ]
+}

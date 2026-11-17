@@ -1,0 +1,277 @@
+{
+  "title": "OneFamilyServices ops: one request, five views",
+  "output": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "codec": "h264 High, yuv420p, bt709, faststart",
+    "audio": "silent AAC (no music, no voice)"
+  },
+  "music": null,
+  "take": {
+    "number": "1046",
+    "base": "http://localhost:9219",
+    "recorded": "2026-11-17T02:13:36.985Z"
+  },
+  "sources": {
+    "coord": {
+      "file": "coord.webm",
+      "in_s": 4.229,
+      "drift_ms": -7
+    },
+    "dispatch": {
+      "file": "dispatch.webm",
+      "in_s": 3.989,
+      "drift_ms": 33
+    },
+    "controller": {
+      "file": "controller.webm",
+      "in_s": 3.749,
+      "drift_ms": 73
+    },
+    "overview": {
+      "file": "overview.webm",
+      "in_s": 3.589,
+      "drift_ms": 33
+    },
+    "tech": {
+      "file": "tech.webm",
+      "in_s": 3.269,
+      "drift_ms": 33
+    }
+  },
+  "layout": {
+    "tiles": {
+      "coord": {
+        "x": 16,
+        "y": 46,
+        "name": "Coordinator"
+      },
+      "dispatch": {
+        "x": 762,
+        "y": 46,
+        "name": "Dispatch"
+      },
+      "controller": {
+        "x": 16,
+        "y": 518,
+        "name": "Controller"
+      },
+      "overview": {
+        "x": 762,
+        "y": 518,
+        "name": "Overview"
+      }
+    },
+    "phone": {
+      "x": 1512,
+      "y": 46,
+      "name": "Tech's phone"
+    },
+    "focus": {
+      "x": 16,
+      "y": 46,
+      "w": 1478,
+      "h": 862,
+      "cover": 900
+    },
+    "tile": {
+      "w": 732,
+      "h": 428
+    },
+    "caption_band_y": 958
+  },
+  "cards": {
+    "open": {
+      "seconds": 8,
+      "title": "One request, five views",
+      "lines": [
+        "OneFamilyServices ops: a proof of concept for Jahnel Group",
+        "A new request moves from intake to QuickBooks, and every open view updates live."
+      ],
+      "foot": "All data is synthetic. QuickBooks is simulated."
+    },
+    "close": {
+      "seconds": 8,
+      "title": "One record, every view, live",
+      "lines": [
+        "Clients, sites, people and costs are synthetic.",
+        "QuickBooks is simulated. Claude drafted the request live."
+      ],
+      "foot": "ofs.apps.johnhiemstra.com"
+    }
+  },
+  "main": {
+    "duration_s": 179.737
+  },
+  "segments": [
+    {
+      "beat": "establish",
+      "start": 0,
+      "end": 9.105,
+      "layout": "grid",
+      "view": null,
+      "caption": "Five views are open at once: coordinator, dispatch, controller, overview and the tech's phone."
+    },
+    {
+      "beat": "new-request",
+      "start": 9.105,
+      "end": 15.68,
+      "layout": "grid",
+      "view": "coord",
+      "caption": "Coordinator: a new request arrives, and Claude drafts the job from it."
+    },
+    {
+      "beat": "draft",
+      "start": 15.68,
+      "end": 25.683,
+      "layout": "focus",
+      "view": "coord",
+      "caption": "The draft is labelled as Claude's. The coordinator checks it against the request as it arrived."
+    },
+    {
+      "beat": "draft-lands",
+      "start": 25.683,
+      "end": 32.685,
+      "layout": "grid",
+      "view": "overview",
+      "caption": "The new draft is already counted in the overview, under Intake draft."
+    },
+    {
+      "beat": "qualify",
+      "start": 32.685,
+      "end": 40.186,
+      "layout": "grid",
+      "view": "coord",
+      "caption": "Coordinator: Qualify. The overview moves the job from Intake draft to Qualified."
+    },
+    {
+      "beat": "estimate",
+      "start": 40.186,
+      "end": 47.688,
+      "layout": "focus",
+      "view": "coord",
+      "caption": "The estimate rises to $49,000, over this client's cap."
+    },
+    {
+      "beat": "rule",
+      "start": 47.688,
+      "end": 55.692,
+      "layout": "focus",
+      "view": "coord",
+      "caption": "The contract rule holds dispatch until the client's approval is on record."
+    },
+    {
+      "beat": "approval",
+      "start": 55.692,
+      "end": 64.197,
+      "layout": "focus",
+      "view": "coord",
+      "caption": "Coordinator: request the client's approval, then record it with the client's reference."
+    },
+    {
+      "beat": "to-dispatch",
+      "start": 64.197,
+      "end": 72.198,
+      "layout": "grid",
+      "view": "dispatch",
+      "caption": "Approved for dispatch. The job lands in Ready on the dispatch screen, with no reload."
+    },
+    {
+      "beat": "recommend",
+      "start": 72.198,
+      "end": 82.2,
+      "layout": "focus",
+      "view": "dispatch",
+      "caption": "Dispatch: the recommended tech, with the reasons: skill, license, distance and load."
+    },
+    {
+      "beat": "assign",
+      "start": 82.2,
+      "end": 90.703,
+      "layout": "grid",
+      "view": "dispatch",
+      "caption": "One click assigns Tech 1. The coordinator's record and the tech's phone update at once."
+    },
+    {
+      "beat": "phone-open",
+      "start": 90.703,
+      "end": 97.706,
+      "layout": "grid",
+      "view": "tech",
+      "caption": "Tech's phone: the job is on the list. The tech opens it."
+    },
+    {
+      "beat": "arrive",
+      "start": 97.706,
+      "end": 105.71,
+      "layout": "grid",
+      "view": "tech",
+      "caption": "The tech taps Arrive. Coordinator, dispatch and the overview show Onsite."
+    },
+    {
+      "beat": "close",
+      "start": 105.71,
+      "end": 114.214,
+      "layout": "grid",
+      "view": "tech",
+      "caption": "The site signs off, and the tech closes the job and sends it to billing."
+    },
+    {
+      "beat": "to-billing",
+      "start": 114.214,
+      "end": 122.714,
+      "layout": "grid",
+      "view": "controller",
+      "caption": "Controller: the job lands in Billing review with its invoice drafted. Every view shows the change."
+    },
+    {
+      "beat": "invoice",
+      "start": 122.714,
+      "end": 132.227,
+      "layout": "focus",
+      "view": "controller",
+      "caption": "The drafted invoice passed its check: signed off, approved where the contract asks, within the estimate."
+    },
+    {
+      "beat": "submit",
+      "start": 132.227,
+      "end": 140.73,
+      "layout": "focus",
+      "view": "controller",
+      "caption": "Controller: Approve and submit. QuickBooks (simulated) returns an invoice number."
+    },
+    {
+      "beat": "aging",
+      "start": 140.73,
+      "end": 149.231,
+      "layout": "grid",
+      "view": "controller",
+      "caption": "The aging moves: one more invoice under Current. Coordinator, dispatch and the overview show Invoiced."
+    },
+    {
+      "beat": "overview",
+      "start": 149.231,
+      "end": 159.733,
+      "layout": "focus",
+      "view": "overview",
+      "caption": "Overview: how long each step waits, measured from every job's own history."
+    },
+    {
+      "beat": "overview-filter",
+      "start": 159.733,
+      "end": 168.234,
+      "layout": "focus",
+      "view": "overview",
+      "caption": "A filter on Invoiced finds this job among the rest."
+    },
+    {
+      "beat": "history",
+      "start": 168.234,
+      "end": 179.737,
+      "layout": "focus",
+      "view": "coord",
+      "caption": "The one record keeps its history: each step, who took it and when."
+    }
+  ]
+}
