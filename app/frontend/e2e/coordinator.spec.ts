@@ -19,6 +19,8 @@ test("a request goes from draft to dispatch, through the approval rule, and move
   const toast = page.locator(".toast");
   await expect(toast).toContainText(/New request from|One new request every few seconds/, { timeout: 20_000 });
   if ((await toast.textContent())?.includes("every few seconds")) {
+    // The wait is the answer this branch expects: the browser logs its 429, and that one line isn't an error.
+    errors.splice(0, errors.length, ...errors.filter((e) => !/status of 429/.test(e)));
     await toast.getByRole("button", { name: "Dismiss" }).click();
     await page.waitForTimeout(3100);
     await page.getByRole("button", { name: "New request" }).click();
