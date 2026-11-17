@@ -4,7 +4,7 @@
     "open": {
       "seconds": 8,
       "title": "One request, five views",
-      "lines": ["OneFamilyServices ops: a proof of concept for Jahnel Group", "A new request moves from intake to QuickBooks, and every open view updates live."],
+      "lines": ["OneFamilyServices ops: a proof of concept for Jahnel Group", "Watch a new request move from intake to QuickBooks while every open view updates live."],
       "foot": "All data is synthetic. QuickBooks is simulated."
     },
     "close": {
@@ -30,11 +30,11 @@
     { "id": "arrive", "view": "tech", "layout": "grid", "min_ms": 8000, "caption": "The tech taps Arrive. Coordinator, dispatch and the overview show Onsite." },
     { "id": "close", "view": "tech", "layout": "grid", "min_ms": 8500, "caption": "The site signs off, and the tech closes the job and sends it to billing." },
     { "id": "to-billing", "view": "controller", "layout": "grid", "min_ms": 8500, "caption": "Controller: the job lands in Billing review with its invoice drafted. Every view shows the change." },
-    { "id": "invoice", "view": "controller", "layout": "focus", "min_ms": 9500, "caption": "The drafted invoice passed its check: signed off, approved where the contract asks, within the estimate." },
+    { "id": "invoice", "view": "controller", "layout": "focus", "min_ms": 9500, "caption": "The drafted invoice passes its check: signed off, approved where the contract asks, within the estimate." },
     { "id": "submit", "view": "controller", "layout": "focus", "min_ms": 8500, "caption": "Controller: Approve and submit. QuickBooks (simulated) returns an invoice number." },
     { "id": "aging", "view": "controller", "layout": "grid", "min_ms": 8500, "caption": "The aging moves: one more invoice under Current. Coordinator, dispatch and the overview show Invoiced." },
     { "id": "overview", "view": "overview", "layout": "focus", "min_ms": 10500, "caption": "Overview: how long each step waits, measured from every job's own history." },
-    { "id": "overview-filter", "view": "overview", "layout": "focus", "min_ms": 8500, "caption": "A filter on Invoiced finds this job among the rest." },
+    { "id": "overview-filter", "view": "overview", "layout": "focus", "min_ms": 8500, "caption": "The Invoiced filter finds this job among the rest." },
     { "id": "history", "view": "coord", "layout": "focus", "min_ms": 10500, "caption": "The one record keeps its history: each step, who took it and when." }
   ]
 }

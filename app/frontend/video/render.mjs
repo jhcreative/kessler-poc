@@ -146,7 +146,7 @@ async function shot(html, file) {
   if (!fonts.length || fonts.some((f) => !f.endsWith("loaded"))) throw new Error(`fonts: ${fonts.join(", ")}`);
   const runts = await page.evaluate(() => {
     // PQ-5e: a caption or card line may not end on a runt (a last line of one or two words).
-    const bad = [];
+    const bad = [], checked = [];
     for (const el of document.querySelectorAll(".caption, .card p, .card h1")) {
       const r = document.createRange();
       r.selectNodeContents(el);
@@ -166,13 +166,18 @@ async function shot(html, file) {
         }
       }
       const counts = [...lines.entries()].sort((a, b) => a[0] - b[0]).map((e) => e[1]);
+      checked.push(`${counts.join("+")} words`);
       if (counts.length > 1 && counts.at(-1) <= 2) bad.push(el.textContent);
     }
-    return bad;
+    return { bad, checked };
   });
-  if (runts.length) console.log(`RUNT in ${file}: ${runts.join(" | ")}`);
+  // PQ-5a: show the check ran, and on what (words per rendered line, for every block).
+  runtLog.push(`${file.split("/").pop()}: ${runts.checked.join(", ")}`);
+  if (!runts.checked.length) throw new Error(`runt check found no text in ${file}`);
+  if (runts.bad.length) console.log(`RUNT in ${file}: ${runts.bad.join(" | ")}`);
   await page.screenshot({ path: file });
 }
+const runtLog = [];
 const chromeFiles = [];
 for (const [i, seg] of segments.entries()) {
   const f = join(FRAMES, `beat-${String(i + 1).padStart(2, "0")}-${seg.beat}.png`);
@@ -182,6 +187,8 @@ for (const [i, seg] of segments.entries()) {
 await shot(cardHtml(open), join(FRAMES, "card-open.png"));
 await shot(cardHtml(close), join(FRAMES, "card-close.png"));
 await browser.close();
+writeFileSync(join(OUT, "runt-check.txt"), runtLog.join("\n") + "\n");
+console.log(`runt check: ${runtLog.length} frames checked, lines per block in runt-check.txt`);
 
 // 4. ffmpeg: the chrome as a stream, each recording trimmed to the story and placed, focus beats on top, cards around.
 const concat = segments.map((s, i) => `file '${chromeFiles[i]}'\nduration ${(s.end - s.start).toFixed(3)}`).join("\n") + `\nfile '${chromeFiles.at(-1)}'\n`;
