@@ -1,13 +1,13 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-17 (Angela, the final presentation drafted; the video reshot)
+Updated: 2026-11-17 (Angela, v0.1.1 live; the deck at nine gears)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: `jhcreative/jahnel-poc` (private, main; created 2026-11-16)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 
 ## Live
 
-**https://ofs.apps.johnhiemstra.com**, tag `110bf61`, deployed 2026-11-16 by John (`ship.sh --first`) on `vps-3e8f42b5` (15.204.245.239). `check-live.py`: 7 of 7 (health, noindex, CSP, robots, Secure cookie, R1 WebSocket through the edge, a new request drafted and pushed in 4.3 s). The run stopped once at the logins step (the file's owner; Rob fixed it and re-ran the step; `ship.sh` now gates it, 65f66ff). The live check's request is job 1046 in the demo data. Box logins: `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env`.
+**https://ofs.apps.johnhiemstra.com**, images `a657757` (v0.1.1, `docs/releases/v0.1.1.md`), shipped 2026-11-17 by John (`ship.sh`) on `vps-3e8f42b5` (15.204.245.239). `check-live.py`: 7 of 7. Demo data reseeded after the check (45 jobs, invoices at the new rate; logins kept). Box logins: `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env`; they're on page 9 of the PDF too (John, 2026-11-17: the app comes down within the week).
 
 ## Delivery (plan `docs/plans/2026-11-16-final-presentation.md`)
 
@@ -16,13 +16,13 @@ App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 - **The video, reshot (take 2):** `docs/delivery/video/jahnel-poc-one-request-five-views.mp4`, 3:16, captioned, Lisa's
   RTP-3 pass met. Waits on John's unlisted upload; then its link goes on page 9 and in the email.
 - **The emails:** `docs/delivery/2026-11-16-email.md` and `…-logins-email.md`, Lisa's RTP-3 in. No password in the repo.
-- **App fixes, local only:** `919a661` (invoice labor = hours × $150, synthetic), `d53e197` (phone hint after approval),
-  `dccedd3` (e2e flake). e2e 13 of 13 at `dccedd3`, 2026-11-17T15:00Z. **The live box still runs `110bf61`**: a redeploy is
-  John's (OPS-5).
+- **App fixes, live in v0.1.1:** `919a661` (invoice labor = hours × $150, synthetic), `d53e197` (phone hint after
+  approval), `dccedd3` (e2e flake).
+- **The PDF carries the passwords on page 9**, filled at render; it's untracked in git.
 
 ## Rollback
 
-No earlier tag on the box, so the rollback is the OVH snapshot `3ec70dc9` (the prepped box, before the deploy): `ovh-vps.py --env ~/jhc/secrets/ovhcloud/jhc-apps-api.env revert vps-3e8f42b5.vps.ovh.us`, about 2.5 min. After a later deploy: `ship.sh --rollback 110bf61`. Either is John's (OPS-5).
+`ship.sh --box deploy@15.204.245.239 --rollback 110bf61`, or the OVH snapshot `92d5186e` (2026-11-17 15:29 UTC, v0.1.0 running): `ovh-vps.py --env ~/jhc/secrets/ovhcloud/jhc-apps-api.env revert vps-3e8f42b5.vps.ovh.us`. Either is John's (OPS-5).
 
 ## Next
 
@@ -63,4 +63,3 @@ Next, while it waits: POC-15, the simulator.
 | 2026-11-17 | Read the nine-page PDF; edit the text pages by hand if you like | Angela | |
 | 2026-11-17 | Upload the demo video to YouTube, **unlisted**, and send the link | Henry | |
 | 2026-11-17 | The email's address: "Ann-Marie, Neale" (recommended) or "Dana" in the role play; keep or flatten its two point labels | Lisa | |
-| 2026-11-17 | Redeploy `dccedd3` so the live app has the invoice fix (and reseed); `ship.sh` is yours | Rob | |
