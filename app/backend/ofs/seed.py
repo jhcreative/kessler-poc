@@ -24,7 +24,7 @@ from typing import Any
 from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .commands import invoice_check
+from .commands import invoice_check, invoice_lines
 from .models import (
     Client,
     Contract,
@@ -483,8 +483,7 @@ async def seed(session: AsyncSession, seed: int = DEFAULT_SEED, now: datetime | 
                     job.sign_off = {"by": "Store manager", "at": t.isoformat()}
                     payload = {"actual_hours": job.actual_hours, "sign_off_by": "Store manager"}
             elif command == "draft_invoice":
-                final = job.final_cents or estimate
-                labor = round(final * 0.6 / 100) * 100
+                lines, final = invoice_lines(job)
                 note = invoice_check(job)
                 invoice = Invoice(
                     id=w.uuid(),
@@ -492,10 +491,7 @@ async def seed(session: AsyncSession, seed: int = DEFAULT_SEED, now: datetime | 
                     format=spec.invoice_format,
                     state="draft",
                     created_at=t,
-                    lines=[
-                        {"desc": f"Labor, {job.actual_hours} h", "cents": labor},
-                        {"desc": "Parts and materials", "cents": final - labor},
-                    ],
+                    lines=lines,
                     total_cents=final,
                     check_passed=note is None,
                     check_note=note,

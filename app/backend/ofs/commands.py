@@ -39,6 +39,10 @@ from .states import FIELD_EDITORS, FINAL, QUEUE, TRANSITIONS, UPDATE_FIELDS, Act
 
 BEFORE_DISPATCH = frozenset({State.INTAKE_DRAFT, State.QUALIFIED, State.NEEDS_CLIENT_APPROVAL})
 
+# Synthetic: one blended labor rate for every trade and client, $150 an hour, in the range commercial facility repair
+# bills. The demo has no rate card; a real one would be per contract or per trade.
+LABOR_RATE_CENTS = 15_000
+
 
 class Refused(Exception):
     """A command the backend won't run. `reason` is a sentence the person can act on."""
@@ -271,16 +275,25 @@ def invoice_check(job: Job) -> str | None:
     return "; ".join(problems).capitalize() or None
 
 
+def invoice_lines(job: Job) -> tuple[list[dict[str, Any]], int]:
+    """The invoice's lines and total: the hours at the labor rate, and parts and materials as the rest of the final.
+
+    Labor never runs past the total: when the hours priced would, the line stops at the total and parts are zero.
+    """
+    total = job.final_cents if job.final_cents is not None else job.estimate_cents
+    hours = job.actual_hours or 0
+    labor = min(round(hours * LABOR_RATE_CENTS), total)
+    return [
+        {"desc": f"Labor, {hours} h", "cents": labor},
+        {"desc": "Parts and materials", "cents": total - labor},
+    ], total
+
+
 async def _draft_invoice(
     session: AsyncSession, job: Job, req: BaseModel, actor: Actor, o: str | None, now: datetime
 ) -> Result:
     client = (await session.execute(select(Client).where(Client.id == job.client_id))).scalar_one()
-    total = job.final_cents if job.final_cents is not None else job.estimate_cents
-    labor = round(total * 0.6 / 100) * 100  # synthetic split: the demo's invoices aren't priced from a rate card
-    lines = [
-        {"desc": f"Labor, {job.actual_hours or 0} h", "cents": labor},
-        {"desc": "Parts and materials", "cents": total - labor},
-    ]
+    lines, total = invoice_lines(job)
     note = invoice_check(job)
     invoice = await session.scalar(select(Invoice).where(Invoice.job_id == job.id))
     if invoice is None:

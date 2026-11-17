@@ -144,3 +144,17 @@ async def test_a_few_jobs_need_approval_not_most(session: AsyncSession) -> None:
     assert any(not j.requires_approval for j in drafts)  # N1 starts from one of these
     cents = (await session.execute(select(Job.estimate_cents))).scalars().all()
     assert min(cents) >= 200_000 and max(cents) <= 5_000_000
+
+
+async def test_every_seeded_invoice_prices_its_hours_at_one_rate(session: AsyncSession) -> None:
+    """The seed's invoices are drafted the way the backend drafts them: hours at the rate, the rest parts."""
+    from ofs.commands import LABOR_RATE_CENTS
+
+    await seed(session, now=NOW)
+    rows = (await session.execute(select(Invoice, Job).join(Job, Job.id == Invoice.job_id))).all()
+    assert rows
+    for inv, job in rows:
+        (labor, parts) = inv.lines
+        assert labor["desc"] == f"Labor, {job.actual_hours} h" and parts["desc"] == "Parts and materials"
+        assert labor["cents"] == min(round(job.actual_hours * LABOR_RATE_CENTS), inv.total_cents)
+        assert parts["cents"] == inv.total_cents - labor["cents"] >= 0

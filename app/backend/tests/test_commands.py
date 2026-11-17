@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ofs.commands import Refused, execute, run_system
+from ofs.commands import LABOR_RATE_CENTS, Refused, execute, run_system
 from ofs.models import Invoice, JobEvent, QbLedger
 from ofs.states import TRANSITIONS, Role, State
 
@@ -179,3 +179,27 @@ async def test_payment_comes_from_quickbooks_simulated(seeded: AsyncSession) -> 
     entry = (await seeded.execute(select(QbLedger).where(QbLedger.invoice_id == inv.id))).scalar_one()
     assert entry.paid_at is not None
     assert (await seeded.execute(select(JobEvent).where(JobEvent.id == job.last_event_id))).scalar_one() is event
+
+
+# --- the drafted invoice prices the hours ---
+
+PLAUSIBLE_RATE_CENTS = range(7_500, 25_001)  # $75 to $250 an hour: commercial repair, independent of the constant
+
+
+def labor_and_parts(invoice: Invoice) -> tuple[int, int]:
+    labor, parts = invoice.lines
+    assert labor["desc"].startswith("Labor, ") and parts["desc"] == "Parts and materials"
+    return labor["cents"], parts["cents"]
+
+
+async def test_the_labor_line_is_the_hours_at_the_rate(seeded: AsyncSession) -> None:
+    """Henry's find: $49,000 and 2.5 h drafted a $29,400 labor line, about $11,760 an hour."""
+    job = await job_in(seeded, "onsite")
+    job.estimate_cents, job.final_cents = 4_900_000, None
+    payload = {"actual_hours": 2.5, "sign_off_by": "Store manager"}
+    await execute(seeded, job.id, cmd(job, "close_job", payload), await tech_actor(seeded, job))
+    invoice = (await seeded.execute(select(Invoice).where(Invoice.job_id == job.id))).scalar_one()
+    labor, parts = labor_and_parts(invoice)
+    assert round(labor / 2.5) in PLAUSIBLE_RATE_CENTS  # the effective hourly rate is a rate, not a share
+    assert labor == round(2.5 * LABOR_RATE_CENTS) and parts == 4_900_000 - labor
+    assert invoice.total_cents == 4_900_000 and invoice.check_passed  # the check's semantics are untouched
