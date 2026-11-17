@@ -1,6 +1,6 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-16 (Rob, live on the apps box, 7 of 7)
+Updated: 2026-11-17 (Angela, the final presentation drafted; the video reshot)
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: `jhcreative/jahnel-poc` (private, main; created 2026-11-16)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
@@ -8,6 +8,17 @@ App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 ## Live
 
 **https://ofs.apps.johnhiemstra.com**, tag `110bf61`, deployed 2026-11-16 by John (`ship.sh --first`) on `vps-3e8f42b5` (15.204.245.239). `check-live.py`: 7 of 7 (health, noindex, CSP, robots, Secure cookie, R1 WebSocket through the edge, a new request drafted and pushed in 4.3 s). The run stopped once at the logins step (the file's owner; Rob fixed it and re-ran the step; `ship.sh` now gates it, 65f66ff). The live check's request is job 1046 in the demo data. Box logins: `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env`.
+
+## Delivery (plan `docs/plans/2026-11-16-final-presentation.md`)
+
+- **The PDF, nine pages, drafted:** `docs/flow/jahnel-poc-final.pdf`, from `docs/flow/final/` (text pages 1, 3, 5, 7, 9 are
+  hand-edited HTML; graphics 2, 4, 6, 8 from `graphics.py`; `assemble.py` renders). Waits on John's read-through.
+- **The video, reshot (take 2):** `docs/delivery/video/jahnel-poc-one-request-five-views.mp4`, 3:16, captioned, Lisa's
+  RTP-3 pass met. Waits on John's unlisted upload; then its link goes on page 9 and in the email.
+- **The emails:** `docs/delivery/2026-11-16-email.md` and `…-logins-email.md`, Lisa's RTP-3 in. No password in the repo.
+- **App fixes, local only:** `919a661` (invoice labor = hours × $150, synthetic), `d53e197` (phone hint after approval),
+  `dccedd3` (e2e flake). e2e 13 of 13 at `dccedd3`, 2026-11-17T15:00Z. **The live box still runs `110bf61`**: a redeploy is
+  John's (OPS-5).
 
 ## Rollback
 
@@ -49,3 +60,7 @@ Next, while it waits: POC-15, the simulator.
 | 2026-11-14 | Neale's and Ann-Marie's GitHub usernames, for the repo invites | Anne | |
 | 2026-11-16 | Tag v0.1.0 at `110bf61` (`git tag v0.1.0 110bf61 && git push origin v0.1.0`), or leave it untagged for a POC | Cesar | |
 | 2026-11-16 | Your click-through of the five views on the live site; say if you want the demo data reseeded (request 1046 is the live check's) | Angela | |
+| 2026-11-17 | Read the nine-page PDF; edit the text pages by hand if you like | Angela | |
+| 2026-11-17 | Upload the demo video to YouTube, **unlisted**, and send the link | Henry | |
+| 2026-11-17 | The email's address: "Ann-Marie, Neale" (recommended) or "Dana" in the role play; keep or flatten its two point labels | Lisa | |
+| 2026-11-17 | Redeploy `dccedd3` so the live app has the invoice fix (and reseed); `ship.sh` is yours | Rob | |

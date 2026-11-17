@@ -1,0 +1,43 @@
+/* The final presentation's shared styles: landscape sheet, text-page sections. Linked from every page. */
+.sheet{width:11in;height:8.5in;padding:0.55in 0.75in 0.45in;}
+  @media print{@page{size:11in 8.5in;margin:0;}}
+  .title{margin-top:20px;}
+  .dek{font-size:13pt;line-height:1.45;margin:12px 0 0;max-width:8.6in;}
+  .sections{display:grid;grid-template-columns:1fr 1fr;column-gap:0.6in;row-gap:0.42in;margin-top:0.5in;}
+  .sec .k{font-family:'Fira Sans',sans-serif;font-weight:600;font-size:8.6pt;letter-spacing:.1em;color:#9a5a00;margin:0;}
+  .sec .k b{color:#D07200;font-weight:700;margin-right:6px;}
+  .sec h2{font-family:'Fira Sans',sans-serif;font-weight:700;font-size:15pt;margin:4px 0 0;}
+  .sec p{font-size:11.2pt;line-height:1.5;margin:8px 0 0;}
+  .cur{font-size:.5em;vertical-align:.55em;}  /* $ and % at half size (house canon) */
+
+/* Page 5: the opportunities table (brand table from common.css, tuned for landscape) */
+table.opps{margin-top:0.2in;}
+table.opps td{padding:6px 11px;font-size:9.8pt;line-height:1.32;}
+table.opps td.n{font-family:'Fira Sans',sans-serif;font-weight:700;color:#D07200;width:0.3in;}
+table.opps td.o b{font-family:'Fira Sans',sans-serif;font-weight:600;display:block;}
+table.opps td.o span{color:var(--muted);font-size:9.6pt;}
+table.opps td.p{font-family:'Fira Sans',sans-serif;font-weight:600;white-space:nowrap;width:1.05in;}
+table.opps td.i{width:3.6in;}
+table.opps td.i b{font-family:'Fira Sans',sans-serif;font-weight:600;}
+table.opps tr.total td{font-size:10.6pt;padding-top:8px;}
+.note{font-size:8.6pt;line-height:1.38;color:var(--muted);margin-top:6px;}
+
+/* Page 7: three columns, two rows */
+.sections.three{grid-template-columns:1fr 1fr 1fr;column-gap:0.45in;row-gap:0.36in;margin-top:0.42in;}
+.sections.three .sec h2{font-size:13.5pt;}
+.sections.three .sec p{font-size:10.6pt;}
+
+/* No runts (PQ-5e): the browser balances the last lines of every paragraph and heading */
+.dek,.sec p,.sec h2,.note,table.opps td{text-wrap:pretty;}
+
+/* Page 9: summary and links on the left, the sign-ins on the right */
+.split{display:grid;grid-template-columns:3.3in 1fr;column-gap:0.5in;margin-top:0.38in;}
+.links{list-style:none;padding:0;margin:10px 0 0;}
+.links li{margin:0 0 12px;font-size:10.8pt;line-height:1.35;}
+.links li b{font-family:'Fira Sans',sans-serif;font-weight:600;display:block;font-size:9pt;letter-spacing:.08em;color:#9a5a00;}
+.links a{color:var(--ink);text-decoration:none;border-bottom:1.5px solid #F7941E;}
+.pending{background:#fde7c8;padding:1px 5px;font-family:'Fira Sans',sans-serif;font-size:9.6pt;}
+table.logins{margin-top:10px;}
+table.logins td{padding:7px 10px;font-size:10pt;line-height:1.35;text-wrap:pretty;}
+table.logins td.r{font-family:'Fira Sans',sans-serif;font-weight:600;white-space:nowrap;}
+table.logins td.e{font-family:'Fira Sans',sans-serif;white-space:nowrap;}

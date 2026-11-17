@@ -1,0 +1,23 @@
+beat-01-establish.png: 14 words
+beat-02-new-request.png: 12 words
+beat-03-draft.png: 16 words
+beat-04-draft-lands.png: 12 words
+beat-05-qualify.png: 12 words
+beat-06-estimate.png: 9 words
+beat-07-rule.png: 12 words
+beat-08-approval.png: 12 words
+beat-09-to-dispatch.png: 15 words
+beat-10-recommend.png: 12 words
+beat-11-assign.png: 15 words
+beat-12-phone-open.png: 12 words
+beat-13-arrive.png: 11 words
+beat-14-close.png: 15 words
+beat-15-to-billing.png: 16 words
+beat-16-invoice.png: 16 words
+beat-17-submit.png: 10 words
+beat-18-aging.png: 15 words
+beat-19-overview.png: 12 words
+beat-20-overview-filter.png: 9 words
+beat-21-history.png: 13 words
+card-open.png: 4 words, 9 words, 15 words
+card-close.png: 5 words, 7 words, 8 words
