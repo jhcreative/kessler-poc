@@ -24,7 +24,7 @@ from playwright.sync_api import sync_playwright  # noqa: E402
 from pypdf import PdfReader, PdfWriter  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE.parent / "kessler-poc-final.pdf"
+OUT = HERE.parent / "Kessler-Facility-Services-proof-of-concept-2026-11-17.pdf"
 LOGINS = Path.home() / "jhc/secrets/kessler-poc/box-apps-demo-logins.env"   # the live box's logins
 FILL = r"""(pw) => { const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n, left = 0;
   while ((n = w.nextNode())) n.nodeValue = n.nodeValue.replace(/\{\{password:([^}]+)\}\}/g, (m, e) => pw[e] ?? m);
