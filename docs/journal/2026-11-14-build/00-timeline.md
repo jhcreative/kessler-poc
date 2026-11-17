@@ -7,28 +7,28 @@ Times are commit times. The window started just after 10:00, from the handoff
 
 | Time | Commit | Story | What landed |
 |---|---|---|---|
-| 10:20 | `e42c951` | Sprint start, POC-02 | RTS-1..6 recorded; the test strategy; the first POC-02 (a module inside a Tailor instance) |
-| 11:18 | `6ce60e4` | POC-07 prep | John: the demo uses the existing Anthropic key |
-| 11:29 | `dba8b99` | POC-02 again, POC-03 | The app rebuilt on Tailor's parts (John's call); ten typed tables, the state table, the seed |
-| 11:29 | `4dcd59a` | POC-03 | Evidence; the plan amended by the new ADR |
-| 11:44 | `0cbe04e` | POC-04 | Commands, the rails, the five logins |
-| 11:45 | `5c2a4ab` | POC-04 | Evidence |
-| 11:59 | `77b2dad` | POC-05 | The hub, the WebSocket, replay |
-| 11:59 | `20038be` | POC-05 | Evidence; the demo passwords moved into `~/jhc/secrets` (John's yes) |
-| 12:21 | `87060be` | POC-06 | The frontend shell, typed end to end; the live overview |
-| 12:22 | `f44d64d` | POC-06 | Evidence and the first screenshot |
-| 13:16 | `07c9baa` | POC-07 | The coordinator workspace; Claude drafting intake |
-| 13:18 | `4f34059` | POC-07 | Evidence; ADR: Claude drafts intake |
-| 13:30 | `49b35c0` | POC-08 | Dispatch and the recommendation |
-| 13:37 | `85f625d` | POC-08 | Two e2e flakes understood and fixed |
-| 13:39 | `3003f23` | POC-08 | Evidence |
-| 14:14 | `d354719` | POC-09 | The tech's phone |
-| 14:16 | `be7b00d` | POC-09 | Evidence |
-| 14:32 | `432ed61` | POC-10, POC-14 | The controller, QuickBooks (simulated), aging |
-| 14:34 | `77248a3` | POC-10, POC-14 | Evidence; every view built |
-| 15:10 | `9d29152` | POC-11 | The box path: the edge override, the ship script, the live check |
-| 15:25 | `aa8594a` | POC-11 | The cold review: 17 fixed, 3 accepted |
-| 15:29 | `dcb90f6` | POC-11 | Evidence; the local half done |
+| 10:20 | `5d3dbac` | Sprint start, POC-02 | RTS-1..6 recorded; the test strategy; the first POC-02 (a module inside a Tailor instance) |
+| 11:18 | `a8f9241` | POC-07 prep | John: the demo uses the existing Anthropic key |
+| 11:29 | `fbfc9c4` | POC-02 again, POC-03 | The app rebuilt on Tailor's parts (John's call); ten typed tables, the state table, the seed |
+| 11:29 | `88f2436` | POC-03 | Evidence; the plan amended by the new ADR |
+| 11:44 | `e4f421f` | POC-04 | Commands, the rails, the five logins |
+| 11:45 | `f6f079b` | POC-04 | Evidence |
+| 11:59 | `02ea4a6` | POC-05 | The hub, the WebSocket, replay |
+| 11:59 | `bc4d4b8` | POC-05 | Evidence; the demo passwords moved into `~/jhc/secrets` (John's yes) |
+| 12:21 | `e58475e` | POC-06 | The frontend shell, typed end to end; the live overview |
+| 12:22 | `35e43b5` | POC-06 | Evidence and the first screenshot |
+| 13:16 | `e03f133` | POC-07 | The coordinator workspace; Claude drafting intake |
+| 13:18 | `3c89582` | POC-07 | Evidence; ADR: Claude drafts intake |
+| 13:30 | `50853e7` | POC-08 | Dispatch and the recommendation |
+| 13:37 | `3466913` | POC-08 | Two e2e flakes understood and fixed |
+| 13:39 | `7044cee` | POC-08 | Evidence |
+| 14:14 | `e215cff` | POC-09 | The tech's phone |
+| 14:16 | `ad7b610` | POC-09 | Evidence |
+| 14:32 | `e386bda` | POC-10, POC-14 | The controller, QuickBooks (simulated), aging |
+| 14:34 | `ba53abd` | POC-10, POC-14 | Evidence; every view built |
+| 15:10 | `fa02599` | POC-11 | The box path: the edge override, the ship script, the live check |
+| 15:25 | `2647b34` | POC-11 | The cold review: 17 fixed, 3 accepted |
+| 15:29 | `ba447f5` | POC-11 | Evidence; the local half done |
 
 ## The first Tailor instance (`~/jhc/sites/jahnel-poc`, retired at 11:2x)
 

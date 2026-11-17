@@ -51,11 +51,11 @@ refused; `portability.py` now exports, clears and imports every fieldops table.
 **A candidate for Tailor after Monday (Cesar):** a `--local-module <dir>` on the scaffold, so this overlay becomes a
 flag. That's a Tailor story, not POC work.
 
-**POC-02 rebuilt, and POC-03, 2026-11-14, `app/` at `dba8b99`.** John's call: Tailor's parts, not a Tailor site (ADR
+**POC-02 rebuilt, and POC-03, 2026-11-14, `app/` at `fbfc9c4`.** John's call: Tailor's parts, not a Tailor site (ADR
 `2026-11-14-tailor-parts-not-a-tailor-site.md`; agency ADR-0014). The first POC-02 above stays as the record of the
 instance-module seam. Its instance (`~/jhc/sites/jahnel-poc`) is stopped, and nothing in `app/` depends on it.
 - `app/scripts/gate.sh`: ruff, format, `mypy --strict`, `alembic check` (the migration matches the models), and pytest
-  on Postgres: **20 passed in 2.9 s**, `gate: green at dba8b99 2026-11-14T16:29:22Z`.
+  on Postgres: **20 passed in 2.9 s**, `gate: green at fbfc9c4 2026-11-14T16:29:22Z`.
 - The running stack (`docker compose up -d --wait --build`, then `python -m ofs.seed`): `clients=8 contracts=8
   sites=60 people=16 techs=10 fleet_positions=10 jobs=45 job_events=260 invoices=15 qb_ledger=158`;
   `GET http://localhost:9219/api/health` 200, `{"jobs":45,"events":260}`.
@@ -66,8 +66,8 @@ instance-module seam. Its instance (`~/jhc/sites/jahnel-poc`) is stopped, and no
 - **Typed end to end** (John): the enums, the API contract, every JSON column (rules, approval, sign-off, invoice lines)
   and one payload model per command, all checked on write. The TypeScript side comes with POC-06.
 
-**POC-04, 2026-11-14, `app/` at `0cbe04e`.** `app/scripts/gate.sh`: **58 passed in 23.6 s** on Postgres; ruff, format,
-`mypy --strict` and `alembic check` clean (`gate: green at 0cbe04e 2026-11-14T16:45:05Z`).
+**POC-04, 2026-11-14, `app/` at `e4f421f`.** `app/scripts/gate.sh`: **58 passed in 23.6 s** on Postgres; ruff, format,
+`mypy --strict` and `alembic check` clean (`gate: green at e4f421f 2026-11-14T16:45:05Z`).
 - **Every transition:** each person-issued command is refused from every wrong state, with nothing written. Roles are
   refused by name, a tech acts only on their own job, and a stale view gets a 409.
 - **The rails:** the three hard rails are refused even with an override reason. The soft rail (assigning outside a
@@ -81,8 +81,8 @@ instance-module seam. Its instance (`~/jhc/sites/jahnel-poc`) is stopped, and no
 - **A seed defect found and fixed:** 33 of 45 jobs were over their client's cap, against plan §7's "a few". It's now
   pinned by a test (3 to 12, and the drafts include one with no rule).
 
-**POC-05, 2026-11-14, `app/` at `77b2dad`.** `app/scripts/gate.sh`: **67 passed in 23.3 s**
-(`gate: green at 77b2dad 2026-11-14T16:59:36Z`). The socket tests run against a real uvicorn server with real
+**POC-05, 2026-11-14, `app/` at `02ea4a6`.** `app/scripts/gate.sh`: **67 passed in 23.3 s**
+(`gate: green at 02ea4a6 2026-11-14T16:59:36Z`). The socket tests run against a real uvicorn server with real
 WebSocket clients and cookies.
 - **G1:** a change made by the dispatcher reaches the coordinator's open view in under a second, with the job's new
   state and who did it. On the running stack it took **21 ms** (job 1013 assigned, event 227).
@@ -96,14 +96,14 @@ WebSocket clients and cookies.
   ping. Fixed, and pinned by a test.
 - **Still open (R1):** the first WebSocket through edge-mode Caddy on the box. That's the POC-11 dry run.
 
-**POC-06, 2026-11-14, `app/` at `87060be`.**
-- `app/scripts/gate.sh`, `gate: green at 87060be 2026-11-14T17:22:04Z`:
+**POC-06, 2026-11-14, `app/` at `e58475e`.**
+- `app/scripts/gate.sh`, `gate: green at e58475e 2026-11-14T17:22:04Z`:
   - backend: 69 passed;
   - `types.sh --check`: the TS is in step with the backend;
   - typecheck (app and e2e) and vitest: 6 passed;
   - build, and the budget: sign-in entry 90,966 of 100,000 bytes gzipped; the grid chunk 234,597 of 250,000.
 - `app/scripts/e2e.sh` (PP-14), Playwright in real Chromium against the real stack (Caddy, backend, Postgres):
-  **4 passed**, `e2e: green at 87060be 2026-11-14T17:22:33Z`.
+  **4 passed**, `e2e: green at e58475e 2026-11-14T17:22:33Z`.
   - The exec signs in to all 45 jobs and 11 state tiles, filters and clears, with no console error and no CSP
     violation.
   - A dispatcher's assignment changes the open overview's row and the Assigned count in under a second, with no
@@ -118,8 +118,8 @@ WebSocket clients and cookies.
   - the Paid tile claimed jobs were "waiting" (Jony, from the screenshot).
 - Screenshot: `docs/evidence/2026-11-14-poc-06-overview.png`.
 
-**POC-07 (and C3 of POC-13), 2026-11-14, `app/` at `07c9baa`.** `gate: green at 07c9baa 2026-11-14T18:16:51Z`
-(backend 77 passed); `e2e: green at 07c9baa 2026-11-14T18:17:24Z` (5 passed).
+**POC-07 (and C3 of POC-13), 2026-11-14, `app/` at `e03f133`.** `gate: green at e03f133 2026-11-14T18:16:51Z`
+(backend 77 passed); `e2e: green at e03f133 2026-11-14T18:17:24Z` (5 passed).
 - **The drafting (C2):** Claude drafts, and the rules stand behind it, labelled (ADR
   `2026-11-14-claude-drafts-intake.md`).
   - Two live calls were exact: about 1,000 tokens in and 80 out, 2 to 3.5 s each.
@@ -143,8 +143,8 @@ WebSocket clients and cookies.
     superscript `$` sat in a label.
 - Screenshot: `docs/evidence/2026-11-14-poc-07-coordinator.png`.
 
-**POC-08 (and T4 of POC-12), 2026-11-14, `app/` at `85f625d`.** `gate: green at 49b35c0 2026-11-14T18:31:31Z`
-(backend 100 passed); `e2e: green at 85f625d 2026-11-14T18:38:38Z` (8 passed), then three clean runs in a row.
+**POC-08 (and T4 of POC-12), 2026-11-14, `app/` at `3466913`.** `gate: green at 50853e7 2026-11-14T18:31:31Z`
+(backend 100 passed); `e2e: green at 3466913 2026-11-14T18:38:38Z` (8 passed), then three clean runs in a row.
 - **The recommendation (D2):** a pure function. Hard filters are the skill and a license in the site's state; then
   rank by km from the truck plus 40 per job on the board.
   - **Jen's eval:** 20 cases whose answers were worked out by hand from a map before the code ran. All 20 passed on
@@ -167,8 +167,8 @@ WebSocket clients and cookies.
   - the limiter carrying over between back-to-back runs: `e2e.sh` now restarts the backend first.
 - Screenshot: `docs/evidence/2026-11-14-poc-08-dispatch.png`.
 
-**POC-09, 2026-11-14, `app/` at `d354719`.** `gate: green at d354719 2026-11-14T19:14:48Z` (backend 100 passed);
-`e2e: green at d354719 2026-11-14T19:15:38Z` (10 passed, both new tests on their first run).
+**POC-09, 2026-11-14, `app/` at `e215cff`.** `gate: green at e215cff 2026-11-14T19:14:48Z` (backend 100 passed);
+`e2e: green at e215cff 2026-11-14T19:15:38Z` (10 passed, both new tests on their first run).
 - **The phone, 390 by 844 with touch, in a real browser:**
   - T1: a job dispatch assigns elsewhere is on the tech's schedule within a second.
   - T2: arrive, record a special-order part, close with the site's sign-off. The tech lands back on the schedule,
@@ -183,7 +183,7 @@ WebSocket clients and cookies.
 - Screenshots: `docs/evidence/2026-11-14-poc-09-tech-schedule.png`, `docs/evidence/2026-11-14-poc-09-tech-job.png`.
   The job screen is the coordinator e2e's job, with the approval it recorded (APR-7731).
 
-**POC-10 and POC-14, 2026-11-14, `app/` at `432ed61`.** Gate: backend 102 passed. e2e: 12 passed, twice in a
+**POC-10 and POC-14, 2026-11-14, `app/` at `e386bda`.** Gate: backend 102 passed. e2e: 12 passed, twice in a
 row.
 - **The controller in a real browser, N3:**
   - B1: a tech closes a job elsewhere, and Billing review counts it within a second.
@@ -201,7 +201,7 @@ row.
   - Jony: the Open tile's amount spilled its box.
 - Screenshot: `docs/evidence/2026-11-14-poc-10-controller.png`.
 
-**POC-11, the local half, 2026-11-14, `app/` at `aa8594a`.** The same `app/` tree as `c41d5c5`, where the gate and
+**POC-11, the local half, 2026-11-14, `app/` at `2647b34`.** The same `app/` tree as `c41d5c5`, where the gate and
 the e2e last ran (the amend changed only the review record).
 - **DOD-1:** `gate: green at c41d5c5 2026-11-14T20:26:14Z` (backend 114, vitest 7, types, budget);
   `e2e: green at c41d5c5 2026-11-14T20:27:20Z` (12).

@@ -2,7 +2,7 @@
 
 ## State
 
-- **Live:** https://ofs.apps.johnhiemstra.com, tag `110bf61` (`app/` is byte-for-byte the gated `aa8594a`), shipped by
+- **Live:** https://ofs.apps.johnhiemstra.com, tag `4008063` (`app/` is byte-for-byte the gated `2647b34`), shipped by
   John's own `! … ship.sh --first`. `check-live.py`: 7 of 7. Release notes: `docs/releases/v0.1.0.md`.
 - **The box:** JHC's apps box, on John's OVH US account.
 
@@ -57,7 +57,7 @@ John's word, because it wipes the box.
 - `docs/releases/v0.1.0.md`: the release, the evidence and the rollback.
 - `docs/status.md`: Live, Rollback and the box, updated through the day.
 - `docs/journal/2026-11-14-build/12-the-box-and-the-first-deploy.md`: the window for client docs.
-- `app/scripts/ship.sh` 65f66ff: the logins-owner gate (PP-12).
+- `app/scripts/ship.sh` 50ce83a: the logins-owner gate (PP-12).
 - jhc-agency `docs/for-john.md`, regenerated at each status change.
 - Memory: `project_jhc_apps_box` (VPS-1, resize later); `feedback_working_with_john` (say where each command is
   typed).
@@ -78,7 +78,7 @@ John's word, because it wipes the box.
 - **A bind-mounted secret needs the container's owner, not ours.** The first box run stopped at step 6 (route and
   seed done) with `PermissionError: /tmp/logins.env`. The file was `deploy:600`; the backend runs as uid 10001.
   Fixed by `chown 10001:10001` and re-running the step. **It's a gate now:** `ship.sh` step 4 refuses a first deploy
-  unless the file is `10001:600` (65f66ff). The header says so too.
+  unless the file is `10001:600` (50ce83a). The header says so too.
 - **The OVH US order may not install the SSH key.** `ssh ubuntu@` answered `Permission denied (publickey)`.
   `ovh-vps.py rebuild --key` fixes it; add the check to the deploy-ovhcloud-vps skill's §0 (Rob, next session).
 - **Read back a typed IP.** `apps` went in as `12.204…`; a `dig` caught it.
@@ -100,5 +100,5 @@ John's word, because it wipes the box.
 | Since | Item | Owner | Answer |
 |---|---|---|---|
 | 2026-11-14 | Neale's and Ann-Marie's GitHub usernames, for the repo invites | Anne | |
-| 2026-11-16 | Tag v0.1.0 at `110bf61` (`git tag v0.1.0 110bf61 && git push origin v0.1.0`), or leave it untagged for a POC | Cesar | |
+| 2026-11-16 | Tag v0.1.0 at `4008063` (`git tag v0.1.0 4008063 && git push origin v0.1.0`), or leave it untagged for a POC | Cesar | |
 | 2026-11-16 | Your click-through of the five views on the live site; say if you want the demo data reseeded (request 1046 is the live check's) | Angela | |

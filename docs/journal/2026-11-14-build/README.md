@@ -47,4 +47,4 @@ POC-17 and POC-18 (the narratives and the help panel).
 - **Session notes:** `docs/carry-forward/2026-11-14-*.md`.
 - **Screenshots:** `docs/evidence/2026-11-14-poc-*.png`.
 - **The cold review:** `docs/backlog/2026-11-14-cold-review.md`.
-- **The code:** `app/` at `aa8594a`. The gate and e2e last ran on the identical tree at `c41d5c5`.
+- **The code:** `app/` at `2647b34`. The gate and e2e last ran on the identical tree at `c41d5c5`.

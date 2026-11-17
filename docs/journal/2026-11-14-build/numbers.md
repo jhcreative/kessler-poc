@@ -5,10 +5,10 @@
 | What | Number | Source |
 |---|---|---|
 | The window | about 10:00 to 15:29 Eastern, Saturday 2026-11-14 | commit times |
-| Plan approved to every view built | about 4.5 hours (10:00 to 14:34) | commits `e42c951` to `77248a3` |
+| Plan approved to every view built | about 4.5 hours (10:00 to 14:34) | commits `5d3dbac` to `ba53abd` |
 | The Tailor-parts decision | under 30 minutes, from John's question to the lean skeleton | the timeline |
 
-## Size of what was built (`app/` at `aa8594a`)
+## Size of what was built (`app/` at `2647b34`)
 
 | What | Number |
 |---|---|
@@ -23,7 +23,7 @@
 | Backend runtime pins | 35 |
 | Against: the Tailor instance it replaced | 1,441 files, about 117,000 lines |
 
-## Quality gates (last run, `c41d5c5`, same `app/` tree as `aa8594a`)
+## Quality gates (last run, `c41d5c5`, same `app/` tree as `2647b34`)
 
 | Gate | Result |
 |---|---|

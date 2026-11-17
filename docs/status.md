@@ -16,11 +16,13 @@ App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 - **The video, reshot (take 2):** `docs/delivery/video/kessler-poc-one-request-five-views.mp4`, 3:16, captioned, Lisa's
   RTP-3 pass met. Waits on John's unlisted upload; then its link goes on page 9 and in the email.
 - **The emails:** `docs/delivery/2026-11-16-email.md` and `…-logins-email.md`, Lisa's RTP-3 in. No password in the repo.
-- **App fixes, live in v0.1.1:** `919a661` (invoice labor = hours × $150, synthetic), `d53e197` (phone hint after
-  approval), `dccedd3` (e2e flake).
+- **App fixes, live in v0.1.1:** `a105bd4` (invoice labor = hours × $150, synthetic), `b74b0cd` (phone hint after
+  approval), `91423c0` (e2e flake).
 - **The PDF carries the passwords on page 9**, filled at render; it's untracked in git.
 
 ## Rollback
+
+**History rewritten 2026-11-17** (John: commit messages no longer name the company we built this for). Every commit ID changed; the docs cite the new ones. The images on the box keep the old IDs as their tags, so `images` and `--rollback` references use those. The history before the rewrite: `~/jhc/prospects/kessler-poc-history-before-rewrite-2026-11-17.bundle`.
 
 The OVH snapshot `655c53df` (v0.1.3 at kfs, before v0.1.4); images alone: `ship.sh --rollback b2f4949`: `ovh-vps.py --env ~/jhc/secrets/ovhcloud/jhc-apps-api.env revert vps-3e8f42b5.vps.ovh.us`. John's (OPS-5).
 
@@ -58,5 +60,5 @@ Next, while it waits: POC-15, the simulator.
 | Since | Item | Owner | Answer |
 |---|---|---|---|
 | 2026-11-14 | Neale's and Ann-Marie's GitHub usernames, for the repo invites | Anne | |
-| 2026-11-16 | Tag v0.1.0 at `110bf61` (`git tag v0.1.0 110bf61 && git push origin v0.1.0`), or leave it untagged for a POC | Cesar | |
+| 2026-11-16 | Tag v0.1.0 at `4008063` (`git tag v0.1.0 4008063 && git push origin v0.1.0`), or leave it untagged for a POC | Cesar | |
 | 2026-11-17 | The email's address: "Ann-Marie, Neale" (recommended) or "Dana" in the role play; keep or flatten its two point labels | Lisa | |

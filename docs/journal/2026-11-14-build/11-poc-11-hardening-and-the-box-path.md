@@ -53,7 +53,7 @@ The ones worth telling:
 ## State at the end of the window
 
 - **The evidence:** gate 114, vitest 7, e2e 12 (run twice after the fixes), the live check 7 of 7, the ship dry run
-  green. `app/` at `aa8594a`.
+  green. `app/` at `2647b34`.
 - **Not done:** the deploy and R1 on the real box. Waiting on John: the VPS-2 order, the OVH token, the GitHub repo
   create, and the Cloudflare DNS records.
 

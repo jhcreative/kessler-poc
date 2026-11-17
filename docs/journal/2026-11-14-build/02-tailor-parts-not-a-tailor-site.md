@@ -48,7 +48,7 @@ with Node backend", "as a team on future project without much extra direction".
 
 ## What it cost, and what it saved
 
-- **Cost:** under 30 minutes from the question to the lean skeleton committed with POC-03 (`dba8b99`, 11:29). The Tailor instance was stopped and kept as the record of
+- **Cost:** under 30 minutes from the question to the lean skeleton committed with POC-03 (`fbfc9c4`, 11:29). The Tailor instance was stopped and kept as the record of
   the seam.
 - **Saved, measured afterwards:**
   - the gate went from 98 seconds over 2,505 publishing tests to seconds over our own tests, against real Postgres

@@ -1,7 +1,7 @@
 # Cold review, 2026-11-14 (POC-11, DOD-3)
 
 **The reviewer:** a fresh agent, given the code and what the app is for, not our conclusions. It reviewed in DOD-3's
-order: tests, then code, then security. It ran the gate (green at `9d29152`) and changed nothing.
+order: tests, then code, then security. It ran the gate (green at `fa02599`) and changed nothing.
 
 **The result:** 20 findings. 17 are fixed, 13 of them with a test (the row-lock test proven to fail without its fix). 3 are accepted, with
 the reason. "Test" names the file that pins it.

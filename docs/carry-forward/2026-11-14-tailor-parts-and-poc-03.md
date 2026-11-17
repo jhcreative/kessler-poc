@@ -6,7 +6,7 @@
   from Tailor's parts. Admin is users, integrations and config only, and the work happens in one view per role. The
   app is typed end to end, and the same base must work in Node. This supersedes the previous carry-forward's "Start
   here": the Tailor instance and its installer are retired, and the instance stack is stopped.
-- **The app:** `app/` at `dba8b99`. Backend `app/backend/ofs/`: `states.py` (the state table), `schemas.py` (the
+- **The app:** `app/` at `fbfc9c4`. Backend `app/backend/ofs/`: `states.py` (the state table), `schemas.py` (the
   contract and the typed JSON), `models.py` (ten tables), `rules.py`, `seed.py`, `main.py` (health).
 - **POC-03 done.** Evidence is in `docs/backlog/README.md`.
 
