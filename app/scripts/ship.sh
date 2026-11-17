@@ -14,7 +14,7 @@
 #
 # Before the first deploy, Rob prepares the box once (it isn't scripted, because the secrets are John's):
 #   /srv/ofs/.env (0600): COMPOSE_FILE=docker-compose.yml:docker-compose.edge.yml, POSTGRES_PASSWORD, SESSION_SECRET
-#     (48+ chars, new for the box), COOKIE_SECURE=1, ALLOWED_ORIGINS=https://ofs.apps.johnhiemstra.com,
+#     (48+ chars, new for the box), COOKIE_SECURE=1, ALLOWED_ORIGINS=https://kfs.apps.johnhiemstra.com,
 #     TRUSTED_PROXY=10.240.0.2/32, ANTHROPIC_ENV_FILE=/srv/ofs/anthropic.env, OFS_TAG=
 #   /srv/ofs/anthropic.env (0600), /srv/ofs/demo-logins.env (0600, owned 10001:10001, the container's `app` user, which
 #     reads it through a bind mount: five new email=password lines)
@@ -23,7 +23,7 @@
 # Every step ends on a gate; the first failure stops the run and says what to do.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-DOMAIN=ofs.apps.johnhiemstra.com
+DOMAIN=kfs.apps.johnhiemstra.com
 REMOTE=/srv/ofs
 BOX=""; FIRST=0; DRY=0; ROLLBACK=""
 while [ $# -gt 0 ]; do
