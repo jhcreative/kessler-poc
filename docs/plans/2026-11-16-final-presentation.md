@@ -104,3 +104,4 @@ intake people, $80K–$200K a year written off in disputes, QuickBooks and a few
 | R7 | Gears renumbered (2026-11-17): recommended tech 6 → 3, updates 3 → 4, push to billing 4 → 5, invoices 5 → 6 |
 | R8 | The end of the flow (2026-11-17): invoicing drafts and exports to client systems and QuickBooks; QuickBooks comes first and feeds both collections (the final phase) and the company's accounting |
 | R9 | Page 10 (2026-11-17): the demo passwords, unbranded, in a TEST copy only (`assemble.py --with-logins`, gitignored); out of the final version |
+| R10 | Page 6 (2026-11-17): no dek; rows 4, 5, 6 and 7 are long term, since each needs the centralized record. Immediate: 2, 8, 9. Short term: 1, 3 |
