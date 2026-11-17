@@ -76,3 +76,15 @@ test("needs review: dispatch asks the tech to wait, and the job goes back to wor
   await record.getByRole("button", { name: "Ask tech to wait" }).click();
   await expect(record.locator(".state-pill")).toHaveText("Onsite");
 });
+
+test("every tab opens, in either order, without an error (the board after the techs was a crash)", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await signIn(page, "dispatch@kfs.com");
+  for (const name of [/^Techs/, /^On the board/, /^Techs/, /^Needs review/, /^Ready/, /^Techs/, /^Ready/]) {
+    await page.getByRole("tab", { name }).click();
+    await expect(page.locator(".queue-grid .ag-root")).toBeVisible();
+  }
+  await expect(page.getByText("Unexpected Application Error")).toHaveCount(0);
+  expect(errors).toEqual([]);
+});

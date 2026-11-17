@@ -35,8 +35,8 @@ const techColumns: ColDef<TechOut>[] = [
   { field: "truck", headerName: "Truck", width: 80 },
   { field: "truck_status", headerName: "Truck is", width: 100, valueFormatter: (p) => (p.value === "onsite" ? "On site" : p.value === "driving" ? "Driving" : "Parked") },
   { field: "load", headerName: "Board", width: 80 },
-  { field: "skills", headerName: "Skills", width: 220, valueFormatter: (p) => (p.value as string[]).map((s) => ISSUE_LABEL[s] ?? s).join(", ") },
-  { field: "licenses", headerName: "Licensed in", width: 120, valueFormatter: (p) => (p.value as string[]).join(", ") },
+  { field: "skills", headerName: "Skills", width: 220, valueFormatter: (p) => ((p.value as string[] | undefined) ?? []).map((s) => ISSUE_LABEL[s] ?? s).join(", ") },
+  { field: "licenses", headerName: "Licensed in", width: 120, valueFormatter: (p) => ((p.value as string[] | undefined) ?? []).join(", ") },
 ];
 
 export function Dispatch() {
@@ -76,9 +76,10 @@ export function Dispatch() {
           {!loaded ? (
             skeleton && Array.from({ length: 8 }, (_, i) => <div key={i} className="skeleton skeleton-row" aria-hidden="true" />)
           ) : tab === "techs" ? (
-            <AgGridReact<TechOut> theme={houseGrid} rowData={roster} columnDefs={techColumns} getRowId={getTechId} suppressCellFocus />
+            <AgGridReact<TechOut> key="techs" theme={houseGrid} rowData={roster} columnDefs={techColumns} getRowId={getTechId} suppressCellFocus />
           ) : (
             <AgGridReact<Job>
+              key="jobs"
               theme={houseGrid}
               rowData={rows}
               columnDefs={jobColumns}
