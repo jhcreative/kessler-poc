@@ -78,6 +78,51 @@ test("needs review from the field shows in dispatch at once", async ({ page, pla
   await desk.context().close();
 });
 
+test("once the client's approval is on record, the phone stops telling the tech to send it for review", async ({ page, playwright, baseURL }) => {
+  // A seeded job over its client's cap: the client approves it, and dispatch sends it to Tech 1.
+  const base = baseURL ?? "";
+  const coord = await office(playwright, base, "coord@ofs.com");
+  const [waiting] = (await (await coord.get("/api/jobs?state=needs_client_approval")).json()) as J[];
+  if (!waiting) throw new Error("the seed holds no job waiting on the client");
+  const step = async (who: string, command: string, payload: object = {}) => {
+    const now = (await (await coord.get(`/api/jobs/${waiting.id}`)).json()) as J;
+    const ctx = await office(playwright, base, who);
+    const r = await ctx.post(`/api/jobs/${waiting.id}/commands`, {
+      data: { command, expected_event_id: now.last_event_id, payload, override_reason: "e2e" },
+    });
+    expect(r.ok(), await r.text()).toBeTruthy();
+  };
+  await step("coord@ofs.com", "record_client_approval", { by: "Client facilities manager", client_ref: "APR-7731" });
+  await step("coord@ofs.com", "approve_for_dispatch");
+  await step("dispatch@ofs.com", "assign_tech", { tech: "Tech 1" });
+
+  // And one of Tech 1's jobs under a cap, with no approval: the cap's hint still stands there.
+  const tech = await office(playwright, base, "tech@ofs.com");
+  type Mine = J & { approval: { client_ref: string } | null };
+  const mine = ((await (await tech.get("/api/jobs?state=assigned")).json()) as Mine[]).filter((j) => !j.approval);
+  let capped: Mine | undefined;
+  for (const j of mine) {
+    const c = (await (await tech.get(`/api/jobs/${j.id}/contract`)).json()) as { rules: { kind: string }[] };
+    if (c.rules.some((r) => r.kind === "cap")) { capped = j; break; }
+  }
+  expect(capped, "Tech 1 holds a job under a cap").toBeTruthy();
+
+  await signIn(page, "tech@ofs.com");
+  const rails = page.locator(".rails");
+  // The rules arrive with the contract, after the panel: wait for it, or "not shown" passes before they could show.
+  const contractLoaded = () => page.waitForResponse((r) => r.url().endsWith("/contract") && r.ok());
+  let loaded = contractLoaded();
+  await page.locator(".job-card", { hasText: `job ${waiting.number}` }).click();
+  await loaded;
+  await expect(rails).toContainText("Client approved, ref APR-7731.");
+  await expect(rails).not.toContainText("send it for review");
+  loaded = contractLoaded();
+  await page.goto(`/ops/tech/${capped!.id}`);
+  await loaded;
+  await expect(rails).toContainText("send it for review: the client approves first.");
+  await expect(rails).not.toContainText("Client approved");
+});
+
 async function deskPage(browser: Browser, baseURL: string) {
   const context = await browser.newContext({ baseURL, viewport: { width: 1440, height: 900 } });
   const desk = await context.newPage();

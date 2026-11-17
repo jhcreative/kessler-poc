@@ -120,9 +120,12 @@ function JobScreen({ job, status }: { job: Job; status: "connecting" | "live" | 
         <h3 id="rails">Before you close</h3>
         <ul>
           <li>The site signs off, or you say why they can't.</li>
-          {job.requires_approval && <li>{job.approval ? `Client approved, ref ${job.approval.client_ref}.` : `${job.rule_fired}.`}</li>}
+          {(job.requires_approval || job.approval) && (
+            <li>{job.approval ? `Client approved, ref ${job.approval.client_ref}.` : `${job.rule_fired}.`}</li>
+          )}
+          {/* The cap's hint is for work the client hasn't approved: once the approval is on record, it's done. */}
           {contract?.rules.map((r) =>
-            r.kind === "cap" ? (
+            r.kind === "cap" && !job.approval ? (
               <li key={r.text}>
                 If the work will run over <span className="unit">$</span>
                 {dollars(r.amount_cents)}, send it for review: the client approves first.
