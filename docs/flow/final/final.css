@@ -80,3 +80,9 @@ table.opps.nine + .note{margin-top:4px;}
 .twocol{grid-auto-flow:row dense;}
 .twocol > .dek{grid-column:1;font-size:12.5pt;line-height:1.5;margin:0 0 12px;}
 .twocol > .sections{grid-column:2;grid-row:1 / span 12;}
+
+/* Page 9: the five-minute run-through, one step per role, in the links' type. */
+.split.stack .sec p.note.lead{margin:4px 0 0;font-size:9.6pt;line-height:1.4;}
+ol.steps{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(5,1fr);column-gap:0.3in;}
+ol.steps li{font-size:9.6pt;line-height:1.38;text-wrap:pretty;}
+ol.steps li b{font-family:'Fira Sans',sans-serif;font-weight:600;display:block;font-size:8.6pt;letter-spacing:.08em;color:#9a5a00;margin-bottom:2px;}
