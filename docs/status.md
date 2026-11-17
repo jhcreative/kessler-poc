@@ -1,13 +1,13 @@
 # Jahnel Group POC: status
 
-Updated: 2026-11-17 (Angela, v0.1.3 live at kfs: the board tab fix, Show password)
+Updated: 2026-11-17 (Angela, v0.1.4 live at kfs: the login title without "ops")
 Kind: prospect
 Repo: `~/jhc/prospects/jahnel-poc` · Remote: `jhcreative/jahnel-poc` (private, main; created 2026-11-16)
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 
 ## Live
 
-**https://kfs.apps.johnhiemstra.com**, images `b2f4949` (v0.1.3, `docs/releases/v0.1.3.md`), 2026-11-17. The client is Kessler Facility Services. `check-live.py`: 7 of 7. Logins: five `@kfs.com`, one shared password, in `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env` and on page 9 of the PDF (the app comes down within the week, John). ofs.apps no longer answers.
+**https://kfs.apps.johnhiemstra.com**, images `ed7e009` (v0.1.4, `docs/releases/v0.1.4.md`), 2026-11-17. The client is Kessler Facility Services. `check-live.py`: 7 of 7. Logins: five `@kfs.com`, one shared password, in `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env` and on page 9 of the PDF (the app comes down within the week, John). ofs.apps no longer answers.
 
 ## Delivery (plan `docs/plans/2026-11-16-final-presentation.md`)
 
@@ -22,7 +22,7 @@ App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 
 ## Rollback
 
-The OVH snapshot `eec3017f` (v0.1.2 at kfs, before v0.1.3); images alone: `ship.sh --rollback 733887b`: `ovh-vps.py --env ~/jhc/secrets/ovhcloud/jhc-apps-api.env revert vps-3e8f42b5.vps.ovh.us`. John's (OPS-5).
+The OVH snapshot `655c53df` (v0.1.3 at kfs, before v0.1.4); images alone: `ship.sh --rollback b2f4949`: `ovh-vps.py --env ~/jhc/secrets/ovhcloud/jhc-apps-api.env revert vps-3e8f42b5.vps.ovh.us`. John's (OPS-5).
 
 ## Next
 
