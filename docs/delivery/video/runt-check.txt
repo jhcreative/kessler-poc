@@ -19,5 +19,5 @@ beat-18-aging.png: 15 words
 beat-19-overview.png: 12 words
 beat-20-overview-filter.png: 9 words
 beat-21-history.png: 13 words
-card-open.png: 4 words, 9 words, 15 words
-card-close.png: 5 words, 7 words, 8 words
+card-open.png: 6 words, 7 words, 15 words, 7 words, 1 words
+card-close.png: 6 words, 1 words

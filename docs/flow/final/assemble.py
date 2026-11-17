@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Assemble the final presentation: every page-N.html in this folder, landscape 11 x 8.5, in page order, into
-../jahnel-poc-final.pdf, with a PNG preview of each page in preview/. Plan: docs/plans/2026-11-16-final-presentation.md.
+../kessler-poc-final.pdf, with a PNG preview of each page in preview/. Plan: docs/plans/2026-11-16-final-presentation.md.
 
 The pages are the source (PP-11). The text pages (1, 3, 5, 7, 9) are written by hand and this script never writes
 them: it formats them with the pinned Prettier, which changes layout only, then renders. The graphic pages
@@ -24,8 +24,8 @@ from playwright.sync_api import sync_playwright  # noqa: E402
 from pypdf import PdfReader, PdfWriter  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE.parent / "jahnel-poc-final.pdf"
-LOGINS = Path.home() / "jhc/secrets/jahnel-poc/box-apps-demo-logins.env"   # the live box's logins
+OUT = HERE.parent / "kessler-poc-final.pdf"
+LOGINS = Path.home() / "jhc/secrets/kessler-poc/box-apps-demo-logins.env"   # the live box's logins
 FILL = r"""(pw) => { const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n, left = 0;
   while ((n = w.nextNode())) n.nodeValue = n.nodeValue.replace(/\{\{password:([^}]+)\}\}/g, (m, e) => pw[e] ?? m);
   w.currentNode = document.body; while ((n = w.nextNode())) if (n.nodeValue.includes("{{password:")) left++;

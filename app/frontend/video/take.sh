@@ -5,7 +5,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 TAKE="${1:?take dir}"; TRIES="${2:-25}"
-LOGINS="${E2E_LOGINS:-$HOME/jhc/secrets/jahnel-poc/local-demo-logins.env}"
+LOGINS="${E2E_LOGINS:-$HOME/jhc/secrets/kessler-poc/local-demo-logins.env}"
 set -a; . ./.env; set +a
 for i in $(seq 1 "$TRIES"); do
   # A fresh backend process: the login and new-request limits live in memory.

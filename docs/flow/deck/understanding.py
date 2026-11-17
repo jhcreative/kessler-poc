@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Landscape pages (11 x 8.5), left to right (John, 2026-11-13): 1 the recommended request flow, 2 the current one.
 Writes _landscape-N.html (underscore: the portrait assembler skips it), renders it, and puts it in front of the
-portrait deck as ../jahnel-poc-flows.pdf. A flow diagram, not system architecture: no vendors or tools on it."""
+portrait deck as ../kessler-poc-flows.pdf. A flow diagram, not system architecture: no vendors or tools on it."""
 import io, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -334,7 +334,7 @@ with sync_playwright() as pw:
     b.close()
 # The landscape pages alone for now (John, 2026-11-13); --with-rest puts them in front of the portrait deck.
 rest = "--with-rest" in sys.argv
-out = HERE.parent / ("jahnel-poc-flows.pdf" if rest else "jahnel-poc-understanding.pdf")
+out = HERE.parent / ("kessler-poc-flows.pdf" if rest else "kessler-poc-understanding.pdf")
 w = PdfWriter()
 for pdf in [PdfReader(io.BytesIO(x)) for x in pdfs] + ([PdfReader(str(HERE.parent / "_portrait.pdf"))] if rest else []):
     for page in pdf.pages:

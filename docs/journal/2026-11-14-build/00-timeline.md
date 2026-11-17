@@ -3,7 +3,7 @@
 Times are commit times. The window started just after 10:00, from the handoff
 `docs/carry-forward/2026-11-14-plan-approved-handoff.md`.
 
-## Engagement repo (`~/jhc/prospects/jahnel-poc`)
+## Engagement repo (`~/jhc/prospects/kessler-poc`)
 
 | Time | Commit | Story | What landed |
 |---|---|---|---|

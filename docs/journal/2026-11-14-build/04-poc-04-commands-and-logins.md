@@ -21,7 +21,7 @@
   - the same answer for a wrong password and an unknown email.
   - Each defence is written in the code beside the threat it answers.
 - **`ofs/logins.py`:** generates the passwords straight into a file readable only by its owner, and prints only the
-  emails. The file now lives in `~/jhc/secrets/jahnel-poc/` (John's yes).
+  emails. The file now lives in `~/jhc/secrets/kessler-poc/` (John's yes).
 - **Role-scoped reads (`ofs/api.py`):** a tech sees only their own jobs; exec reads everything and changes nothing.
 
 ## Verified

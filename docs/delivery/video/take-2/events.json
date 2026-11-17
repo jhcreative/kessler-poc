@@ -1,0 +1,174 @@
+{
+  "base": "http://localhost:9219",
+  "dsf": 1.5,
+  "desk": {
+    "width": 1200,
+    "height": 700
+  },
+  "phone": {
+    "width": 390,
+    "height": 844
+  },
+  "number": "1046",
+  "videos": {
+    "coord": "coord.webm",
+    "dispatch": "dispatch.webm",
+    "controller": "controller.webm",
+    "overview": "overview.webm",
+    "tech": "tech.webm"
+  },
+  "events": [
+    {
+      "t": 1794927686748,
+      "type": "page-open",
+      "view": "coord"
+    },
+    {
+      "t": 1794927687113,
+      "type": "page-open",
+      "view": "dispatch"
+    },
+    {
+      "t": 1794927687681,
+      "type": "page-open",
+      "view": "controller"
+    },
+    {
+      "t": 1794927688065,
+      "type": "page-open",
+      "view": "overview"
+    },
+    {
+      "t": 1794927688339,
+      "type": "page-open",
+      "view": "tech"
+    },
+    {
+      "t": 1794927690858,
+      "type": "flash",
+      "id": "start"
+    },
+    {
+      "t": 1794927692365,
+      "type": "beat",
+      "id": "establish"
+    },
+    {
+      "t": 1794927700871,
+      "type": "beat",
+      "id": "new-request"
+    },
+    {
+      "t": 1794927707456,
+      "type": "drafted",
+      "number": "1046",
+      "by": "Claude",
+      "top": "Tech 1",
+      "issue": "plumbing"
+    },
+    {
+      "t": 1794927707457,
+      "type": "beat",
+      "id": "draft"
+    },
+    {
+      "t": 1794927717460,
+      "type": "beat",
+      "id": "draft-lands"
+    },
+    {
+      "t": 1794927724462,
+      "type": "beat",
+      "id": "qualify"
+    },
+    {
+      "t": 1794927731967,
+      "type": "beat",
+      "id": "estimate"
+    },
+    {
+      "t": 1794927739471,
+      "type": "beat",
+      "id": "rule"
+    },
+    {
+      "t": 1794927747481,
+      "type": "beat",
+      "id": "approval"
+    },
+    {
+      "t": 1794927755984,
+      "type": "beat",
+      "id": "to-dispatch"
+    },
+    {
+      "t": 1794927763987,
+      "type": "beat",
+      "id": "recommend"
+    },
+    {
+      "t": 1794927773990,
+      "type": "beat",
+      "id": "assign"
+    },
+    {
+      "t": 1794927782493,
+      "type": "beat",
+      "id": "phone-open"
+    },
+    {
+      "t": 1794927789497,
+      "type": "beat",
+      "id": "arrive"
+    },
+    {
+      "t": 1794927797501,
+      "type": "beat",
+      "id": "close"
+    },
+    {
+      "t": 1794927806003,
+      "type": "beat",
+      "id": "to-billing"
+    },
+    {
+      "t": 1794927814512,
+      "type": "beat",
+      "id": "invoice"
+    },
+    {
+      "t": 1794927824025,
+      "type": "beat",
+      "id": "submit"
+    },
+    {
+      "t": 1794927832526,
+      "type": "beat",
+      "id": "aging"
+    },
+    {
+      "t": 1794927841030,
+      "type": "beat",
+      "id": "overview"
+    },
+    {
+      "t": 1794927851533,
+      "type": "beat",
+      "id": "overview-filter"
+    },
+    {
+      "t": 1794927860037,
+      "type": "beat",
+      "id": "history"
+    },
+    {
+      "t": 1794927870539,
+      "type": "story-end"
+    },
+    {
+      "t": 1794927870540,
+      "type": "flash",
+      "id": "end"
+    }
+  ]
+}

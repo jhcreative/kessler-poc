@@ -2,18 +2,18 @@
 
 Updated: 2026-11-17 (Angela, v0.1.4 live at kfs: the login title without "ops")
 Kind: prospect
-Repo: `~/jhc/prospects/jahnel-poc` · Remote: `jhcreative/jahnel-poc` (private, main; created 2026-11-16)
+Repo: `~/jhc/prospects/kessler-poc` · Remote: `jhcreative/kessler-poc` (private, main; created 2026-11-16 as jahnel-poc, renamed 2026-11-17; GitHub redirects the old name). Start a reader at `README.md`; the latest session: `docs/carry-forward/2026-11-17-1530-kessler-final-round.md`
 App: `app/` in this repo, local at http://localhost:9219 (API only until POC-06)
 
 ## Live
 
-**https://kfs.apps.johnhiemstra.com**, images `ed7e009` (v0.1.4, `docs/releases/v0.1.4.md`), 2026-11-17. The client is Kessler Facility Services. `check-live.py`: 7 of 7. Logins: five `@kfs.com`, one shared password, in `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env` and on page 9 of the PDF (the app comes down within the week, John). ofs.apps no longer answers.
+**https://kfs.apps.johnhiemstra.com**, images `ed7e009` (v0.1.4, `docs/releases/v0.1.4.md`), 2026-11-17. The client is Kessler Facility Services. `check-live.py`: 7 of 7. Logins: five `@kfs.com`, one shared password, in `~/jhc/secrets/kessler-poc/box-apps-demo-logins.env` and on page 9 of the PDF (the app comes down within the week, John). ofs.apps no longer answers.
 
 ## Delivery (plan `docs/plans/2026-11-16-final-presentation.md`)
 
-- **The PDF, nine pages, drafted:** `docs/flow/jahnel-poc-final.pdf`, from `docs/flow/final/` (text pages 1, 3, 5, 7, 9 are
+- **The PDF, nine pages, drafted:** `docs/flow/kessler-poc-final.pdf`, from `docs/flow/final/` (text pages 1, 3, 5, 7, 9 are
   hand-edited HTML; graphics 2, 4, 6, 8 from `graphics.py`; `assemble.py` renders). Waits on John's read-through.
-- **The video, reshot (take 2):** `docs/delivery/video/jahnel-poc-one-request-five-views.mp4`, 3:16, captioned, Lisa's
+- **The video, reshot (take 2):** `docs/delivery/video/kessler-poc-one-request-five-views.mp4`, 3:16, captioned, Lisa's
   RTP-3 pass met. Waits on John's unlisted upload; then its link goes on page 9 and in the email.
 - **The emails:** `docs/delivery/2026-11-16-email.md` and `…-logins-email.md`, Lisa's RTP-3 in. No password in the repo.
 - **App fixes, live in v0.1.1:** `919a661` (invoice labor = hours × $150, synthetic), `d53e197` (phone hint after
@@ -43,11 +43,11 @@ Next, while it waits: POC-15, the simulator.
 - **Start here next window:** `docs/carry-forward/2026-11-16-1720-live-on-the-apps-box.md` (the box, the keys by name, the permissions, the lessons). Release notes: `docs/releases/v0.1.0.md`.
 - **The build journal:** `docs/journal/2026-11-14-build/` covers this window story by story. Start at its
   `mining-guide.md` when writing the README, the recap email or the narratives.
-- **Demo logins (John, 2026-11-14):** the passwords are in `~/jhc/secrets/jahnel-poc/local-demo-logins.env`.
+- **Demo logins (John, 2026-11-14):** the passwords are in `~/jhc/secrets/kessler-poc/local-demo-logins.env`.
 - **Intake key (John, 2026-11-14):** the demo uses the existing key in `~/jhc/secrets/anthropic.env`. It's read at
   runtime and never copied into the repo or an image.
 - **The box (ordered 2026-11-16):** `vps-3e8f42b5.vps.ovh.us` (label `jhc-vps-3e8f42b5`; the API takes the ID), 15.204.245.239 and 2604:2dc0:121::1327, VPS-1, Vint Hill US-EAST-VA-2, $5.75/mo with the snapshot option, Ubuntu 24.04 (checked by `ovh-vps.py info`), John's OVH account.
-- **Box prep (2026-11-16, Rob):** rebuilt with John's key (the order didn't install it), `harden-ovh-box.sh` HARDENED, the OVH edge firewall (22/80/443), rDNS to ofs.apps, and the gates: deploy@ ssh and sudo, apt, outbound https, 5432 refused. DNS: `apps` and `ofs.apps` A records, grey cloud. Token: `~/jhc/secrets/ovhcloud/jhc-apps-api.env`, 30 days (to 2026-12-16). Then (John's "go on secrets"): new box demo logins in `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env`; `/srv/ofs/.env` (secrets generated on the box), `anthropic.env` and `demo-logins.env`, all 0600; the edge from Tailor v1.1.5 `templates/edge/`, healthy on `tailor-edge` 10.240.0.0/24 (80/443 open once a site is routed); snapshot `3ec70dc9` (2026-11-16 21:47 UTC). Deployed (see Live).
+- **Box prep (2026-11-16, Rob):** rebuilt with John's key (the order didn't install it), `harden-ovh-box.sh` HARDENED, the OVH edge firewall (22/80/443), rDNS to ofs.apps, and the gates: deploy@ ssh and sudo, apt, outbound https, 5432 refused. DNS: `apps` and `ofs.apps` A records, grey cloud. Token: `~/jhc/secrets/ovhcloud/jhc-apps-api.env`, 30 days (to 2026-12-16). Then (John's "go on secrets"): new box demo logins in `~/jhc/secrets/kessler-poc/box-apps-demo-logins.env`; `/srv/ofs/.env` (secrets generated on the box), `anthropic.env` and `demo-logins.env`, all 0600; the edge from Tailor v1.1.5 `templates/edge/`, healthy on `tailor-edge` 10.240.0.0/24 (80/443 open once a site is routed); snapshot `3ec70dc9` (2026-11-16 21:47 UTC). Deployed (see Live).
 - **Deploy:** to `ofs.apps.johnhiemstra.com` on a new JHC apps box (OVH VPS-1, edge mode; VPS-2 out of stock 11-16, US boxes resize up in place), on John's go Monday.
 - **Dry-run report:** Sunday 8 pm.
 - **Delivery:** the app, the private repo with invites, the email with the deck attached. Stretch: the narratives in

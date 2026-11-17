@@ -279,5 +279,5 @@ const cues = [
   ...segments.map((s) => ({ s: s.start + open.seconds, e: s.end + open.seconds, text: s.caption })),
   { s: open.seconds + dur, e: open.seconds + dur + close.seconds, text: [close.title, ...close.lines, close.foot, close.link].filter(Boolean).join("\n") },
 ];
-writeFileSync(join(OUT, "jahnel-poc-one-request-five-views.srt"), cues.map((c, i) => `${i + 1}\n${ts(c.s)} --> ${ts(c.e)}\n${c.text}\n`).join("\n"));
+writeFileSync(join(OUT, "kessler-poc-one-request-five-views.srt"), cues.map((c, i) => `${i + 1}\n${ts(c.s)} --> ${ts(c.e)}\n${c.text}\n`).join("\n"));
 console.log(`render: ${mp4}, ${(dur + open.seconds + close.seconds).toFixed(1)} s`);

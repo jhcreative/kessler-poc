@@ -2,7 +2,7 @@
 # The instance e2e (PP-14): rebuild the stack, reseed it, restore the logins, and drive it in a real browser.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-LOGINS="${E2E_LOGINS:-$HOME/jhc/secrets/jahnel-poc/local-demo-logins.env}"
+LOGINS="${E2E_LOGINS:-$HOME/jhc/secrets/kessler-poc/local-demo-logins.env}"
 set -a; . ./.env; set +a
 docker compose up -d --wait --build >/dev/null
 # A fresh backend process: the login rate limit lives in memory, and back-to-back runs from one address would hit it.

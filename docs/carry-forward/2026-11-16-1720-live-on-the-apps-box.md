@@ -20,7 +20,7 @@
   | Snapshot | `3ec70dc9`, 2026-11-16 21:47 UTC: the prepped box with the edge, **before** the app |
 
 - **DNS (Cloudflare, johnhiemstra.com zone):** A `apps` and A `ofs.apps` → 15.204.245.239, grey cloud. No AAAA yet.
-- **Repo:** `jhcreative/jahnel-poc`, private, `main` tracks origin; everything here is pushed. No tag yet (tagging
+- **Repo:** `jhcreative/kessler-poc`, private, `main` tracks origin; everything here is pushed. No tag yet (tagging
   v0.1.0 is John's, OPS-5).
 
 ## Where the keys are (names only)
@@ -28,7 +28,7 @@
 | What | Where |
 |---|---|
 | OVH API token for this box, 30 days to **2026-12-16** | `~/jhc/secrets/ovhcloud/jhc-apps-api.env` (600). Rights: `GET /vps`, `/vps/*` all verbs, `/ip/15.204.245.239` and `/*` |
-| Box demo logins (5, new, not the local ones) | `~/jhc/secrets/jahnel-poc/box-apps-demo-logins.env` (600) |
+| Box demo logins (5, new, not the local ones) | `~/jhc/secrets/kessler-poc/box-apps-demo-logins.env` (600) |
 | Box app secrets (Postgres password, SESSION_SECRET) | generated **on the box** into `/srv/ofs/.env` (600); never on the Mac |
 | Anthropic key | `~/jhc/secrets/anthropic.env` → `/srv/ofs/anthropic.env` (600), sent over ssh stdin, never printed |
 | Logins on the box | `/srv/ofs/demo-logins.env`, **owned 10001:10001, mode 600** (the container's `app` user) |
@@ -39,7 +39,7 @@ Jess's token (`ovhcloud/jess-ship-api.env`, to 12-11) reads this box too (`/vps/
 ## Permissions (what the next window can and can't run)
 
 The allow rules live in **`~/jhc/jhc-agency/.claude/settings.local.json`**, so they apply to a session started in
-`~/jhc/jhc-agency`. A session started in `~/jhc/prospects/jahnel-poc` doesn't get them: start there from
+`~/jhc/jhc-agency`. A session started in `~/jhc/prospects/kessler-poc` doesn't get them: start there from
 jhc-agency, or John adds them to that project too (at the prompt, `/permissions`).
 
 | Allowed (John, 11-16) | Not allowed: John runs it with `!` at the prompt, or adds a rule |

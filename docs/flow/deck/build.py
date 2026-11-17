@@ -6,7 +6,7 @@ Message (John, 2026-11-13): multiple efficiencies adding up over time, measured 
 system that will fix everything.
 
 Writes page-N.html beside this file on the JHC brand sheet (writer-brand-kit), then the assembler makes the PDF:
-    python3 build.py && python3 <kit>/assemble_report_pdf.py . -o ../jahnel-poc-flows.pdf
+    python3 build.py && python3 <kit>/assemble_report_pdf.py . -o ../kessler-poc-flows.pdf
 The diagrams are hand-placed SVG; the tables on pages 2 and 3 are read from one-request.yaml.
 """
 import html

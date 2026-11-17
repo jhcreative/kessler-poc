@@ -1,0 +1,94 @@
+1
+00:00:00,000 --> 00:00:08,000
+Single Source of Truth for Everyone
+All data is synthetic. QuickBooks is simulated.
+kfs.apps.johnhiemstra.com
+
+2
+00:00:08,000 --> 00:00:17,106
+Five views are open at once: coordinator, dispatch, controller, overview and the tech's phone.
+
+3
+00:00:17,106 --> 00:00:23,692
+Coordinator: a new request arrives, and Claude drafts the job from it.
+
+4
+00:00:23,692 --> 00:00:33,695
+The draft is labelled as Claude's. The coordinator checks it against the request as it arrived.
+
+5
+00:00:33,695 --> 00:00:40,697
+The new draft is already counted in the overview, under Intake draft.
+
+6
+00:00:40,697 --> 00:00:48,202
+Coordinator: Qualify. The overview moves the job from Intake draft to Qualified.
+
+7
+00:00:48,202 --> 00:00:55,706
+The estimate rises to $49,000, over this client's cap.
+
+8
+00:00:55,706 --> 00:01:03,716
+The contract rule holds dispatch until the client's approval is on record.
+
+9
+00:01:03,716 --> 00:01:12,219
+Coordinator: request the client's approval, then record it with the client's reference.
+
+10
+00:01:12,219 --> 00:01:20,222
+Approved for dispatch. The job lands in Ready on the dispatch screen, with no reload.
+
+11
+00:01:20,222 --> 00:01:30,225
+Dispatch: the recommended tech, with the reasons: skill, license, distance and load.
+
+12
+00:01:30,225 --> 00:01:38,728
+One click assigns Tech 1. The coordinator's record and the tech's phone update at once.
+
+13
+00:01:38,728 --> 00:01:45,732
+Tech's phone: the job is on the list. The tech opens it.
+
+14
+00:01:45,732 --> 00:01:53,736
+The tech taps Arrive. Coordinator, dispatch and the overview show Onsite.
+
+15
+00:01:53,736 --> 00:02:02,238
+The site signs off, and the tech closes the job and sends it to billing.
+
+16
+00:02:02,238 --> 00:02:10,747
+Controller: the job lands in Billing review with its invoice drafted. Every view shows the change.
+
+17
+00:02:10,747 --> 00:02:20,260
+The drafted invoice passes its check: signed off, approved where the contract asks, within the estimate.
+
+18
+00:02:20,260 --> 00:02:28,761
+Controller: Approve and submit. QuickBooks (simulated) returns an invoice number.
+
+19
+00:02:28,761 --> 00:02:37,265
+The aging moves: one more invoice under Current. Coordinator, dispatch and the overview show Invoiced.
+
+20
+00:02:37,265 --> 00:02:47,768
+Overview: how long each step waits, measured from every job's own history.
+
+21
+00:02:47,768 --> 00:02:56,272
+The Invoiced filter finds this job among the rest.
+
+22
+00:02:56,272 --> 00:03:07,774
+The one record keeps its history: each step, who took it and when.
+
+23
+00:03:07,774 --> 00:03:15,774
+Single Source of Truth for Everyone
+kfs.apps.johnhiemstra.com

@@ -10,7 +10,7 @@ sells Subscription AI with a documented delivery process (Atlas: discovery, plan
 the POC gets built is as much on show as the POC.
 
 ## Decision
-We will run the POC as a JHC prospect engagement in its own repo (`~/jhc/prospects/jahnel-poc`), with the standard
+We will run the POC as a JHC prospect engagement in its own repo (`~/jhc/prospects/kessler-poc`), with the standard
 skeleton, gates and records, because the process record is a deliverable alongside the POC.
 
 ## Consequences

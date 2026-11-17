@@ -64,6 +64,6 @@ docs/releases/       # What shipped, per version
 docs/evidence/       # Screenshots and other evidence, dated, synthetic data only
 docs/meetings/       # Evidence as received (the round-4 account)
 opportunities/       # Opportunities doc HTML + dated PDFs
-proposals/           # jhc-proposal-jahnel-poc-<date>.pdf
+proposals/           # jhc-proposal-kessler-poc-<date>.pdf
 history/             # Our process material (shown to Jahnel here; see constraints)
 ```

@@ -4,7 +4,7 @@
     "open": {
       "seconds": 8,
       "title": "Single Source of Truth for Everyone",
-      "lines": ["Kessler Facility Services: a proof of concept for Jahnel Group", "Watch a new request move from intake to QuickBooks while every open view updates live."],
+      "lines": ["Kessler Facility Services: a proof of concept", "Watch a new request move from intake to QuickBooks while every open view updates live."],
       "foot": "All data is synthetic. QuickBooks is simulated.",
       "link": "kfs.apps.johnhiemstra.com"
     },

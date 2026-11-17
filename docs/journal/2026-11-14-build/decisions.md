@@ -10,7 +10,7 @@
 | 11:24 | Save it as the base for future apps (not Tailor web, ecom or blog) | "Anne Cesar save this pattern as future base for liek apps" · "that are not Tailor web/ecom/blog but actual apps liek this POC" | agency ADR-0014, TEAM-11, the team memory |
 | 11:26 | Strongly typed, with TypeScript models that correspond | "so we have strongly typed data strcutures readable in codebase?" · "or we will have" · "ok great w ewill want them to correspond to Typescript models for front end" · "i know its our usual but want to reinforce here" | ADR-0014's Types row; `app/scripts/types.sh` |
 | 11:28 | The same pattern in Node, buildable without extra direction | "good we shoudl eb able to do this same thing all in javacript with Node backend" · "as a team on future project without much extra direction" | ADR-0014's Node table; TEAM-11's done item 5 |
-| 11:45 | Move the demo passwords into the secrets store, and go on POC-05 | "yes and go on poc-5" | `docs/status.md`; `~/jhc/secrets/jahnel-poc/local-demo-logins.env` |
+| 11:45 | Move the demo passwords into the secrets store, and go on POC-05 | "yes and go on poc-5" | `docs/status.md`; `~/jhc/secrets/kessler-poc/local-demo-logins.env` |
 | 12:22 | POC-06 accepted in the browser | "POC-6 looks good in browser - continue to POC-7" | the backlog |
 | 13:35 | The seed's long-distance recommendations are acceptable | "yeah its good with a couple of outliers liek that 💪" | the backlog, POC-08's evidence |
 | 15:30 | Journal the window for future client-facing documents | "Ok Anne write up this window of work in detail, refer to stories and create .md files that journal all up to deploy and allow future session to mine for client facing docs" | this folder |
