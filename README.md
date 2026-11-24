@@ -1,7 +1,7 @@
 # Kessler Facility Services: a proof of concept
 
-**One service request, one shared record, five live views.** Built by John Hiemstra Creative in five days, from
-the first discovery call to a live app, with every decision written down along the way.
+**One service request, one shared record, five live views.** Built by John Hiemstra Creative in three business
+days, from the first discovery call to a working app, with every decision written down along the way.
 
 | ▶ Watch | ● Use | ☰ Read |
 |---|---|---|
@@ -125,7 +125,7 @@ Production deploys wait on John's go.
 
 ```mermaid
 timeline
-    title Five days, discovery to live
+    title Three business days, discovery to a working app
     Nov 12 : Discovery session : Research and intake questions
     Nov 13 : Request flows mapped : The POC plan written and walked through
     Nov 14 : Plan approved : Every view built in one day : Cold review, 17 of 20 fixed
